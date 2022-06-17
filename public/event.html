@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details Page</title>
+    <link href="./css/event.css" rel="stylesheet">
+</head>
+<body>
+    <div id="event">
+        <div class="event_title"></div>
+        <div class="event_date"></div>
+        <div class="event_location"></div>
+        <div class="event_category"></div>
+        <img class="event_main-image">
+        <div class="event_artist"></div>
+        <div class="event_description"></div>
+
+        <button type="button" id="ticket_button" onclick="clickTicketButton(event)">Ticket</button>
+
+        <div class="ticket_type_container" style="display:none;">
+            <table class="normal">
+                <thead>
+                    <tr>
+                        <th id="tb_type">Type</th>
+                        <th id="tb_price">Price</th>
+                        <th id="tb_amount">Select Ticket</th>
+                        <!-- <th id="tb_select">Select</th> -->
+                    </tr>
+                </thead>
+                <tbody id="ticket_tb_tbody">
+                    <!-- <tr id="ticket_tb_tbody_tr">
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                    </tr>
+                    <tr id="ticket_tb_tbody_tr">
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td> 
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="ticket_selected_summary_container" style="display:none;">
+            <div>Order Summary</div>
+            <!-- <div id="summary_row"></div> -->
+        </div>
+        <!-- <button style="display:none;" type="button" id="addToCart_ticket_button" onclick="addToCartShowSummary(event, i)">Add to Cart</button> -->
+        <button style="display:none;" onclick="postTicketSelection(event)" type="button" id="addToCart_ticket_button">Add to Cart</button>
+
+        <button style="display:none;" type="button" id="reserve_ticket_button">Reserve</button>
+
+        <button style="display:none;" type="button" id="buy_ticket_button" onclick=buyTicket(event)">Pay Now</button>
+
+    </div>
+    <script src="./script/event.js"></script>
+</body>
+</html>
