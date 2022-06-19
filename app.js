@@ -3,8 +3,8 @@ const express = require("express");
 const mysql = require("mysql2");
 const multer = require("multer");
 const path = require("path");
-const { getEventDetailsAPI, getAvailableTickets, saveTicketOrder} = require("./controllers/event-controller");
-const { getTicketDetailsAPI, saveTicketSelection, saveAttendeeInfo } = require("./controllers/ticket-controller");
+const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder} = require("./controllers/event-controller");
+// const { getTicketDetailsAPI, saveTicketSelection, saveAttendeeInfo } = require("./controllers/ticket-controller");
 
 
 const app = express();
@@ -27,11 +27,12 @@ app.get(`/api/${process.env.api}/event/:id/tickets`, getAvailableTickets, (req, 
     res.json(req.result);
 })
 
-app.post(`/api/${process.env.api}/event/:id/tickets/reserve`, (req, res)=>{
-    // res.json(req.result);
+app.post(`/api/${process.env.api}/event/:id/tickets/reserve`, reserveTickets, (req, res)=>{
+    res.json(req.result);
 })
 
 app.post(`/api/${process.env.api}/event/:id/buy`, saveTicketOrder, (req, res)=>{
+    res.redirect('./public/order-confirmation.html');
 });
 
 // app.get(`/api/${process.env.api}/events/:category`,(req, res)=>{
@@ -76,18 +77,18 @@ app.get(`/event/:id/reserve`, (req, res)=>{
 
 
 // not used
-app.get('/ticket/details', getTicketDetailsAPI, (req, res)=>{
-    res.json(req.result);
-})
+// app.get('/ticket/details', getTicketDetailsAPI, (req, res)=>{
+//     res.json(req.result);
+// })
 
 
-app.post('/ticket/type', saveTicketSelection, (req, res)=>{
-    res.send('ticket selection sent');
-})
+// app.post('/ticket/type', saveTicketSelection, (req, res)=>{
+//     res.send('ticket selection sent');
+// })
 
-app.post('/ticket/attendee', saveAttendeeInfo, (req, res)=>{
-    res.send('attendee info sent')
-})
+// app.post('/ticket/attendee', saveAttendeeInfo, (req, res)=>{
+//     res.send('attendee info sent')
+// })
 
 
 

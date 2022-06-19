@@ -12,6 +12,35 @@ const getAvailTickets = async (id)=>{
     return availTickets;
 };
 
+const checkAndReserveTickets = async (user_id, ticketType, ticketNumber)=>{
+    // const [reservedTickets] = await pool.query(`CALL checkAvailTicketsAndreserveTicket(?, ?, ?, @out_ticket_id)`, [user_id, ticketType, ticketNumber]);
+    
+    const conn = await pool.getConnection();
+    try {
+        await conn.query('START TRANSACTION');
+        let [reservedTickets] = await conn.query(`SELECT ticket_id from ticket WHERE temp_status = '0' and type = ? limit ?;`, [ticketType, ticketNumber]);
+        let ticket_id_array = [];
+        for (let i = 0; i < reservedTickets.length; i++) {
+            let ticket_id = reservedTickets[i].ticket_id;
+            console.log(ticket_id);
+            ticket_id_array.push(ticket_id);
+            await conn.query(`UPDATE ticket SET user_id = ?, timer_timestamp = NOW(), temp_status = '1' WHERE ticket_id = ?`, [user_id, ticket_id]);
+        }
+        await conn.query('COMMIT');
+        return ticket_id_array;
+    } catch (error) {
+        await conn.query('ROLLBACK');
+        return {error};
+    } finally {
+        await conn.release();
+    }
+}
+
+const reserveTickets = async ()=>{
+    const [reserveTicketsResult] = await pool.query(``);
+    return reserveTicketsResult;
+};
+
 //order: event_id, user_id
 const saveOrder = async (event_id, user_id)=>{
     const [order] = await pool.query(`INSERT INTO order (event_id, user_id) VALUES (?)`, [event_id, user_id]);
@@ -28,4 +57,4 @@ const saveTicket = async (user_id, ticket_id)=>{
 //insert ticket_order table
 
 
-module.exports = {getEventDetails, getAvailTickets, saveOrder, saveTicket};
+module.exports = {getEventDetails, getAvailTickets, reserveTickets, checkAndReserveTickets, saveOrder, saveTicket};

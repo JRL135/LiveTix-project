@@ -78,6 +78,7 @@ async function clickTicketButton(e){
 }
 
 // oninput data is recorded in event
+// show selected ticket on summary table
 // assign random available ticket_id to ticket_selected
 // package input data with user_id & send to backend
 function recordTicketSelection(e){
@@ -99,14 +100,24 @@ function recordTicketSelection(e){
     // let ticketAvail = await ticketsFetch.json();
 }
 
-function postTicketSelection(e){
+async function postTicketSelection(e){
     console.log("postTicketSelection triggered");
 
+    // hide add to cart button
+    document.getElementById("addToCart_ticket_button").style.display = 'none';
+
     // get current shown input value
-    // let ticket_number = document.querySelector(`[name="${ticketAvailArrayKeys[i]}"]`).value;
-    let tix_selected = document.querySelectorAll(`[class="summary_div_tix"]`).innerHTML;
-    // console.log("ticket_number: " + ticket_number);
+    let tix_selected = document.querySelectorAll(`[class="summary_row_tix"]`);
     console.log(tix_selected);
+    let ticket_type_list = [];
+    let ticket_number_list = [];
+    for (let i = 0; i < tix_selected.length; i++) {
+        let tix_selected_innerHTML = tix_selected[i].innerHTML;
+        tix_number = tix_selected_innerHTML.split(',')[0];
+        tix_type = tix_selected_innerHTML.split(',')[1];
+        ticket_type_list.push(tix_type);
+        ticket_number_list.push(tix_number);
+    }
 
     const token = 12345;
     const reserveURL = `/api/1.0/event/${product_id}/tickets/reserve`;
@@ -118,46 +129,41 @@ function postTicketSelection(e){
     }
 
     let body = {
-        ticket_type: ticket_type,
-        ticket_number: ticket_number
+        ticket_type: ticket_type_list,
+        ticket_number: ticket_number_list
     };
 
     console.log(headers);
     console.log(body);
-    // let postTicketSelectionJSON = async() => {
-    //     let response = await fetch(reserveURL, {
-    //         method: 'POST',
-    //         headers: headers,
-    //         body: JSON.stringify(body)
-    //     });
-    //     let ticketJSON = await response.json();
-    //     console.log(ticketJSON);
 
-    // }
-    // postTicketSelectionJSON();
-    // ticket_selected_value = e.target.value;
-    // // if (ticket_selected_value){
-    //     console.log(e.target.name);
-    //     console.log(ticket_selected_value);
-    // }
-    // ticket_selected_value = e.target.value;
-    // if (ticket_selected_value){
-    //     console.log(e.target.name);
-    //     console.log(ticket_selected_value);
-    // }
+    let reserve = await fetch(reserveURL, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(body)
+    });
+    let postTixResponse = await reserve.json();
+    console.log("postTixResponse:");
+    console.log(postTixResponse); // returns available tickets for each tix type
+
+    // show buy ticket button
+    document.getElementById("buy_ticket_button").style.display = 'inline-block';
+    
+
+}
+
+// click pay now button
+// LATER: check timer_timestamp < 10m, then
+// post postTixResponse to backend
+async function buyTicket(e){
+    //post data:
+    //order: event_id, user_id
+    //ticket: user_id, purchase_date
+    //insert ticket_order table
+    let buyTicketFetch = await fetch(`/api/1.0/event/${product_id}/buy`);
+    // let eventDetails = await buyTicketFetch.json();
 }
 
 
-
-// track selected number of tix
-function addToCartShowSummary(e){
-    // selectElement = document.querySelector(`#${ticketAvailArrayKeys[i]}`);
-    ticket_selected_value = e.target.value;
-    console.log(e);
-    console.log(ticket_selected_value);
-    document.getElementById(`summary_div_${ticketAvailArrayKeys[i]}`).innerHTML = `${ticket_selected_value}`;
-    // document.querySelector('.output').innerHTML = ticket_selected_value;
-}
 
 
 
@@ -177,11 +183,12 @@ function reserveTicket(e){
 
 }
 
-async function buyTicket(e){
-    //post data:
-    //order: event_id, user_id
-    //ticket: user_id, purchase_date
-    //insert ticket_order table
-    let buyTicketFetch = await fetch(`/api/1.0/event/${product_id}/buy`);
-    // let eventDetails = await buyTicketFetch.json();
+// track selected number of tix
+function addToCartShowSummary(e){
+    // selectElement = document.querySelector(`#${ticketAvailArrayKeys[i]}`);
+    ticket_selected_value = e.target.value;
+    console.log(e);
+    console.log(ticket_selected_value);
+    document.getElementById(`summary_div_${ticketAvailArrayKeys[i]}`).innerHTML = `${ticket_selected_value}`;
+    // document.querySelector('.output').innerHTML = ticket_selected_value;
 }
