@@ -110,19 +110,29 @@ async function reserveTickets(req, res, next){
 async function saveTicketOrder(req, res, next){
     console.log('saveTicketOrder triggered');
     let event_id = req.params.id;
-    let user_id = 1;
-    console.log(id);
+    const authHeader = req.headers.authorization;
+    // console.log(authHeader); //should be Bearer 12345
+    let user_id = authHeader.split(' ')[1];
+    console.log("user_id: " + user_id);
     //order: event_id, user_id
     //ticket: user_id, purchase_date
     //insert ticket_order table
+    let buyTicketsArray = req.body;
+    console.log("buyTicketsArray in saveTicketOrder:");
+    console.log(buyTicketsArray);
+    let ticket_ids = [];
+    for (let i = 0; i < buyTicketsArray.length; i++) {
+        let ticket_id = buyTicketsArray[i].ticket_ids;
+        // ticket_ids.push(ticket_id);
+        for (let j = 0; j < ticket_id.length; j++) {
+            ticket_ids.push(ticket_id[j]);
+        }
+    }
+    console.log(ticket_ids);
     try {
-        let a = await Event.saveOrder(event_id, user_id);
-        console.log(a);
-        let b = await Event.saveTicket(user_id, ticket_id);
-        console.log(b)
-        // get a, b => 
-        await Event.saveTicket_Order();
-        // req.result = availTickets;
+        let order_id = await Event.saveTicketOrder(event_id, user_id, ticket_ids);
+        console.log(order_id);
+        req.result = order_id;
     } catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});

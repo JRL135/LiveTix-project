@@ -18,7 +18,7 @@ const checkAndReserveTickets = async (user_id, ticketType, ticketNumber)=>{
     const conn = await pool.getConnection();
     try {
         await conn.query('START TRANSACTION');
-        let [reservedTickets] = await conn.query(`SELECT ticket_id from ticket WHERE temp_status = '0' and type = ? limit ?;`, [ticketType, ticketNumber]);
+        let [reservedTickets] = await conn.query(`SELECT ticket_id from ticket WHERE temp_status = '0' and type = ? limit ?`, [ticketType, ticketNumber]);
         let ticket_id_array = [];
         for (let i = 0; i < reservedTickets.length; i++) {
             let ticket_id = reservedTickets[i].ticket_id;
@@ -29,6 +29,7 @@ const checkAndReserveTickets = async (user_id, ticketType, ticketNumber)=>{
         await conn.query('COMMIT');
         return ticket_id_array;
     } catch (error) {
+        console.log(error);
         await conn.query('ROLLBACK');
         return {error};
     } finally {
@@ -36,19 +37,45 @@ const checkAndReserveTickets = async (user_id, ticketType, ticketNumber)=>{
     }
 }
 
-const reserveTickets = async ()=>{
-    const [reserveTicketsResult] = await pool.query(``);
-    return reserveTicketsResult;
-};
-
 //order: event_id, user_id
-const saveOrder = async (event_id, user_id)=>{
-    const [order] = await pool.query(`INSERT INTO order (event_id, user_id) VALUES (?)`, [event_id, user_id]);
-    return order;
+//ticket: user_id, purchase_date
+const saveTicketOrder = async (event_id, user_id, ticket_ids)=>{
+    const conn = await pool.getConnection();
+    try {
+        console.log("saveTicketOrder in model try catch");
+        console.log(event_id);
+        console.log(user_id);
+        await conn.query('START TRANSACTION');
+        let [order_query] = await conn.query(`INSERT INTO live.order (event_id, user_id) VALUES (?, ?)`, [event_id, user_id]);
+        console.log(typeof(order_query));
+        console.log(order_query);
+        let order_id = order_query.insertId;
+        console.log("order_id in model:");
+        console.log(order_id);
+        for (let i = 0; i < ticket_ids.length; i++) {
+            let ticket_id = ticket_ids[i];
+            await conn.query(`UPDATE ticket SET purchase_date = NOW() WHERE ticket_id = ?`, ticket_id);
+            // console.log("updated ticket table for purchase");
+            await conn.query(`INSERT INTO ticket_order (order_id, ticket_id) VALUES (?, ?)`, [order_id, ticket_id]);
+            // console.log("inserted into ticket_order table");
+        }
+        await conn.query('COMMIT');
+        return order_id;
+    } catch (error) {
+        console.log(error);
+        await conn.query('ROLLBACK');
+        return {error};
+    } finally {
+        await conn.release();
+    }
+    
 };
 
-//`UPDATE ticket SET user_id = '1', temp_status = '1', timer_timestamp = NOW() WHERE temp_status = '0' AND ticket_id = '1'`
-//ticket: user_id, purchase_date
+
+
+
+
+
 const saveTicket = async (user_id, ticket_id)=>{
     const [ticket] = await pool.query(`UPDATE ticket SET user_id = ?, purchase_date = NOW() WHERE ticket_id = ?`, user_id);
     return ticket;
@@ -57,4 +84,4 @@ const saveTicket = async (user_id, ticket_id)=>{
 //insert ticket_order table
 
 
-module.exports = {getEventDetails, getAvailTickets, reserveTickets, checkAndReserveTickets, saveOrder, saveTicket};
+module.exports = {getEventDetails, getAvailTickets, checkAndReserveTickets, saveTicketOrder};

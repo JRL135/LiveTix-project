@@ -100,6 +100,8 @@ function recordTicketSelection(e){
     // let ticketAvail = await ticketsFetch.json();
 }
 
+let postTixResponse;
+
 async function postTicketSelection(e){
     console.log("postTicketSelection triggered");
 
@@ -141,7 +143,7 @@ async function postTicketSelection(e){
         headers: headers,
         body: JSON.stringify(body)
     });
-    let postTixResponse = await reserve.json();
+    postTixResponse = await reserve.json();
     console.log("postTixResponse:");
     console.log(postTixResponse); // returns available tickets for each tix type
 
@@ -154,13 +156,30 @@ async function postTicketSelection(e){
 // click pay now button
 // LATER: check timer_timestamp < 10m, then
 // post postTixResponse to backend
-async function buyTicket(e){
+async function buyTickets(e){
+    console.log("buyTickets triggered");
     //post data:
     //order: event_id, user_id
     //ticket: user_id, purchase_date
     //insert ticket_order table
-    let buyTicketFetch = await fetch(`/api/1.0/event/${product_id}/buy`);
-    // let eventDetails = await buyTicketFetch.json();
+    const buyURL = `/api/1.0/event/${product_id}/tickets/buy`;
+    const token = 12345;
+    let headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`,
+    }
+    let buyTix = await fetch(buyURL, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(postTixResponse)
+    });
+    let buyTixResponse = await buyTix.json();
+    console.log("thanks for ordering, your order number is: ");
+    console.log(buyTixResponse);
+
+    alert(`Thank you for ordering, your order number is #${buyTixResponse}`);
+
 }
 
 
