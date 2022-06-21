@@ -10,9 +10,16 @@ async function getEventDetailsAPI(){
     let eventFetch = await fetch(`/api/1.0/event/${product_id}`);
     let eventDetails = await eventFetch.json();
     document.getElementsByClassName("event_title")[0].innerHTML = eventDetails[0].title;
-    document.getElementsByClassName("event_date")[0].innerHTML = eventDetails[0].date;
-    document.getElementsByClassName("event_location")[0].innerHTML = eventDetails[0].location;
-    document.getElementsByClassName("event_category")[0].innerHTML = eventDetails[0].category;
+    console.log(document.getElementsByClassName("event_title")[0]);
+    let event_date_unsorted = eventDetails[0].date;
+    let event_date = event_date_unsorted.split('T')[0];
+    document.getElementsByClassName("event_date")[0].innerHTML = `Date: ${event_date}`;
+    document.getElementsByClassName("event_location")[0].innerHTML = `Location: ${eventDetails[0].location}`;
+    document.getElementsByClassName("event_category")[0].innerHTML = `Category: ${eventDetails[0].category}`;
+    document.getElementsByClassName("event_artist")[0].innerHTML = `
+    Artist: ${eventDetails[0].artist}`;
+    document.getElementsByClassName("event_main-image")[0].setAttribute('src', eventDetails[0].main_picture);
+    // document.getElementsByClassName("event_main-image")[0].innerHTML = "main_image";
     document.getElementsByClassName("event_description")[0].innerHTML = eventDetails[0].description;
 }
 getEventDetailsAPI();
@@ -40,10 +47,11 @@ async function fetchAvailTickets(){
 //after clicking ticket button
 //hide ticket button & description
 async function clickTicketButton(e){
-    // hide event description
-    document.getElementsByClassName("event_description")[0].style.display = 'none';
+    // hide event description section
+    document.getElementsByClassName("main-container-s2")[0].style.display = 'none';
     // hide ticket button
     document.getElementById("ticket_button").style.display = 'none';
+
     // fetch available tickets
     let ticketAvailArray = await fetchAvailTickets();
 
@@ -70,9 +78,9 @@ async function clickTicketButton(e){
         }
     }
     // show table
-    document.getElementsByClassName("ticket_type_container")[0].style.display = 'inline-block';
+    document.getElementsByClassName("main-container-s3 w3-cell-row")[0].style.display = 'inline-block';
     // show summary table
-    document.getElementById("ticket_selected_summary_container").style.display = 'inline-block';
+    // document.getElementById("ticket_selected_summary_container").style.display = 'inline-block';
     // show addToCart button
     document.getElementById("addToCart_ticket_button").style.display = 'inline-block';
 }
@@ -187,27 +195,12 @@ async function buyTickets(e){
 
 
 
-
-
-// tbc
-function reserveTicket(e){
-    //change ticket table temp_status 0 -> 1
-    //set ticket table timestamp NOW()
-
-    document.getElementById("reserve_ticket_button").style.display = 'none';
-    document.getElementById("buy_ticket_button").style.display = 'inline-block';
-    //LATER start frontend timer
-    //LATER check token (login)
-    //LATER attendee info
-
-}
-
-// track selected number of tix
-function addToCartShowSummary(e){
-    // selectElement = document.querySelector(`#${ticketAvailArrayKeys[i]}`);
-    ticket_selected_value = e.target.value;
-    console.log(e);
-    console.log(ticket_selected_value);
-    document.getElementById(`summary_div_${ticketAvailArrayKeys[i]}`).innerHTML = `${ticket_selected_value}`;
-    // document.querySelector('.output').innerHTML = ticket_selected_value;
-}
+// // track selected number of tix
+// function addToCartShowSummary(e){
+//     // selectElement = document.querySelector(`#${ticketAvailArrayKeys[i]}`);
+//     ticket_selected_value = e.target.value;
+//     console.log(e);
+//     console.log(ticket_selected_value);
+//     document.getElementById(`summary_div_${ticketAvailArrayKeys[i]}`).innerHTML = `${ticket_selected_value}`;
+//     // document.querySelector('.output').innerHTML = ticket_selected_value;
+// }

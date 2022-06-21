@@ -6,204 +6,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Details Page</title>
     <link href="./css/event.css" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@384&family=Signika+Negative:wght@461&family=Viga&display=swap" rel="stylesheet">
+    <script src="./components/header.js" type="text/javascript" defer></script>
+    <script src="./components/footer.js" type="text/javascript" defer></script>
+
 </head>
 <body>
-    <header class="header">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">LiveTix</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <!-- <li class="nav-item">
-                  <a class="nav-link" href="#">Link</a>
-                </li> -->
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Browse Events
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Concerts</a>
-                    <a class="dropdown-item" href="#">Festivals</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Featured Events</a>
-                  </div>
-                </li>
-              </ul>
-              <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-              </form>
+    <!-- navbar -->
+    <header-component></header-component>
+
+    <!-- body -->
+    <main class="main" role="main">
+        <div class="main-container-s1 w3-cell-row">
+            <div class="main-container-s1-date-container w3-container w3-center w3-cell w3-cell-middle">
+                <div class="main-container-s1-date-container__style__item event_title"></div>
+                <div class="main-container-s1-date-container__style__item event_category"></div>
+                <div class="main-container-s1-date-container__style__item event_date"></div>
+                <div class="main-container-s1-date-container__style__item event_location"></div>
+                <div class="main-container-s1-date-container__style__item event_artist"></div>
+                <button class="main-container-s1-date-container__style__item ticket_button" type="button" id="ticket_button" onclick="clickTicketButton(event)">Tickets</button>
             </div>
-        </nav>
-        <!-- <nav class="navbar">
-            <div class="navbar-container">
-                <a href="#" class="header-logo nav-brand">LiveTix</a>
-                <div class="header-search">
-                    <button type="button" id="header-search-button">
-                        <div class="navbar-search-icon-container">
-                            <svg id="navbar-search-icon-svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve" style="width:24px;height:24px;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 14c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4zm3.5.9c-1 .7-2.2 1.1-3.5 1.1-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6c0 1.3-.4 2.5-1.1 3.4l5.1 5.1-1.5 1.5-5-5.1z"></path>
-                            </svg>
-                        </div>
-                        <input type="search" placeholder="Search events">
-                    </button>
-                </div>
-                <div class="header-minor">
-                    <ul class="navbar-ul">
-                        <li class="nav-item"><a href="#" class="nav-link">Browse Events</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Sign Up</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Sign In</a></li>
-                    </ul>
-                </div>
+
+            <div class="main-container-s1-photo-container w3-container w3-cell w3-cell-middle">
+                <img class="event_main-image w3-image">
             </div>
-        </nav> -->
-    </header>
-    <main role="main">
-        <div class="container" id="event-details-container">
-            <div id="event-details-p1-container">
-                <div class="event_title"></div>
-                <div class="event_category"></div>
-                <div class="event_date"></div>
-                <div class="event_location"></div>
-                <img class="event_main-image">
-                <div class="event_artist"></div>
-            </div>
+        </div>
+
+        <!-- event description -->
+        <div class="main-container-s2 w3-container w3-center w3-padding-48">
+            <p id="event_description_header">Event Description</p>
             <div class="event_description"></div>
+        </div>
 
-            <button type="button" id="ticket_button" onclick="clickTicketButton(event)">Ticket</button>
-
-            <div class="ticket_type_container" style="display:none;">
-                <table class="normal">
+        <div class="main-container-s3 w3-cell-row" style="display:none;">
+            <!-- ticket selection -->
+            <div class="main-container-s3-selection-container w3-container w3-center w3-cell w3-cell-middle w3-half">
+                <table class="w3-table w3-bordered">
                     <thead>
                         <tr>
                             <th id="tb_type">Type</th>
                             <th id="tb_price">Price</th>
                             <th id="tb_amount">Select Ticket</th>
-                            <!-- <th id="tb_select">Select</th> -->
                         </tr>
                     </thead>
-                    <tbody id="ticket_tb_tbody">
-                        <!-- <tr id="ticket_tb_tbody_tr">
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                        </tr>
-                        <tr id="ticket_tb_tbody_tr">
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td> 
-                        </tr> -->
-                    </tbody>
+                    <tbody id="ticket_tb_tbody"></tbody>
                 </table>
             </div>
 
-            <div id="ticket_selected_summary_container" style="display:none;">
-                <div>Order Summary</div>
-                <!-- <div id="summary_row"></div> -->
+            <div class="main-container-s3-summary-container w3-container w3-center w3-cell w3-cell-middle w3-half">
+                <!-- order summary -->
+                <div id="ticket_selected_summary_container">
+                    <div class="ticket_selected_summary_container_item" id="order_summary_title">Order Summary</div>
+                </div>
+
+                <!-- add to cart button -->
+                <button class="ticket_button" style="display:none;" onclick="postTicketSelection(event)" type="button" id="addToCart_ticket_button">Add to Cart</button>
+
+                <!-- pay button -->
+                <button class="ticket_button" style="display:none;" type="button" id="buy_ticket_button" onclick="buyTickets(event)">Pay Now</button>
             </div>
-            <!-- <button style="display:none;" type="button" id="addToCart_ticket_button" onclick="addToCartShowSummary(event, i)">Add to Cart</button> -->
-            <button style="display:none;" onclick="postTicketSelection(event)" type="button" id="addToCart_ticket_button">Add to Cart</button>
-
-            <!-- <button style="display:none;" type="button" id="reserve_ticket_button">Reserve</button> -->
-
-            <button style="display:none;" type="button" id="buy_ticket_button" onclick="buyTickets(event)">Pay Now</button>
-
         </div>
     </main>
-    <footer class="text-center text-lg-start text-white" style="background-color: #464f61">
-        <!-- Grid container -->
-        <div class="footer-container p-4 pb-0">
-        <!-- Section: Links -->
-            <section class="footer-links-section">
-                <!--Grid row-->
-                <div class="row">
-                <!-- Grid column -->
-                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-                    <h6 class="text-uppercase mb-4 font-weight-bold">
-                    Use LiveTix
-                    </h6>
-                    <p>
-                    How it works
-                    </p>
-                </div>
-                <!-- Grid column -->
 
-                <hr class="w-100 clearfix d-md-none" />
-
-                <!-- Grid column -->
-                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
-                    <h6 class="text-uppercase mb-4 font-weight-bold">Plan Events</h6>
-                    <p>
-                    <a class="text-white">Register</a>
-                    </p>
-                    <p>
-                    <a class="text-white">Sell event tickets</a>
-                    </p>
-                    <p>
-                    <a class="text-white">Event management</a>
-                    </p>
-                </div>
-                <!-- Grid column -->
-
-                <hr class="w-100 clearfix d-md-none" />
-
-                <!-- Grid column -->
-                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
-                    <h6 class="text-uppercase mb-4 font-weight-bold">
-                    Useful links
-                    </h6>
-                    <p>
-                    <a class="text-white">Your Account</a>
-                    </p>
-                    <p>
-                    <a class="text-white">Become an Affiliate</a>
-                    </p>
-                    <p>
-                    <a class="text-white">Help</a>
-                    </p>
-                </div>
-
-                <!-- Grid column -->
-                <hr class="w-100 clearfix d-md-none" />
-
-                <!-- Grid column -->
-                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
-                    <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
-                    <p><i class="fas fa-home mr-3"></i> LiveTix Inc.</p>
-                    <p><i class="fas fa-envelope mr-3"></i> LiveTix@info.com</p>
-                    <p><i class="fas fa-phone mr-3"></i> + 01 234 567 89</p>
-                </div>
-                <!-- Grid column -->
-                </div>
-                <!--Grid row-->
-            </section>
-        </div>
-
-        <hr class="my-3">
-
-        <!-- Section: Copyright -->
-        <section class="p-3 pt-0">
-            <div class="row d-flex align-items-center">
-                <div class="col-md-7 col-lg-8 text-center text-md-start">
-                    <div class="p-3">© 2022 LiveTix</div>
-                </div>
-            </div>
-        </section>
-    </footer>
+    <footer-component></footer-component>
 </div>
     <script src="./script/event.js"></script>
-    <!-- Bootstrap JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -4,7 +4,6 @@ const mysql = require("mysql2");
 const multer = require("multer");
 const path = require("path");
 const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder} = require("./controllers/event-controller");
-// const { getTicketDetailsAPI, saveTicketSelection, saveAttendeeInfo } = require("./controllers/ticket-controller");
 
 
 const app = express();
@@ -12,14 +11,19 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(express.static("public"));
+
 app.get('/', (req, res)=>{
     res.send("homepage");
 })
 
 
-//API routes (frontend call backend)
+
+
+// API routes (frontend call backend)
 
 app.get(`/api/${process.env.api}/event/:id`, getEventDetailsAPI, (req, res)=>{
+    console.log("Entered event details page");
     res.json(req.result);
 })
 
@@ -46,21 +50,12 @@ app.post(`/api/${process.env.api}/event/:id/tickets/buy`, saveTicketOrder, (req,
 
 
 
-//client routes (client call frontend)
-//event.html
-//reserve.html
-app.use(express.static("./public"));
+// frontend routes
+// event.html
 
-app.get(`/event/:id/reserve`, (req, res)=>{
-    res.sendFile(path.join(__dirname, '/reserve.html'));
+app.get(`/events/:id`, getEventDetailsAPI, (req, res)=>{
+    res.json(req.result);
 })
-
-
-
-
-// app.get(`/events/:id`, getEventDetailsAPI, (req, res)=>{
-//     res.json(req.result);
-// })
 
 
 
@@ -91,7 +86,9 @@ app.get(`/event/:id/reserve`, (req, res)=>{
 //     res.send('attendee info sent')
 // })
 
-
+// app.get(`/event/:id/reserve`, (req, res)=>{
+//     res.sendFile(path.join(__dirname, '/reserve.html'));
+// })
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
