@@ -8,7 +8,7 @@ const getEventDetails = async (id)=>{
 };
 
 const getAvailTickets = async (id)=>{
-    const [availTickets] = await pool.query(`SELECT ticket_id, type, price, type_name FROM ticket WHERE temp_status = '0'`);
+    const [availTickets] = await pool.query(`SELECT ticket_id, type, price, type_name FROM ticket WHERE event_id = ? AND temp_status = '0'`, id);
     return availTickets;
 };
 
