@@ -1,4 +1,3 @@
-// require('dotenv').config();
 const {pool} = require('./sqlconfig.js');
 
 // select from event table
@@ -6,6 +5,16 @@ const getEventDetails = async (id)=>{
     const [eventDetails] = await pool.query(`SELECT * FROM event where event_id=?`, id);
     return eventDetails;
 };
+
+const getEventArtists = async (id)=>{
+    const [eventArtists] = await pool.query(`SELECT artist_name FROM artist WHERE artist_id IN (SELECT artist_id FROM artist_event WHERE event_id = ?);`, id);
+    return eventArtists;
+}
+
+const getEventDates = async (id)=>{
+    const [eventDates] = await pool.query(`SELECT start_date, end_date FROM event WHERE event_id = ?`, id);
+    return eventDates;
+}
 
 const getAvailTickets = async (id)=>{
     const [availTickets] = await pool.query(`SELECT ticket_id, type, price, type_name FROM ticket WHERE event_id = ? AND temp_status = '0'`, id);
@@ -71,17 +80,21 @@ const saveTicketOrder = async (event_id, user_id, ticket_ids)=>{
     
 };
 
-
-
-
-
-
-const saveTicket = async (user_id, ticket_id)=>{
-    const [ticket] = await pool.query(`UPDATE ticket SET user_id = ?, purchase_date = NOW() WHERE ticket_id = ?`, user_id);
-    return ticket;
+const getCurrentEvents = async ()=>{
+    const [currentEvents] = await pool.query(`SELECT * FROM event WHERE end_date >= CURDATE()`);
+    return currentEvents;
 };
 
-//insert ticket_order table
+const getCurrentEventsByCategory = async (category)=>{
+    const [currentEvents] = await pool.query(`SELECT * FROM event WHERE end_date >= CURDATE() AND category = ?`, category);
+    return currentEvents;
+};
+
+const getSearchedEvents = async (keyword)=>{
+    const [searchedEvents] = await pool.query(`SELECT * FROM event WHERE date >= CURDATE() AND title = %?%`, keyword);
+    return searchedEvents;
+};
 
 
-module.exports = {getEventDetails, getAvailTickets, checkAndReserveTickets, saveTicketOrder};
+
+module.exports = {getEventDetails, getEventArtists, getEventDates, getAvailTickets, checkAndReserveTickets, saveTicketOrder, getCurrentEvents, getCurrentEventsByCategory, getSearchedEvents};

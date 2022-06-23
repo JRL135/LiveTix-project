@@ -1,5 +1,5 @@
 const Event = require('../models/event-model');
-var CryptoJS = require("crypto-js");
+// var CryptoJS = require("crypto-js");
 
 
 async function getEventDetailsAPI(req, res, next){
@@ -8,6 +8,19 @@ async function getEventDetailsAPI(req, res, next){
     console.log(id);
     try {
         let eventDetails = await Event.getEventDetails(id);
+        let eventArtists = await Event.getEventArtists(id);
+        // let eventDates = await Event.getEventDates(id);
+        // console.log(eventDetails);
+        // console.log(eventArtists);
+        // console.log(eventDates);
+
+        let event_artists_array = [];
+        for (let i = 0; i < eventArtists.length; i++) {
+            event_artists_array.push(eventArtists[i].artist_name)
+        }
+        eventDetails[0].artist = event_artists_array;
+        console.log(eventDetails);
+
         req.result = eventDetails;
     } catch(err) {
         console.log(err);
@@ -140,5 +153,39 @@ async function saveTicketOrder(req, res, next){
     await next();
 }
 
+async function getCurrentEvents (req, res, next){
+    console.log('getCurrentEvents triggered');
+    let category = req.params.category;
+    console.log("category: " + category);
+    try {
+        if (category === 'null') {
+            let currentEvents = await Event.getCurrentEvents();
+            req.result = currentEvents;
+        } else {
+            let currentEvents = await Event.getCurrentEventsByCategory(category);
+            req.result = currentEvents;
+        }
+        // req.result = currentEvents;
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
 
-module.exports = {printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder};
+async function getSearchedEvents (req, res, next){
+    console.log('getSearchedEvents triggered');
+    let keyword = req.params.keyword;
+    console.log("keyword: " + keyword);
+    try {
+        let searchedEvents = await Event.getSearchedEvents(keyword);
+        req.result = searchedEvents;
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+
+module.exports = {printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchedEvents};

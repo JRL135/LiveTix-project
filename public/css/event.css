@@ -1,7 +1,11 @@
-body {
+html, body {
     /* font-family: 'Josefin Sans', sans-serif;
     font-family: 'Signika Negative', sans-serif; */
-    font-family: 'Viga', sans-serif;    
+    font-family: 'Viga', sans-serif !important;    
 }
 
 /* img {max-width:100%;} */
+
+.ticket_selected_summary_container_item{
+    margin-top: 0 !important;
+}

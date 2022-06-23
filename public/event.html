@@ -5,9 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Details Page</title>
-    <link href="./css/event.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@384&family=Signika+Negative:wght@461&family=Viga&display=swap" rel="stylesheet">
+    <link href="./css/event.css" rel="stylesheet">
+    <script src="./settings/settings.js"></script>
     <script src="./components/header.js" type="text/javascript" defer></script>
     <script src="./components/footer.js" type="text/javascript" defer></script>
 
@@ -24,6 +26,7 @@
                 <div class="main-container-s1-date-container__style__item event_category"></div>
                 <div class="main-container-s1-date-container__style__item event_date"></div>
                 <div class="main-container-s1-date-container__style__item event_location"></div>
+                <div class="main-container-s1-date-container__style__item event_city"></div>
                 <div class="main-container-s1-date-container__style__item event_artist"></div>
                 <button class="main-container-s1-date-container__style__item ticket_button" type="button" id="ticket_button" onclick="clickTicketButton(event)">Tickets</button>
             </div>
@@ -54,7 +57,7 @@
                 </table>
             </div>
 
-            <div class="main-container-s3-summary-container w3-container w3-center w3-cell w3-cell-middle w3-half">
+            <div class="main-container-s3-summary-container w3-container w3-center w3-cell w3-cell-middle w3-half" style="padding-top: 8px;">
                 <!-- order summary -->
                 <div id="ticket_selected_summary_container">
                     <div class="ticket_selected_summary_container_item" id="order_summary_title">Order Summary</div>
@@ -70,7 +73,6 @@
     </main>
 
     <footer-component></footer-component>
-</div>
     <script src="./script/event.js"></script>
 </body>
 </html>

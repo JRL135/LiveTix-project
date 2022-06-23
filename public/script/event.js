@@ -5,16 +5,25 @@ let product_id = event_params.get("id");
 // console.log(event_params.pathname);
 console.log(product_id);
 
+// const ROOT_URL = `${environment.backendBaseUrl}`;
+
 //fetch event details
 async function getEventDetailsAPI(){
     let eventFetch = await fetch(`/api/1.0/event/${product_id}`);
     let eventDetails = await eventFetch.json();
     document.getElementsByClassName("event_title")[0].innerHTML = eventDetails[0].title;
     console.log(document.getElementsByClassName("event_title")[0]);
-    let event_date_unsorted = eventDetails[0].date;
-    let event_date = event_date_unsorted.split('T')[0];
-    document.getElementsByClassName("event_date")[0].innerHTML = `Date: ${event_date}`;
-    document.getElementsByClassName("event_location")[0].innerHTML = `Location: ${eventDetails[0].location}`;
+    let event_start_date_unsorted = eventDetails[0].start_date;
+    let event_end_date_unsorted = eventDetails[0].end_date;
+    let event_start_date = event_start_date_unsorted.split('T')[0];
+    let event_end_date = event_end_date_unsorted.split('T')[0];
+    if (event_start_date === event_end_date) {
+        document.getElementsByClassName("event_date")[0].innerHTML = `Date: ${event_start_date}`;
+    } else {
+        document.getElementsByClassName("event_date")[0].innerHTML = `Date: ${event_start_date} - ${event_end_date}`;
+    }
+    document.getElementsByClassName("event_location")[0].innerHTML = `Location: ${eventDetails[0].avenue}`;
+    document.getElementsByClassName("event_location")[0].innerHTML = `City: ${eventDetails[0].city}`;
     document.getElementsByClassName("event_category")[0].innerHTML = `Category: ${eventDetails[0].category}`;
     document.getElementsByClassName("event_artist")[0].innerHTML = `
     Artist: ${eventDetails[0].artist}`;
@@ -98,8 +107,6 @@ function recordTicketSelection(e){
     let summaryTicketList = [ticket_number, ticket_type];
     // summaryTicketList.push(ticketObj);
     console.log(summaryTicketList);
-
-
 
     let summary_div = document.querySelector(`[summary-id="${ticket_type}"]`);
     summary_div.innerHTML = `${summaryTicketList}`;
@@ -189,18 +196,3 @@ async function buyTickets(e){
     alert(`Thank you for ordering, your order number is #${buyTixResponse}`);
 
 }
-
-
-
-
-
-
-// // track selected number of tix
-// function addToCartShowSummary(e){
-//     // selectElement = document.querySelector(`#${ticketAvailArrayKeys[i]}`);
-//     ticket_selected_value = e.target.value;
-//     console.log(e);
-//     console.log(ticket_selected_value);
-//     document.getElementById(`summary_div_${ticketAvailArrayKeys[i]}`).innerHTML = `${ticket_selected_value}`;
-//     // document.querySelector('.output').innerHTML = ticket_selected_value;
-// }
