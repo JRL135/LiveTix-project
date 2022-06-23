@@ -1,9 +1,9 @@
 require("dotenv").config();
 const express = require("express");
-const mysql = require("mysql2");
-const multer = require("multer");
+// const mysql = require("mysql2");
+// const multer = require("multer");
 const path = require("path");
-const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder} = require("./controllers/event-controller");
+const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchedEvents } = require("./controllers/event-controller");
 
 
 const app = express();
@@ -40,6 +40,16 @@ app.post(`/api/${process.env.api}/event/:id/tickets/buy`, saveTicketOrder, (req,
     res.json(req.result);
 });
 
+app.get(`/api/${process.env.api}/events/:category`, getCurrentEvents, (req, res)=>{
+    console.log("getCurrentEventsAPI triggered");
+    res.json(req.result);
+})
+
+app.get(`/api/${process.env.api}/events/:keyword`, getSearchedEvents, (req, res)=>{
+    console.log("getSearchedEventsAPI triggered");
+    res.json(req.result);
+})
+
 // app.get(`/api/${process.env.api}/events/:category`,(req, res)=>{
 //     res.json();
 // })
@@ -53,9 +63,9 @@ app.post(`/api/${process.env.api}/event/:id/tickets/buy`, saveTicketOrder, (req,
 // frontend routes
 // event.html
 
-app.get(`/events/:id`, getEventDetailsAPI, (req, res)=>{
-    res.json(req.result);
-})
+// app.get(`/events/:id`, getEventDetailsAPI, (req, res)=>{
+//     res.json(req.result);
+// })
 
 
 
