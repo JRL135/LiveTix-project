@@ -5,20 +5,66 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search</title>
+    <!-- for header & footer -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="./css/search.css">
+    <!-- font -->
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@384&family=Signika+Negative:wght@461&family=Viga&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" /> -->
+    <link rel="stylesheet" href="./css/daterangepicker.css">
+    <!-- root_url -->
+    <script src="./settings/settings.js"></script>
     <script src="./components/header.js" type="text/javascript" defer></script>
     <script src="./components/footer.js" type="text/javascript" defer></script>
+    <!-- jquery -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 
 </head>
 <body>
     <header-component></header-component>
 
-    <div class="main-container">
-        <p id="search-results-text">Search Results</p>
+    <div class="main-container-s1">
+        <div class="keyword-search-container">
+            <label for="keyword">Search for anything:</label>
+            <input type="text" class="search-item" id="keyword" name="keyword">
+        </div>
+        <div class="category-search-container">
+            <label for="category">Category:</label>
+            <select class="search-item" name="category" id="category">
+                <option value="Concert">Concert</option>
+                <option value="Festival">Festival</option>
+            </select>
+        </div>
+        <div class="city-search-container">
+            <label for="city">City:</label>
+            <input type="text" class="search-item" id="city" name="city">
+        </div>
+        <div class="date-container">
+            <label for="date">Date:</label>
+            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                <i class="fa fa-calendar"></i>&nbsp;
+                <span class="search-item" id="date"></span> <i class="fa fa-caret-down"></i>
+            </div>
+        </div>
+    </div>
+    <button onclick="postSearchConditions(event)">Search!</button>
+
+    <div class="main-container-s2">
+        <div class="main-container-2-search-results-container">
+            <p id="search-results-text">Search Results</p>
+            <div class="search-results-events-container"></div>
+        </div>
+        <div class="map-container"></div>
     </div>
 
+
     <footer-component></footer-component>
+
     <script src="./script/search.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <!-- <script src="./script/moment.min.js"></script>
+    <script src="./script/daterangepicker.js"></script> -->
 </body>
 </html>

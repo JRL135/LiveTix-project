@@ -90,11 +90,12 @@ const getCurrentEventsByCategory = async (category)=>{
     return currentEvents;
 };
 
-const getSearchedEvents = async (keyword)=>{
-    const [searchedEvents] = await pool.query(`SELECT * FROM event WHERE date >= CURDATE() AND title = %?%`, keyword);
+const getSearchedEvents = async (keyword, category, city, start_date, end_date)=>{
+    const [searchedEvents] = await pool.query(`SELECT * FROM event WHERE (title LIKE ? OR ? IS NOT NULL) AND (category = ? or ? IS NOT NULL) AND (city = ? or ? IS NOT NULL) AND (start_date BETWEEN ? AND ? OR ? BETWEEN start_date AND end_date) ORDER BY start_date ASC`, [`%${keyword}%`, `title`, `${category}`, `category`, `${city}`, `city`, `${start_date}`, `${end_date}`, `${start_date}`]);
     return searchedEvents;
 };
 
+// title, category, city, dates
 
 
 module.exports = {getEventDetails, getEventArtists, getEventDates, getAvailTickets, checkAndReserveTickets, saveTicketOrder, getCurrentEvents, getCurrentEventsByCategory, getSearchedEvents};

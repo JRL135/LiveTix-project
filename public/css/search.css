@@ -1,0 +1,44 @@
+img {
+    width: 100%;
+    border-radius: 12px;
+    height: 214px;
+    object-fit: cover;
+}
+
+.search-results-events-container {
+    /* display: flex; */
+}
+
+.searched-event-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: white;
+    border: 1px solid #bacdd8;
+    padding: 8px;
+    border-radius: 12px;
+}
+
+.searched-event-card-title-plus-container {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 50%;
+    align-items: center;
+    justify-content: space-evenly;
+    /* vertical-align: middle;
+    text-align: center;
+    width: 100%; */
+
+}
+
+.searched-card-item {
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+
+#searched-image {
+    flex-basis: 50%;
+}
+

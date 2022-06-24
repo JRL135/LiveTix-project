@@ -175,11 +175,19 @@ async function getCurrentEvents (req, res, next){
 
 async function getSearchedEvents (req, res, next){
     console.log('getSearchedEvents triggered');
-    let keyword = req.params.keyword;
+    let keyword = req.body.keyword;
+    let category = req.body.cateogry;
+    let city = req.body.city;
+    let dates = req.body.dates;
+    let start_date = dates.split(' ')[0];
+    let end_date = dates.split(' ')[2];
+    console.log(start_date);
+    console.log(end_date);
     console.log("keyword: " + keyword);
     try {
-        let searchedEvents = await Event.getSearchedEvents(keyword);
+        let searchedEvents = await Event.getSearchedEvents(keyword, category, city, start_date, end_date);
         req.result = searchedEvents;
+        console.log(searchedEvents);
     } catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});

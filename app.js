@@ -50,6 +50,12 @@ app.get(`/api/${process.env.api}/events/:keyword`, getSearchedEvents, (req, res)
     res.json(req.result);
 })
 
+app.post(`/api/${process.env.api}/search/results`, getSearchedEvents, (req, res)=>{
+    res.json(req.result);
+})
+
+
+
 // app.get(`/api/${process.env.api}/events/:category`,(req, res)=>{
 //     res.json();
 // })
