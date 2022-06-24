@@ -123,6 +123,9 @@ async function postTicketSelection(e){
     // hide add to cart button
     document.getElementById("addToCart_ticket_button").style.display = 'none';
 
+    // start timer
+    startCountdown();
+
     // get current shown input value
     let tix_selected = document.querySelectorAll(`[class="summary_row_tix"]`);
     console.log(tix_selected);
@@ -130,10 +133,12 @@ async function postTicketSelection(e){
     let ticket_number_list = [];
     for (let i = 0; i < tix_selected.length; i++) {
         let tix_selected_innerHTML = tix_selected[i].innerHTML;
-        tix_number = tix_selected_innerHTML.split(',')[0];
-        tix_type = tix_selected_innerHTML.split(',')[1];
-        ticket_type_list.push(tix_type);
-        ticket_number_list.push(tix_number);
+        if (tix_selected_innerHTML !== "") {
+            tix_number = tix_selected_innerHTML.split(',')[0];
+            tix_type = tix_selected_innerHTML.split(',')[1];
+            ticket_type_list.push(tix_type);
+            ticket_number_list.push(tix_number);
+        }
     }
 
     const token = 12345;
@@ -151,6 +156,7 @@ async function postTicketSelection(e){
     };
 
     console.log(headers);
+    console.log("sorted body: ");
     console.log(body);
 
     let reserve = await fetch(reserveURL, {
@@ -190,9 +196,38 @@ async function buyTickets(e){
         body: JSON.stringify(postTixResponse)
     });
     let buyTixResponse = await buyTix.json();
-    console.log("thanks for ordering, your order number is: ");
+    // console.log("thanks for ordering, your order number is: ");
     console.log(buyTixResponse);
-
-    alert(`Thank you for ordering, your order number is #${buyTixResponse}`);
+    if (buyTixResponse.sucess) {
+        alert(`Thank you for ordering, your order number is #${buyTixResponse.success}`);
+    } else {
+        // console.log(buyTixResponse)
+        alert(`Sorry, purchase was unsuccessful, please try again!`);
+    }
+    
+    // alert(buyTixResponse);
 
 }
+
+
+
+const timerElement = document.getElementById('countdown-text');
+let timer;
+
+function startCountdown() {
+    timer = 10;
+    const timeCountdown = setInterval(countdown, 1000);
+}
+
+function countdown() {
+    if (timer == 0) {
+        // window.location.replace("http://localhost:80/index.html");
+        clearTimeout(timer);
+    } else {
+        timerElement.innerHTML = timer + ' secs';
+        timer--;
+    }
+}
+
+
+

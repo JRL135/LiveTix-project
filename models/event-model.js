@@ -46,6 +46,39 @@ const checkAndReserveTickets = async (user_id, ticketType, ticketNumber)=>{
     }
 }
 
+const checkTimerStatus = async (ticket_ids)=>{
+    console.log("checking ticket timer");
+    // check backend timer does not exceed 10m
+    let array = [];
+    for (let i = 0; i < ticket_ids.length; i++) {
+        let ticket_id = ticket_ids[i];
+        let [tixWithinCountdown] = await pool.query(`SELECT * FROM ticket WHERE ticket_id =? AND DATE_ADD(timer_timestamp, INTERVAL 10 second) >= NOW()`, ticket_id);
+        // let tixWithinCountdown_content = tixWithinCountdown[0];
+        // tixWithinCountdown_array.push(tixWithinCountdown_content);
+        console.log(tixWithinCountdown);
+        
+        if (tixWithinCountdown.length === 0) {
+            console.log(`tixWithinCountdown is empty, countdown has timed out for ticket_id: ${ticket_id}`);
+            [status_update] = await pool.query(`UPDATE ticket SET temp_status = '0' AND timer_timestamp = null WHERE ticket_id = ?`, ticket_id);
+            let tempObj = {};
+            tempObj.expired = ticket_id;
+            array.push(tempObj);
+        }
+        else {
+            console.log("timer has not expired, returning tixWithinCountdown");
+            let tempObj = {};
+            tempObj.ok = ticket_id;
+            array.push(tempObj);
+            // return tixWithinCountdown; // if within timer limit, return ticket_ids back
+        }
+        // if (tixWithinCountdown_content === "") {
+        //     let [status_update] = await pool.query(`UPDATE ticket SET temp_status = '0' AND timer_timestamp = null WHERE ticket_id = ?`, ticket_id);
+        //     status_update_array.push(status_update);
+        // }
+    }
+    return array;
+}
+
 //order: event_id, user_id
 //ticket: user_id, purchase_date
 const saveTicketOrder = async (event_id, user_id, ticket_ids)=>{
@@ -55,6 +88,8 @@ const saveTicketOrder = async (event_id, user_id, ticket_ids)=>{
         console.log(event_id);
         console.log(user_id);
         await conn.query('START TRANSACTION');
+
+
         let [order_query] = await conn.query(`INSERT INTO live.order (event_id, user_id) VALUES (?, ?)`, [event_id, user_id]);
         console.log(typeof(order_query));
         console.log(order_query);
@@ -98,4 +133,4 @@ const getSearchedEvents = async (keyword, category, city, start_date, end_date)=
 // title, category, city, dates
 
 
-module.exports = {getEventDetails, getEventArtists, getEventDates, getAvailTickets, checkAndReserveTickets, saveTicketOrder, getCurrentEvents, getCurrentEventsByCategory, getSearchedEvents};
+module.exports = {getEventDetails, getEventArtists, getEventDates, getAvailTickets, checkAndReserveTickets, checkTimerStatus, saveTicketOrder, getCurrentEvents, getCurrentEventsByCategory, getSearchedEvents};

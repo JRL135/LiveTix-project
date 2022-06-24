@@ -65,6 +65,7 @@ async function reserveTickets(req, res, next){
         console.log("user_id: " + user_id);
         //get ticket_type, ticket_number
         let tickets = req.body;
+        console.log("------------------");
         console.log(tickets);
     
         let ticketsOK = [];
@@ -96,9 +97,10 @@ async function reserveTickets(req, res, next){
             }
         }
         // if all ticket types have available tickets
-        // 3. return results to frontend
+        console.log("reserved tickets array: ");
         console.log(ticketsOK);
         console.log('sending reserved tickets array to frontend');
+        // 3. send tickets to frontend
         req.result = ticketsOK;
 
     } catch(err) {
@@ -143,9 +145,28 @@ async function saveTicketOrder(req, res, next){
     }
     console.log(ticket_ids);
     try {
-        let order_id = await Event.saveTicketOrder(event_id, user_id, ticket_ids);
-        console.log(order_id);
-        req.result = order_id;
+        // check timer status
+        let status = await Event.checkTimerStatus(ticket_ids);
+        console.log("---------------ticket timer status: ---------------");
+        console.log(status);
+        let tix_ok_array = [];
+        for (let i = 0; i < status.length; i++) {
+            console.log(Object.keys(status[i]));
+            if (Object.keys(status[i])[0] === 'ok'){
+                tix_ok_array.push(Object.values(status[i])[0]);
+            }
+        }
+        console.log("------printing tix_ok_array: ");
+        console.log(tix_ok_array);
+        if (tix_ok_array.length != 0){
+            let order_id = await Event.saveTicketOrder(event_id, user_id, tix_ok_array);
+            console.log(order_id);
+            req.order_result = order_id;
+        }
+        else {
+            console.log("some tickets have expired timer, returning expired ticket_ids to frontend");
+            req.anti_order_result = status;
+        }
     } catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});

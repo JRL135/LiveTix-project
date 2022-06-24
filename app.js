@@ -36,8 +36,10 @@ app.post(`/api/${process.env.api}/event/:id/tickets/reserve`, reserveTickets, (r
 })
 
 app.post(`/api/${process.env.api}/event/:id/tickets/buy`, saveTicketOrder, (req, res)=>{
-    // res.redirect('./public/order-confirmation.html');
-    res.json(req.result);
+    res.json({
+        success: req.order_result,
+        failure: req.anti_order_result
+    });
 });
 
 app.get(`/api/${process.env.api}/events/:category`, getCurrentEvents, (req, res)=>{
