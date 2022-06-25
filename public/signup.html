@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        .signup-container {
+            /* Center the form on the page */
+            margin: 0 auto;
+            width: 400px;
+            /* Form outline */
+            padding: 1em;
+            border: 1px solid #CCC;
+            border-radius: 1em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        h3 {
+            text-align: center;
+        }
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            flex: 1;
+            gap: 10px;
+        }
+        #submit-btn {
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+
+            font-weight: 600;
+            color: #0077ff;
+            background-color: #e0efff;
+            margin: 0 auto;
+            display: block;
+            cursor: pointer;
+        }
+        #submit-btn:focus,
+        #submit-btn:hover {
+        background-color: #0077ff;
+        color: #e0efff;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h3>Sign Up</h3>
+        <div class="input-container">
+            <label for="email">Email</label>
+            <input type="text" placeholder="Email" id="email" name="email">
+            <label for="username">Username</label>
+            <input type="text" placeholder="Username" id="username" name="username">
+            <label for="password">Password</label>
+            <input type="password" placeholder="Password" id="password" name="password">
+        </div>
+        <button id="submit-btn" onclick="postSignupInfo()">Submit</button>
+    </div>
+    <script src="./script/signup.js"></script>
+</body>
+</html>
