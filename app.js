@@ -4,7 +4,7 @@ const express = require("express");
 // const multer = require("multer");
 const path = require("path");
 const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchedEvents } = require("./controllers/event-controller");
-const {registerUser} = require("./controllers/user-controller");
+const {registerUser, loginUser} = require("./controllers/user-controller");
 
 
 const app = express();
@@ -58,6 +58,10 @@ app.post(`/api/${process.env.api}/search/results`, getSearchedEvents, (req, res)
 })
 
 app.post(`/user/signup`, registerUser, (req, res)=>{
+    res.json(req.result);
+});
+
+app.post(`/user/login`, loginUser, (req, res)=>{
     res.json(req.result);
 });
 

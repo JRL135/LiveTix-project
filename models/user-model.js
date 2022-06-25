@@ -1,7 +1,7 @@
 const {pool} = require('./sqlconfig.js');
 
 const checkEmail = async (email)=>{
-    const [checkEmail] = await pool.query(`SELECT email FROM user WHERE email = ?`, email);
+    const [checkEmail] = await pool.query(`SELECT * FROM user WHERE email = ?`, email);
     return checkEmail;
 }
 

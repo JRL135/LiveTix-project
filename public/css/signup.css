@@ -1,0 +1,63 @@
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.main-container {
+    /* Center the form on the page */
+    margin: 0 auto;
+    width: 400px;
+    /* Form outline */
+    padding: 1em;
+    border: 1px solid #CCC;
+    border-radius: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+h3 {
+    text-align: center;
+}
+.input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex: 1;
+    gap: 10px;
+}
+#submit-btn {
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+
+    font-weight: 600;
+    color: #0077ff;
+    background-color: #e0efff;
+    margin: 0 auto;
+    display: block;
+    cursor: pointer;
+}
+#submit-btn:focus,
+#submit-btn:hover {
+background-color: #0077ff;
+color: #e0efff;
+}
+
+
+
+.twinPageBtn-container {
+    margin: 0 auto;
+    width: 400px;
+    padding: 1em;
+    
+}
+
+#toTwinPage-text {
+    cursor: pointer;
+}

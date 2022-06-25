@@ -21,7 +21,7 @@ async function registerUser(req, res, next){
         if (emailCheck.length === 0) {
             let createNewUser = await User.registerUser(email, name, password);
             console.log("new user created");
-                    // gen JWT token for new user
+            // gen JWT token for new user
             let token = await genToken(email, name, password);
             console.log(token);
             req.result = token;
@@ -38,9 +38,41 @@ async function registerUser(req, res, next){
     await next();
 }
 
+async function loginUser(req, res, next){
+    console.log("loginUser triggered");
+    try {
+        let userInfo = req.body;
+        console.log(userInfo);
+        let email = userInfo.email;
+        let password = userInfo.password;
+        // check password
+        let existingUser = await User.checkEmail(email);
+        console.log(existingUser);
+        let name = existingUser[0].name;
+        let hashed_password = existingUser[0].password;
+        const match = await bcrypt.compare(password, hashed_password);
+        if (match) {
+            console.log("password check ok");
+            let token = await genToken(email, name, hashed_password);
+            console.log(token);
+            req.result = token;
+        } else {
+            console.log("password check failed");
+            let message = "Email or password does not match";
+            req.result = message;
+        }
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+
+}
+
 async function genToken(email, name, password){
     let token = await JWT.sign({email: email, name: name, password: password}, process.env.jwt_key);
     return token;
 }
 
-module.exports = {registerUser};
+
+module.exports = { registerUser, loginUser };

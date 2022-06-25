@@ -7,25 +7,24 @@
     <title>Sign Up</title>
     <link href="./css/signup.css" rel="stylesheet">
     <script src="./settings/settings.js"></script>
+
 </head>
 <body>
     <main>
         <div class="main-container">
-            <h3>Sign Up</h3>
+            <h3>Log In</h3>
             <div class="input-container">
                 <label for="email">Email</label>
                 <input type="text" placeholder="Email" id="email" name="email">
-                <label for="username">Username</label>
-                <input type="text" placeholder="Username" id="username" name="username">
                 <label for="password">Password</label>
                 <input type="password" placeholder="Password" id="password" name="password">
             </div>
-            <button id="submit-btn" onclick="postSignupInfo()">Submit</button>
+            <button id="submit-btn" onclick="postLoginInfo()">Submit</button>
         </div>
         <div class="twinPageBtn-container">
-            <p id="toTwinPage-text" onclick="toLoginPage()">Log In</p>
+            <p id="toTwinPage-text" onclick="toSignupPage()">Sign Up</p>
         </div>
     </main>
-    <script src="./script/signup.js"></script>
+    <script src="./script/login.js"></script>
 </body>
 </html>
