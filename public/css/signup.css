@@ -1,8 +1,17 @@
+body {
+    background-image: url("https://img.freepik.com/free-photo/rear-view-excited-people-with-arms-raised-having-fun-while-watching-confetti-fireworks-front-stage-music-festival-copy-space_637285-568.jpg?t=st=1656164943~exp=1656165543~hmac=8e28babea4926fb4c36e6e77ad9bc55d8c35ba25816de7d724048d8c04ba0e45&w=2000");
+
+}
+
 main {
+    /* margin: 0 auto;
+    width: 100%; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* margin: auto; */
+    height: 100vh;
 
 }
 
@@ -10,6 +19,7 @@ main {
     /* Center the form on the page */
     margin: 0 auto;
     width: 400px;
+    height: fit-content;
     /* Form outline */
     padding: 1em;
     border: 1px solid #CCC;
@@ -17,9 +27,10 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex: 1;
     gap: 20px;
     flex-wrap: wrap;
+    background-color: white;
+
 }
 h3 {
     text-align: center;
@@ -28,7 +39,6 @@ h3 {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    flex: 1;
     gap: 10px;
 }
 #submit-btn {
@@ -55,7 +65,7 @@ color: #e0efff;
     margin: 0 auto;
     width: 400px;
     padding: 1em;
-    
+
 }
 
 #toTwinPage-text {
