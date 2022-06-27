@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <script src="./settings/settings.js"></script>
+    <script src="./components/header.js" type="text/javascript" defer></script>
+    <script src="./components/footer.js" type="text/javascript" defer></script>
+    <link href="./css/header.css" rel="stylesheet">
+    <link href="./css/footer.css" rel="stylesheet">
+    <link href="./css/profile.css" rel="stylesheet">
+</head>
+<body>
+    <header-component></header-component>
+
+    <main>
+        <div class="user-info-container">
+            <div id="picture-id"><img src="../img/profile-placeholder.png"></div>
+            <div id="name-id"></div>
+            <div id="email-id"></div>
+        </div>
+        <div class="events-container">
+            <div class="tab_css">
+                <!-- tab 1 -->
+                <input id="tab1" type="radio" name="tab" checked="checked"/>
+                <label for="tab1">Registered Events</label>
+                <div class="tab_content">
+                    <div class="tab1-div"></div>
+                    <!-- <div class="registered-event-div"></div> -->
+                </div>
+                <!-- tab 1 end -->
+            
+                <!-- tab 2 start -->
+                <input id="tab2" type="radio" name="tab"/>
+                <label for="tab2">Favorite Events</label>
+                <div class="tab_content tab2-div"></div>
+                <!-- tab 2 end -->
+            
+            </div>
+        </div>
+
+    </main>
+
+    <footer-component></footer-component>
+
+    <script src="./script/profile.js"></script>
+</body>
+</html>
