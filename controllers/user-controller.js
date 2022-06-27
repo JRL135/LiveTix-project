@@ -8,6 +8,7 @@ async function registerUser(req, res, next){
     try {
         let userInfo = req.body;
         console.log(userInfo);
+        let user_id = userInfo.user_id;
         let email = userInfo.email;
         let name = userInfo.username;
         let password = userInfo.password;
@@ -22,7 +23,7 @@ async function registerUser(req, res, next){
             let createNewUser = await User.registerUser(email, name, password);
             console.log("new user created");
             // gen JWT token for new user
-            let token = await genToken(email, name, password);
+            let token = await genToken(user_id, email, name, password);
             console.log(token);
             req.result = token;
         } else {
@@ -48,12 +49,13 @@ async function loginUser(req, res, next){
         // check password
         let existingUser = await User.checkEmail(email);
         console.log(existingUser);
+        let user_id = existingUser[0].user_id;
         let name = existingUser[0].name;
         let hashed_password = existingUser[0].password;
         const match = await bcrypt.compare(password, hashed_password);
         if (match) {
             console.log("password check ok");
-            let token = await genToken(email, name, hashed_password);
+            let token = await genToken(user_id, email, name, hashed_password);
             console.log(token);
             req.result = token;
         } else {
@@ -69,10 +71,50 @@ async function loginUser(req, res, next){
 
 }
 
-async function genToken(email, name, password){
-    let token = await JWT.sign({email: email, name: name, password: password}, process.env.jwt_key);
+async function getUserProfile(req, res, next){
+    console.log('getUserProfile triggered');
+    try {
+        //check token
+        const authHeader = req.headers.authorization;
+        console.log(authHeader);
+        let token = authHeader.split(' ')[1];
+        let userInfo = await checkToken(token);
+        console.log(userInfo);
+        req.result = userInfo;
+
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+async function getUserRegisteredEvents(req, res, next){
+    console.log('getUserRegisteredEvents triggered');
+    try {
+        let username = req.params.username;
+        console.log(username);
+        let registeredEvents = await User.getRegisteredEvents(username);
+        console.log(registeredEvents);
+        req.result = registeredEvents;
+
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+
+async function checkToken(token){
+    let userInfo = await JWT.verify(token, process.env.jwt_key);
+    return userInfo;
+}
+
+async function genToken(user_id, email, name, password){
+    let token = await JWT.sign({id: user_id, email: email, name: name, password: password}, process.env.jwt_key);
     return token;
 }
 
 
-module.exports = { registerUser, loginUser };
+module.exports = { registerUser, loginUser, getUserProfile, checkToken, getUserRegisteredEvents };

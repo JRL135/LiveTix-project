@@ -6,13 +6,17 @@ class Header extends HTMLElement {
     }
     connectedCallback() {
         this.innerHTML = `
-            <div class="w3-bar w3-light-grey">
-                <a target="_parent" href="${ROOT_URL}index.html" class="w3-bar-item w3-button">LiveTix</a>
-                <a target="_parent" href="${ROOT_URL}index.html?category=concert" class="w3-bar-item w3-button">Concert</a>
-                <a target="_parent" href="${ROOT_URL}index.html?category=festival" class="w3-bar-item w3-button">Festival</a>
-                <a href="#" class="w3-bar-item w3-button w3-right">Sign In/Sign Up</a>
-                <input type="text" class="w3-bar-item w3-input" placeholder="Search events...">
-                <a target="_parent" id="search-btn" class="w3-bar-item w3-button w3-green">Search</a>
+            <div class="header-container navbar">
+                <div class="header-left">
+                    <a target="_parent" href="${ROOT_URL}index.html" class="nav-link"><img id="logo-id" src="../img/LiveTixLogo.png"></a>
+                    <a target="_parent" href="${ROOT_URL}index.html?category=concert" class="nav-link slide">Concert</a>
+                    <a target="_parent" href="${ROOT_URL}index.html?category=festival" class="nav-link slide">Festival</a>
+                    <a target="_parent" id="search-btn" class="nav-link slide">Search</a>
+                </div>
+                <div class="header-right">
+                    <a target="_parent" href="${ROOT_URL}profile.html" class="nav-link slide">Profile</a>
+                    <a href="${ROOT_URL}signup.html" class="nav-link slide">Sign In/Sign Up</a>
+                </div>
             </div>
         `;
         let search = document.getElementById('search-btn');

@@ -1,5 +1,6 @@
 body {
-    background-color: #eaeff1;
+    /* background-color: #eaeff1; */
+    background-color: white;
     font-family: "Raleway", sans-serif;
   }
 
@@ -15,16 +16,35 @@ a, a:hover, a:focus, a:active {
     color: inherit;
 }
 
+.main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 3em;
+    margin-bottom: 3em;
+    gap: 20px;
+}
+
 .current-events-container{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    row-gap: 20px;
+    /* row-gap: 20px; */
+    gap: 4em;
 }
+
+
+
+
+
+
+
+
+
 
 .card-container{
     margin: 0;
 }
-
 
 #container {
     max-width: 300px;

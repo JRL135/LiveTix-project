@@ -1,4 +1,5 @@
 const Event = require('../models/event-model');
+const UserController = require('./user-controller');
 // var CryptoJS = require("crypto-js");
 
 
@@ -60,8 +61,13 @@ async function reserveTickets(req, res, next){
     try {
         //temp: get user_id (check token) here
         const authHeader = req.headers.authorization;
-        // console.log(authHeader); //should be Bearer 12345
-        let user_id = authHeader.split(' ')[1];
+        let token = authHeader.split(' ')[1];
+        if (token.length === 0){
+            
+        }
+        let userInfo = await UserController.checkToken(token);
+        console.log(userInfo);
+        let user_id = userInfo.id;
         console.log("user_id: " + user_id);
         //get ticket_type, ticket_number
         let tickets = req.body;
@@ -126,8 +132,10 @@ async function saveTicketOrder(req, res, next){
     console.log('saveTicketOrder triggered');
     let event_id = req.params.id;
     const authHeader = req.headers.authorization;
-    // console.log(authHeader); //should be Bearer 12345
-    let user_id = authHeader.split(' ')[1];
+    let token = authHeader.split(' ')[1];
+    let userInfo = await UserController.checkToken(token);
+    console.log(userInfo);
+    let user_id = userInfo.id;
     console.log("user_id: " + user_id);
     //order: event_id, user_id
     //ticket: user_id, purchase_date

@@ -34,5 +34,5 @@ async function postLoginInfo(){
 
 
 function toSignupPage(){
-    location.assign(`${ROOT_URL}/signup.html`);
+    location.assign(`${ROOT_URL}signup.html`);
 }

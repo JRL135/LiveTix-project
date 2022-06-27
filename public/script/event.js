@@ -22,7 +22,7 @@ async function getEventDetailsAPI(){
     } else {
         document.getElementsByClassName("event_date")[0].innerHTML = `Date: ${event_start_date} - ${event_end_date}`;
     }
-    document.getElementsByClassName("event_location")[0].innerHTML = `Location: ${eventDetails[0].avenue}`;
+    document.getElementsByClassName("event_avenue")[0].innerHTML = `Location: ${eventDetails[0].avenue}`;
     document.getElementsByClassName("event_location")[0].innerHTML = `City: ${eventDetails[0].city}`;
     document.getElementsByClassName("event_category")[0].innerHTML = `Category: ${eventDetails[0].category}`;
     document.getElementsByClassName("event_artist")[0].innerHTML = `
@@ -87,7 +87,7 @@ async function clickTicketButton(e){
         }
     }
     // show table
-    document.getElementsByClassName("main-container-s3 w3-cell-row")[0].style.display = 'inline-block';
+    document.getElementsByClassName("main-container-s3")[0].style.display = 'inline-flex';
     // show summary table
     // document.getElementById("ticket_selected_summary_container").style.display = 'inline-block';
     // show addToCart button
@@ -141,7 +141,7 @@ async function postTicketSelection(e){
         }
     }
 
-    const token = 12345;
+    let token = localStorage.getItem('token');
     const reserveURL = `/api/1.0/event/${product_id}/tickets/reserve`;
     
     let headers = {
@@ -184,7 +184,7 @@ async function buyTickets(e){
     //ticket: user_id, purchase_date
     //insert ticket_order table
     const buyURL = `/api/1.0/event/${product_id}/tickets/buy`;
-    const token = 12345;
+    let token = localStorage.getItem('token');
     let headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -198,7 +198,7 @@ async function buyTickets(e){
     let buyTixResponse = await buyTix.json();
     // console.log("thanks for ordering, your order number is: ");
     console.log(buyTixResponse);
-    if (buyTixResponse.sucess) {
+    if (buyTixResponse.success) {
         alert(`Thank you for ordering, your order number is #${buyTixResponse.success}`);
     } else {
         // console.log(buyTixResponse)
