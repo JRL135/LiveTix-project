@@ -5,6 +5,7 @@ const express = require("express");
 const path = require("path");
 const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchedEvents } = require("./controllers/event-controller");
 const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents} = require("./controllers/user-controller");
+const {getTicketDetails} = require("./controllers/ticket-controller");
 
 
 const app = express();
@@ -71,6 +72,10 @@ app.post(`/api/${process.env.api}/user/profile`, getUserProfile, (req, res)=>{
 })
 
 app.get(`/api/${process.env.api}/user/:username/events/registered`, getUserRegisteredEvents, (req, res)=>{
+    res.json(req.result);
+})
+
+app.get(`/api/${process.env.api}/ticket/:id`, getTicketDetails, (req, res)=>{
     res.json(req.result);
 })
 

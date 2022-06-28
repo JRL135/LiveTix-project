@@ -29,6 +29,8 @@ async function postLoginInfo(){
         location.reload();
     } else {
         localStorage.setItem("token", loginUserToken);
+        alert("Welcome back!");
+        location.assign(`${ROOT_URL}index.html`);
     }
 }
 

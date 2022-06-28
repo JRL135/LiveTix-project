@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search</title>
     <!-- for header & footer -->
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
     <link rel="stylesheet" href="./css/search.css">
     <!-- font -->
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@384&family=Signika+Negative:wght@461&family=Viga&display=swap" rel="stylesheet">
@@ -18,6 +18,8 @@
     <script src="./components/footer.js" type="text/javascript" defer></script>
     <!-- jquery -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <link href="./css/header.css" rel="stylesheet">
+    <link href="./css/footer.css" rel="stylesheet">
 
 </head>
 <body>
@@ -46,8 +48,9 @@
                 <span class="search-item" id="date"></span> <i class="fa fa-caret-down"></i>
             </div>
         </div>
+        <button onclick="postSearchConditions(event)">Search!</button>
     </div>
-    <button onclick="postSearchConditions(event)">Search!</button>
+    
 
     <div class="main-container-s2">
         <div class="main-container-2-search-results-container">

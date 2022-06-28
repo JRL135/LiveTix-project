@@ -17,7 +17,8 @@
 
 async function postSearchConditions(e){
     let searchKeyword = document.querySelector(`#keyword`).value;
-    let searchCategory = document.querySelector(`#category option:checked`).value;
+    let searchCategoryDiv = document.querySelector(`#category`);
+    let searchCategory = searchCategoryDiv.options[searchCategoryDiv.selectedIndex].value;
     let searchCity = document.querySelector(`#city`).value;
     let searchDates = document.querySelector(`#date`).innerHTML;
     console.log(searchKeyword);
@@ -50,13 +51,17 @@ async function postSearchConditions(e){
     let end_date = searchResults.end_date.split('T')[0];
 
     let searchResultsDiv = document.getElementsByClassName('search-results-events-container')[0];
+    console.log(searchResultsDiv);
+    searchResultsDiv.innerHTML = "";
+
+    searchResultsDiv = document.getElementsByClassName('search-results-events-container')[0];
     searchResultsDiv.innerHTML += `
         <div class="searched-event-card">
             <div class="searched-event-card-title-plus-container">
                 <div class="searched-card-item">${searchResults.title}</div>
                 <div class="searched-card-item">${start_date}</div>
                 <div class="searched-card-item">${searchResults.avenue} @ ${searchResults.city}</div>
-                <div class="searched-card-item">${searchResults.avenue} @ ${searchResults.city}</div>
+                <a target="_parent" href="${ROOT_URL}event.html?id=${searchResults.event_id}"><button id="details-btn" class="searched-card-item">Details</button></a>
             </div>
             <img id="searched-image" src="${searchResults.main_picture}" alt="${searchResults.title}">
         </div>`;

@@ -28,6 +28,8 @@ async function postSignupInfo(){
         location.reload();
     } else {
         localStorage.setItem("token", newUserToken);
+        alert("Thank you for signing up!");
+        location.assign(`${ROOT_URL}index.html`);
     }
 
 
