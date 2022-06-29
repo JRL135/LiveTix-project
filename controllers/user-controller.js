@@ -52,10 +52,11 @@ async function loginUser(req, res, next){
         let user_id = existingUser[0].user_id;
         let name = existingUser[0].name;
         let hashed_password = existingUser[0].password;
+        let role = existingUser[0].role;
         const match = await bcrypt.compare(password, hashed_password);
         if (match) {
             console.log("password check ok");
-            let token = await genToken(user_id, email, name, hashed_password);
+            let token = await genToken(user_id, email, name, role, hashed_password);
             console.log(token);
             req.result = token;
         } else {
@@ -89,6 +90,26 @@ async function getUserProfile(req, res, next){
     await next();
 }
 
+async function checkAdmin(req, res, next){
+    console.log('checkAdmin triggered');
+    try {
+        //check token
+        const authHeader = req.headers.authorization;
+        console.log(authHeader);
+        let token = authHeader.split(' ')[1];
+        let userInfo = await checkToken(token);
+        if (userInfo.role === 'admin'){
+            req.result = 'admin';
+        } else {
+            req.result = 'user';
+        }
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
 async function getUserRegisteredEvents(req, res, next){
     console.log('getUserRegisteredEvents triggered');
     try {
@@ -111,10 +132,10 @@ async function checkToken(token){
     return userInfo;
 }
 
-async function genToken(user_id, email, name, password){
-    let token = await JWT.sign({id: user_id, email: email, name: name, password: password}, process.env.jwt_key);
+async function genToken(user_id, email, name, role, password){
+    let token = await JWT.sign({id: user_id, email: email, name: name, role: role, password: password}, process.env.jwt_key);
     return token;
 }
 
 
-module.exports = { registerUser, loginUser, getUserProfile, checkToken, getUserRegisteredEvents };
+module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkAdmin, getUserRegisteredEvents };

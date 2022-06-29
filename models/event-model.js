@@ -53,8 +53,6 @@ const checkTimerStatus = async (ticket_ids)=>{
     for (let i = 0; i < ticket_ids.length; i++) {
         let ticket_id = ticket_ids[i];
         let [tixWithinCountdown] = await pool.query(`SELECT * FROM ticket WHERE ticket_id =? AND DATE_ADD(timer_timestamp, INTERVAL 10 second) >= NOW()`, ticket_id);
-        // let tixWithinCountdown_content = tixWithinCountdown[0];
-        // tixWithinCountdown_array.push(tixWithinCountdown_content);
         console.log(tixWithinCountdown);
         
         if (tixWithinCountdown.length === 0) {
@@ -90,21 +88,30 @@ const saveTicketOrder = async (event_id, user_id, ticket_ids)=>{
         await conn.query('START TRANSACTION');
 
 
+        // order_query: ...
         let [order_query] = await conn.query(`INSERT INTO live.order (event_id, user_id) VALUES (?, ?)`, [event_id, user_id]);
         console.log(typeof(order_query));
         console.log(order_query);
+        
+        
         let order_id = order_query.insertId;
         console.log("order_id in model:");
         console.log(order_id);
+
+
         for (let i = 0; i < ticket_ids.length; i++) {
             let ticket_id = ticket_ids[i];
             await conn.query(`UPDATE ticket SET purchase_date = NOW() WHERE ticket_id = ?`, ticket_id);
+            
+            
             // console.log("updated ticket table for purchase");
             await conn.query(`INSERT INTO ticket_order (order_id, ticket_id) VALUES (?, ?)`, [order_id, ticket_id]);
             // console.log("inserted into ticket_order table");
         }
         await conn.query('COMMIT');
         return order_id;
+
+
     } catch (error) {
         console.log(error);
         await conn.query('ROLLBACK');

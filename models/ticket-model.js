@@ -11,4 +11,14 @@ const getEventDetailsForTicket = async (ticket_id)=>{
     return eventDetails;
 }
 
-module.exports = {getTicketDetails, getEventDetailsForTicket};
+const updateUsed = async (ticket_id)=>{
+    const [ticketUpdated] = await pool.query(`UPDATE ticket SET used_status = '1' WHERE ticket_id = ?`, ticket_id);
+    return ticketUpdated;
+}
+
+const saveTicketURLAndQR = async (ticketURL, ticketQR, ticket_id)=>{
+    const [ticketUpdated] = await pool.query(`UPDATE ticket SET ticket_url = ?, qrcode = ? WHERE ticket_id = ?`, [ticketURL, ticketQR, ticket_id]);
+    return ticketUpdated;
+}
+
+module.exports = {getTicketDetails, getEventDetailsForTicket, updateUsed, saveTicketURLAndQR};

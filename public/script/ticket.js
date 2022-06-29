@@ -1,8 +1,6 @@
+// window.jsPDF = window.jspdf.jsPDF;
 let ticket_params = new URL(document.location).searchParams;
 let ticket_id = ticket_params.get("id");
-// console.log(document.location);
-// let event_params = new URL(document.location);
-// console.log(event_params.pathname);
 console.log(ticket_id);
 
 async function getTicketDetails(){
@@ -25,8 +23,22 @@ async function getTicketDetails(){
         <div>Date: ${ticketDetails.date}</div>
         <div>Ticket Type: ${ticketDetails.ticket_type}</div>
         <div>Ticket Price: ${ticketDetails.ticket_price}</div>
-        <button id="pdf-btn">Download Ticket PDF</button>
+        <img src="${ticketDetails.qrcode}">
     `;
 
 }
 getTicketDetails();
+
+function downloadPDF(){
+    let pdfElement = document.getElementsByClassName('ticket-container')[0];
+    html2pdf(pdfElement);
+}
+// function downloadPDF(){
+//     console.log("download PDF");
+//     const doc = new jsPDF();
+//     doc.html(document.body, {
+//         cb: function(doc) {
+//             doc.save('ticket.pdf');
+//         }
+//     });
+// }

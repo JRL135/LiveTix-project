@@ -1,5 +1,6 @@
 const Event = require('../models/event-model');
 const UserController = require('./user-controller');
+const TicketController = require('./ticket-controller');
 // var CryptoJS = require("crypto-js");
 
 
@@ -167,6 +168,7 @@ async function saveTicketOrder(req, res, next){
         console.log("------printing tix_ok_array: ");
         console.log(tix_ok_array);
         if (tix_ok_array.length != 0){
+            await TicketController.genQRcode(tix_ok_array);
             let order_id = await Event.saveTicketOrder(event_id, user_id, tix_ok_array);
             console.log(order_id);
             req.order_result = order_id;
@@ -223,6 +225,7 @@ async function getSearchedEvents (req, res, next){
     }
     await next();
 }
+
 
 
 module.exports = {printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchedEvents};

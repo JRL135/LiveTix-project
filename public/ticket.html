@@ -6,14 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket</title>
     <script src="./settings/settings.js"></script>
-    <script src="./components/header.js" type="text/javascript" defer></script>
-    <script src="./components/footer.js" type="text/javascript" defer></script>
+    <!-- <script src="./components/header.js" type="text/javascript" defer></script>
+    <script src="./components/footer.js" type="text/javascript" defer></script> -->
     <link href="./css/ticket.css" rel="stylesheet">
-    <link href="./css/header.css" rel="stylesheet">
-    <link href="./css/footer.css" rel="stylesheet">
+    <!-- <link href="./css/header.css" rel="stylesheet">
+    <link href="./css/footer.css" rel="stylesheet"> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-    <header-component></header-component>
+    <!-- <header-component></header-component> -->
     <main>
         <div class="ticket-container">
             <!-- <div id="">Event</div>
@@ -22,9 +25,13 @@
             <div id="">Ticket Details: type, price</div>
             <div id="">QR</div> -->
         </div>
+        <br>
+        <button id="pdf-btn" onclick="downloadPDF()">Download Ticket PDF</button>
     </main>
 
-    <footer-component></footer-component>
+    <!-- <footer-component></footer-component> -->
+
+
     <script src="./script/ticket.js"></script>
 </body>
 </html>
