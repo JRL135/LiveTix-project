@@ -1,7 +1,7 @@
 body {
     /* background-color: #eaeff1; */
     background-color: white;
-    font-family: "Raleway", sans-serif;
+    /* font-family: "Raleway", sans-serif; */
   }
 
 img {
@@ -90,7 +90,7 @@ a, a:hover, a:focus, a:active {
 }
 
 /* Style p element */
-p {
+.card__details p {
     font-size: 14px;
     color: #7f8c9b;
     line-height: 150%;
@@ -113,6 +113,7 @@ button {
 
     /* Button is a clickable element, therefore it should have a pointer cursor */
     cursor: pointer;
+
 }
 
 .card__details {

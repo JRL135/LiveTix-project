@@ -45,9 +45,6 @@ a {
     flex-basis: 50%;
     align-items: center;
     justify-content: space-evenly;
-    /* vertical-align: middle;
-    text-align: center;
-    width: 100%; */
 
 }
 
@@ -57,21 +54,26 @@ a {
     vertical-align: middle;
 }
 
-#details-btn {
+button {
     border: none;
     padding: 12px 24px;
     border-radius: 50px;
+
     font-weight: 600;
     color: #0077ff;
     background-color: #e0efff;
+
+    /* Button is inline-block element by default, it need to have block display for margin: 0 auto; to work */
     margin: 0 auto;
     display: block;
+
+    /* Button is a clickable element, therefore it should have a pointer cursor */
     cursor: pointer;
 
 }
 
-#details-btn:focus,
-#details-btn:hover {
+button:focus,
+button:hover {
   background-color: #0077ff;
   color: #e0efff;
 }

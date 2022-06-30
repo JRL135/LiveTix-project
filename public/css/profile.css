@@ -42,7 +42,7 @@ main {
     padding: 10px 16px;
     cursor: pointer;
     border-radius: 5px;
-    background: #999;
+    background: #bacdd8;
     color: #fff;
     opacity: 0.5;
 }
@@ -83,7 +83,7 @@ main {
 .tab1-div {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2em;
+    gap: 1em;
 
 }
 
@@ -91,7 +91,7 @@ main {
     .tab1-div {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 2em;
+        gap: 1em;
     }
 }
 
@@ -99,7 +99,7 @@ main {
     .tab1-div {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
-        gap: 2em;
+        gap: 1em;
     }
 }
 
@@ -110,6 +110,7 @@ main {
     /* flex-wrap: wrap; */
     width: 300px;
     margin-top: 2em;
+    margin-bottom: 2em;
     border: 1px solid #bacdd8;
     border-radius: 12px;
     padding: 8px;

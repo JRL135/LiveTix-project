@@ -1,8 +1,3 @@
-.background-div {
-    /* background-image: url("https://img.freepik.com/free-photo/rear-view-excited-people-with-arms-raised-having-fun-while-watching-confetti-fireworks-front-stage-music-festival-copy-space_637285-568.jpg?t=st=1656164943~exp=1656165543~hmac=8e28babea4926fb4c36e6e77ad9bc55d8c35ba25816de7d724048d8c04ba0e45&w=2000"); */
-
-}
-
 .background-div::after {
     content: "";
     background: url("https://img.freepik.com/free-photo/rear-view-excited-people-with-arms-raised-having-fun-while-watching-confetti-fireworks-front-stage-music-festival-copy-space_637285-568.jpg?t=st=1656164943~exp=1656165543~hmac=8e28babea4926fb4c36e6e77ad9bc55d8c35ba25816de7d724048d8c04ba0e45&w=2000");
@@ -41,20 +36,57 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 20px;
+    gap: 5px;
     flex-wrap: wrap;
     background-color: white;
 
 }
 h3 {
     text-align: center;
+    margin-bottom: 0;
 }
 .input-container {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     gap: 10px;
+    padding: 1.5em;
 }
+
+.input-container input {
+    font-size: 1em;
+}
+
+label {
+    font-size: .85rem;
+    text-transform: uppercase;
+    color: rgb(144, 144, 144);
+}
+
+.form-control {
+    background-color: transparent;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+}
+
+.form-control:focus {
+    border-color: rgb(144, 144, 144);
+}
+
+[type="text"] {color: rgb(144, 144, 144);}
+[type="password"] {color: rgb(144, 144, 144);}
+
+.form-control{
+    /* border: none; */
+    outline:none;
+}
+.form-control:active{
+    border: none;
+    outline:none;
+}
+
 #submit-btn {
     border: none;
     padding: 12px 24px;
@@ -74,7 +106,6 @@ color: #e0efff;
 }
 
 
-
 .twinPageBtn-container {
     margin: 0 auto;
     width: 400px;
@@ -83,5 +114,15 @@ color: #e0efff;
 }
 
 #toTwinPage-text {
+    border-radius: 50px;
     cursor: pointer;
+    color: rgb(216, 216, 216);
+    padding: 1em;
+    width: fit-content;
+}
+
+#toTwinPage-text:focus,
+#toTwinPage-text:hover {
+  background-color: #0077ff;
+  color: #e0efff;
 }
