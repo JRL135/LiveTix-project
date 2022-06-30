@@ -71,18 +71,40 @@ main {
 
 /* ------------ registered event -------------- */
 
-.tab1-div {
+/* .tab1-div {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
     margin: 3em 3em;
-    /* margin-top: 2em;
-    margin-bottom: 2em; */
     row-gap: 2em;
+} */
+
+.tab1-div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2em;
+
+}
+
+@media only screen and (max-width: 1070px) {
+    .tab1-div {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2em;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .tab1-div {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 2em;
+    }
 }
 
 .registered-event-div {
+    place-self: center;
     display: flex;
     flex-direction: column;
     /* flex-wrap: wrap; */
