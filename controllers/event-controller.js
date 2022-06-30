@@ -117,17 +117,6 @@ async function reserveTickets(req, res, next){
     await next();
 }
 
-// let cryptoData = availTickets;
-
-// // Encrypt
-// var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(data), 'secret key 123').toString();
-
-// // Decrypt
-// var bytes  = CryptoJS.AES.decrypt(ciphertext, 'secret key 123');
-// var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-
-// console.log(decryptedData); // [{id: 1}, {id: 2}]
-
 // JWT token 10m save user_id, ticket_id??
 async function saveTicketOrder(req, res, next){
     console.log('saveTicketOrder triggered');
@@ -188,15 +177,28 @@ async function getCurrentEvents (req, res, next){
     console.log('getCurrentEvents triggered');
     let category = req.params.category;
     console.log("category: " + category);
+    let currentEvents;
     try {
-        if (category === 'null') {
-            let currentEvents = await Event.getCurrentEvents();
-            req.result = currentEvents;
+        if (category === undefined) {
+            currentEvents = await Event.getCurrentEvents();
         } else {
-            let currentEvents = await Event.getCurrentEventsByCategory(category);
-            req.result = currentEvents;
+            currentEvents = await Event.getCurrentEventsByCategory(category);
         }
-        // req.result = currentEvents;
+        req.result = currentEvents;
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+async function getSearchOptions (req, res, next){
+    console.log('getSearchOptions triggered');
+    try{
+        let searchOptions = await Event.getCurrentEvents();
+        let uniqueObjArray = [ ...new Map(searchOptions.map((item) => [item["city"], item])).values(), ];
+        console.log("uniqueObjArray", uniqueObjArray);
+        req.result = uniqueObjArray;
     } catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});
@@ -207,16 +209,30 @@ async function getCurrentEvents (req, res, next){
 async function getSearchedEvents (req, res, next){
     console.log('getSearchedEvents triggered');
     let keyword = req.body.keyword;
-    let category = req.body.cateogry;
+    let category = req.body.category;
     let city = req.body.city;
+    console.log(city);
+    console.log(typeof(city));
     let dates = req.body.dates;
     let start_date = dates.split(' ')[0];
     let end_date = dates.split(' ')[2];
+    console.log(req.body);
     console.log(start_date);
     console.log(end_date);
-    console.log("keyword: " + keyword);
+    // console.log("keyword: " + keyword);
+    // console.log(category);
+    let searchedEvents;
     try {
-        let searchedEvents = await Event.getSearchedEvents(keyword, category, city, start_date, end_date);
+        if (category != 0 && city == 0){
+            searchedEvents = await Event.getSearchedEventsCategoryAllCity(keyword, category, city, start_date, end_date);
+        } else if (category == 0 && city == 0){
+            searchedEvents = await Event.getSearchedEventsAllCategoryAllCity(keyword, category, city, start_date, end_date);
+        } else if (category != 0 && city != 0) {
+            searchedEvents = await Event.getSearchedEventsCategoryCity(keyword, category, city, start_date, end_date);
+        } else if (category == 0 && city != 0) {
+            searchedEvents = await Event.getSearchedEventsAllCategoryCity(keyword, category, city, start_date, end_date);
+        }
+
         req.result = searchedEvents;
         console.log(searchedEvents);
     } catch(err) {
@@ -228,4 +244,4 @@ async function getSearchedEvents (req, res, next){
 
 
 
-module.exports = {printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchedEvents};
+module.exports = {printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents};

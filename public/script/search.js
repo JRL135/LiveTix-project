@@ -14,6 +14,20 @@
 // getSearchedEvents();
 
 
+async function getSearchConditions(){
+    const searchConditionsURL = `/api/1.0/search/events`;
+    let getConditions = await fetch(searchConditionsURL)
+    let searchConditions = await getConditions.json();
+    console.log(searchConditions);
+    let cityOptionSec = document.getElementById('city');
+    for (let i = 0; i < searchConditions.length; i++) {
+        cityOptionSec.innerHTML += `
+            <option value="${searchConditions[i].city}">${searchConditions[i].city}</option>
+        `;
+    }
+
+}
+getSearchConditions();
 
 async function postSearchConditions(e){
     let searchKeyword = document.querySelector(`#keyword`).value;
@@ -45,27 +59,29 @@ async function postSearchConditions(e){
     let postSearch = await post.json();
     console.log(postSearch);
 
-    // render search results on screen
-    let searchResults = postSearch[0];
-    let start_date = searchResults.start_date.split('T')[0];
-    let end_date = searchResults.end_date.split('T')[0];
-
+    
     let searchResultsDiv = document.getElementsByClassName('search-results-events-container')[0];
     console.log(searchResultsDiv);
     searchResultsDiv.innerHTML = "";
 
     searchResultsDiv = document.getElementsByClassName('search-results-events-container')[0];
-    searchResultsDiv.innerHTML += `
-        <div class="searched-event-card">
-            <div class="searched-event-card-title-plus-container">
-                <div class="searched-card-item">${searchResults.title}</div>
-                <div class="searched-card-item">${start_date}</div>
-                <div class="searched-card-item">${searchResults.avenue} @ ${searchResults.city}</div>
-                <a target="_parent" href="${ROOT_URL}event.html?id=${searchResults.event_id}"><button id="details-btn" class="searched-card-item">Details</button></a>
-            </div>
-            <img id="searched-image" src="${searchResults.main_picture}" alt="${searchResults.title}">
-        </div>`;
+    for (let i = 0; i < postSearch.length; i++) {
+        // render search results on screen
+        let searchResults = postSearch[i];
+        let start_date = searchResults.start_date.split('T')[0];
+        let end_date = searchResults.end_date.split('T')[0];
 
+        searchResultsDiv.innerHTML += `
+            <div class="searched-event-card">
+                <div class="searched-event-card-title-plus-container">
+                    <div class="searched-card-item">${searchResults.title}</div>
+                    <div class="searched-card-item">${start_date}</div>
+                    <div class="searched-card-item">${searchResults.avenue} @ ${searchResults.city}</div>
+                    <a target="_parent" href="${ROOT_URL}event.html?id=${searchResults.event_id}"><button id="details-btn" class="searched-card-item">Details</button></a>
+                </div>
+                <img id="searched-image" src="${searchResults.main_picture}" alt="${searchResults.title}">
+            </div>`;
+    }
 }
 
 // predefined date range picker

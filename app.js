@@ -3,7 +3,7 @@ const express = require("express");
 // const mysql = require("mysql2");
 // const multer = require("multer");
 const path = require("path");
-const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchedEvents } = require("./controllers/event-controller");
+const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents } = require("./controllers/event-controller");
 const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, checkAdmin} = require("./controllers/user-controller");
 const {getTicketDetails, authTicket} = require("./controllers/ticket-controller");
 
@@ -53,6 +53,11 @@ app.get(`/api/${process.env.api}/events/:keyword`, getSearchedEvents, (req, res)
     console.log("getSearchedEventsAPI triggered");
     res.json(req.result);
 })
+
+app.get(`/api/${process.env.api}/search/events`, getSearchOptions, (req, res)=>{
+    res.json(req.result);
+})
+
 
 app.post(`/api/${process.env.api}/search/results`, getSearchedEvents, (req, res)=>{
     res.json(req.result);
