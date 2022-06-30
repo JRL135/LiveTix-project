@@ -116,7 +116,7 @@ async function getUserRegisteredEvents(req, res, next){
         let username = req.params.username;
         console.log(username);
         let registeredEvents = await User.getRegisteredEvents(username);
-        console.log(registeredEvents);
+        // console.log(registeredEvents);
         req.result = registeredEvents;
 
     } catch(err) {

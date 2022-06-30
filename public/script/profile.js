@@ -47,7 +47,8 @@ async function getUserRegisteredEvents(username){
             <div>${registeredEvents[i].title}</div>
             <div>${start_date}</div>
             <div>${registeredEvents[i].avenue} @ ${registeredEvents[i].city}</div>
-            <button id="ticket-btn">Ticket</button>
+            <a target="_parent" href="${ROOT_URL}ticket.html?id=${registeredEvents[i].ticket_id}"><button id="ticket-btn">Ticket</button></a>
+            
         </div>
         `;
     }

@@ -54,9 +54,7 @@ async function genQRcode(ticket_ids){
         let ticketURLHash = await encryptTicketURL(ticket_id);
         let ticketURL = `http://localhost:80/ticket/${ticketURLHash}`;
         let ticketQR = await QRCode.toDataURL(ticketURL); //qrcode
-        console.log(ticketQR);
-        // let ticketQRs3Location = await s3UploadQR(ticketQR, ticket_id);
-        // console.log(ticketQRs3Location);
+        // console.log(ticketQR);
         //link qrcode with ticket_id, save into DB
         await Ticket.saveTicketURLAndQR(ticketURL, ticketQR, ticket_id);
     }
