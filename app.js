@@ -45,7 +45,6 @@ app.post(`/api/${process.env.api}/event/:id/tickets/buy`, saveTicketOrder, (req,
 });
 
 app.get(`/api/${process.env.api}/events/:category`, getCurrentEvents, (req, res)=>{
-    console.log("getCurrentEventsAPI triggered");
     res.json(req.result);
 })
 

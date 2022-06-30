@@ -179,7 +179,7 @@ async function getCurrentEvents (req, res, next){
     console.log("category: " + category);
     let currentEvents;
     try {
-        if (category === undefined) {
+        if (category == 'null') {
             currentEvents = await Event.getCurrentEvents();
         } else {
             currentEvents = await Event.getCurrentEventsByCategory(category);
