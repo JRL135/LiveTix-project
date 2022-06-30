@@ -133,26 +133,23 @@ const getCurrentEventsByCategory = async (category)=>{
 };
 
 
-//search filter queries
-const getSearchedEventsCategoryAllCity = async (keyword, category, city, start_date, end_date)=>{
-    const [searchedEvents] = await pool.query(`SELECT * FROM event WHERE (title LIKE ?) AND (category = ?) AND (city = ? or city IS NOT NULL) AND (start_date BETWEEN ? AND ? OR ? BETWEEN start_date AND end_date) ORDER BY start_date ASC`, [`%${keyword}%`, `${category}`, `${city}`, `${start_date}`, `${end_date}`, `${start_date}`]);
+//search filter querie
+const getSearchedEvents = async (keyword, category, city, start_date, end_date)=>{
+    let category_condition;
+    if (category != 0) {
+        category_condition = 'and';
+    } else {
+        category_condition = 'or';
+    }
+    let city_condition;
+    if (city != 0) {
+        city_condition = 'and';
+    } else {
+        city_condition = 'or';
+    }
+    const [searchedEvents] = await pool.query(`SELECT * FROM event WHERE (title LIKE ?) AND (category = ? ${category_condition} category IS NOT NULL) AND (city = ? ${city_condition} city IS NOT NULL) AND (start_date BETWEEN ? AND ? OR ? BETWEEN start_date AND end_date) ORDER BY start_date ASC`, [`%${keyword}%`, `${category}`, `${city}`, `${start_date}`, `${end_date}`, `${start_date}`]);
     return searchedEvents;
 };
 
-const getSearchedEventsAllCategoryAllCity = async (keyword, category, city, start_date, end_date)=>{
-    const [searchedEvents] = await pool.query(`SELECT * FROM event WHERE (title LIKE ?) AND (category = ? or category IS NOT NULL) AND (city = ? or city IS NOT NULL) AND (start_date BETWEEN ? AND ? OR ? BETWEEN start_date AND end_date) ORDER BY start_date ASC`, [`%${keyword}%`, `${category}`, `${city}`, `${start_date}`, `${end_date}`, `${start_date}`]);
-    return searchedEvents;
-};
 
-const getSearchedEventsCategoryCity = async (keyword, category, city, start_date, end_date)=>{
-    const [searchedEvents] = await pool.query(`SELECT * FROM event WHERE (title LIKE ?) AND (category = ?) AND (city = ?) AND (start_date BETWEEN ? AND ? OR ? BETWEEN start_date AND end_date) ORDER BY start_date ASC`, [`%${keyword}%`, `${category}`, `${city}`, `${start_date}`, `${end_date}`, `${start_date}`]);
-    return searchedEvents;
-};
-
-const getSearchedEventsAllCategoryCity = async (keyword, category, city, start_date, end_date)=>{
-    const [searchedEvents] = await pool.query(`SELECT * FROM event WHERE (title LIKE ?) AND (category = ? or category is not null) AND (city = ?) AND (start_date BETWEEN ? AND ? OR ? BETWEEN start_date AND end_date) ORDER BY start_date ASC`, [`%${keyword}%`, `${category}`, `${city}`, `${start_date}`, `${end_date}`, `${start_date}`]);
-    return searchedEvents;
-};
-
-
-module.exports = {getEventDetails, getEventArtists, getEventDates, getAvailTickets, checkAndReserveTickets, checkTimerStatus, saveTicketOrder, getCurrentEvents, getCurrentEventsByCategory, getSearchedEventsAllCategoryAllCity, getSearchedEventsCategoryAllCity, getSearchedEventsCategoryCity, getSearchedEventsAllCategoryCity};
+module.exports = {getEventDetails, getEventArtists, getEventDates, getAvailTickets, checkAndReserveTickets, checkTimerStatus, saveTicketOrder, getCurrentEvents, getCurrentEventsByCategory, getSearchedEvents};

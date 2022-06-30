@@ -223,16 +223,7 @@ async function getSearchedEvents (req, res, next){
     // console.log(category);
     let searchedEvents;
     try {
-        if (category != 0 && city == 0){
-            searchedEvents = await Event.getSearchedEventsCategoryAllCity(keyword, category, city, start_date, end_date);
-        } else if (category == 0 && city == 0){
-            searchedEvents = await Event.getSearchedEventsAllCategoryAllCity(keyword, category, city, start_date, end_date);
-        } else if (category != 0 && city != 0) {
-            searchedEvents = await Event.getSearchedEventsCategoryCity(keyword, category, city, start_date, end_date);
-        } else if (category == 0 && city != 0) {
-            searchedEvents = await Event.getSearchedEventsAllCategoryCity(keyword, category, city, start_date, end_date);
-        }
-
+        searchedEvents = await Event.getSearchedEvents(keyword, category, city, start_date, end_date);
         req.result = searchedEvents;
         console.log(searchedEvents);
     } catch(err) {
