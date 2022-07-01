@@ -78,12 +78,12 @@ async function reserveTickets(req, res, next){
         let ticketsOK = [];
         for (let i = 0; i < tickets.ticket_number.length; i++) {
             let ticketNumber = parseInt(tickets.ticket_number[i]);
-            let ticketType = tickets.ticket_type[i];
+            let ticketTypeName = tickets.ticket_type[i];
 
             // 1. check available tickets for each ticket type, grab ticket ids
-            let tic_ids = await Event.checkAndReserveTickets(user_id, ticketType, ticketNumber);
+            let tic_ids = await Event.checkAndReserveTickets(user_id, ticketTypeName, ticketNumber);
             
-            console.log("ticketType: " + ticketType);
+            console.log("ticketTypeName: " + ticketTypeName);
             console.log("tic_ids: ");
             console.log(tic_ids);
             // add error handling for no available ticket sitaution
@@ -91,8 +91,8 @@ async function reserveTickets(req, res, next){
             // 2. push available ticket_ids to array
             // for each ticket type
             let ticketTypeObj = {};
-            if (!(ticketType.ticket_type in ticketTypeObj)) {
-                ticketTypeObj.ticket_type = ticketType;
+            if (!(ticketTypeName.ticket_type in ticketTypeObj)) {
+                ticketTypeObj.ticket_type = ticketTypeName;
                 // loop through each ticket_ids array
                 // let ticketIDsArray = [];
                 // for (let i = 0; i < tic_ids.length; i++) {

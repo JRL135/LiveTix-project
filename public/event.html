@@ -43,6 +43,12 @@
             <div class="event_description"></div>
         </div>
 
+        <!-- countdown -->
+        <div id="countdown-div" style="display:none;">
+            <p>Time remaining to complete purchase:</p>
+            <div id="countdown-text"></div>
+        </div>
+
         <div class="main-container-s3" style="display:none;">
             <!-- ticket selection -->
             <div class="main-container-s3-selection-container">
@@ -51,6 +57,7 @@
                         <tr>
                             <th id="tb_type">Type</th>
                             <th id="tb_price">Price</th>
+                            <th id="tb_available">Available Tickets</th>
                             <th id="tb_amount">Select Ticket</th>
                         </tr>
                     </thead>
@@ -58,7 +65,7 @@
                 </table>
             </div>
 
-            <div class="main-container-s3-summary-container" style="padding-top: 8px;">
+            <div class="main-container-s3-summary-container">
                 <!-- order summary -->
                 <div id="ticket_selected_summary_container">
                     <div class="ticket_selected_summary_container_item" id="order_summary_title">Order Summary</div>
@@ -70,10 +77,6 @@
                 <!-- pay button -->
                 <button class="ticket_button" style="display:none;" type="button" id="buy_ticket_button" onclick="buyTickets(event)">Pay Now</button>
 
-                <div id="countdown-div">
-                    <p>Time remaining to complete purchase:</p>
-                    <div id="countdown-text"></div>
-                </div>
             </div>
         </div>
     </main>

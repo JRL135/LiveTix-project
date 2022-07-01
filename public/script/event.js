@@ -67,6 +67,7 @@ async function clickTicketButton(e){
     console.log(ticketAvailArray);
     console.log(ticketAvailArray["zone_A"]);
     let ticketAvailArrayKeys = Object.keys(ticketAvailArray);
+    let ticketAvailArrayValues = Object.values(ticketAvailArray);
     console.log(ticketAvailArrayKeys);
     console.log(ticketAvailArray[ticketAvailArrayKeys[0]].type_name);
 
@@ -74,24 +75,61 @@ async function clickTicketButton(e){
     for (let i = 0; i < ticketAvailArrayKeys.length; i++) {
         let tbody = document.getElementById("ticket_tb_tbody");
         let tr = document.createElement('tr');
+        let ticket_id_array = ticketAvailArray[ticketAvailArrayKeys[i]].ticket_id;
         // populate table
-        tr.innerHTML += `<td>${ticketAvailArray[ticketAvailArrayKeys[i]].type_name}</td><td>${ticketAvailArray[ticketAvailArrayKeys[i]].price}</td><td id="${ticketAvailArray[ticketAvailArrayKeys[i]].type_name}"></td>`;
+        tr.innerHTML += `
+            <td>${ticketAvailArray[ticketAvailArrayKeys[i]].type_name}</td>
+            <td>${ticketAvailArray[ticketAvailArrayKeys[i]].price}</td>
+            <td id="available-tix">${ticket_id_array.length}</td>
+            <td id="${ticketAvailArray[ticketAvailArrayKeys[i]].type_name}"></td>
+        `;
         tbody.appendChild(tr);
+
         // populate summary section based on ticket types
         let summary_div_container = document.getElementById("ticket_selected_summary_container");
         summary_div_container.innerHTML += `<div summary-id="${ticketAvailArrayKeys[i]}" class="summary_row_tix"></div>`;
         // select tix column
         let tix_td = document.getElementById(ticketAvailArray[ticketAvailArrayKeys[i]].type_name);
-        for (let j = 0; j < ticketAvailArray[ticketAvailArrayKeys[i]].ticket_id.length; j++) {
-            tix_td.innerHTML = `<input type="number" class="tix_input" oninput="recordTicketSelection(event)" name="${ticketAvailArrayKeys[i]}" id="${ticketAvailArrayKeys[i]}_selected" min="0" max="${ticketAvailArray[ticketAvailArrayKeys[i]].ticket_id.length}">`;
-        }
+        let tix_dropdown = document.createElement('select');
+        tix_dropdown.setAttribute("class", "tix-dropdown");
+        tix_td.appendChild(tix_dropdown);
+        tix_dropdown.innerHTML += `<option value="default" selected>Choose a value</option>`;
+
+        // populate dropdown values
+        tix_dropdown.innerHTML +=`
+            <option id="${ticketAvailArrayKeys[i]}" value="1 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name }">1</option>
+            <option id="${ticketAvailArrayKeys[i]}" value="2 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">2</option>
+            <option id="${ticketAvailArrayKeys[i]}" value="3 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">3</option>
+            <option id="${ticketAvailArrayKeys[i]}" value="4 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">4</option>
+        `;
+
+            // tix_td.innerHTML = `<input type="number" class="tix_input" oninput="recordTicketSelection(event)" name="${ticketAvailArrayKeys[i]}" id="${ticketAvailArrayKeys[i]}_selected" min="0" max="${ticketAvailArray[ticketAvailArrayKeys[i]].ticket_id.length}">`;
     }
     // show table
-    document.getElementsByClassName("main-container-s3")[0].style.display = 'inline-flex';
-    // show summary table
-    // document.getElementById("ticket_selected_summary_container").style.display = 'inline-block';
+    document.getElementsByClassName("main-container-s3")[0].style.display = 'flex';
     // show addToCart button
     document.getElementById("addToCart_ticket_button").style.display = 'inline-block';
+
+    // record current user ticket selection
+    let tix_dropdown = document.querySelectorAll(".tix-dropdown");
+    console.log(tix_dropdown.length);
+    for (let i = 0; i < tix_dropdown.length; i++) {
+        tix_dropdown[i].onchange = function(){
+            let ticket_selection = this.value;
+            console.log(ticket_selection);
+            let [ticket_number, ...rest] = ticket_selection.split(' ');
+            console.log(ticket_number);
+            let ticket_type_typeName = rest.join(' ');
+            console.log(ticket_type_typeName);
+            let [ticket_type, ...rest1] = ticket_type_typeName.split(' ');
+            let ticket_type_name = rest1.join(' ');
+            console.log(ticket_type);
+            console.log(ticket_type_name);
+            let summary_div = document.querySelector(`[summary-id="${ticket_type}"]`);
+            summary_div.innerHTML = `${ticket_type_name} x ${ticket_number}`;
+        
+        }
+    }
 }
 
 // oninput data is recorded in event
@@ -115,6 +153,7 @@ function recordTicketSelection(e){
     // let ticketAvail = await ticketsFetch.json();
 }
 
+
 let postTixResponse;
 
 async function postTicketSelection(e){
@@ -122,6 +161,8 @@ async function postTicketSelection(e){
 
     // hide add to cart button
     document.getElementById("addToCart_ticket_button").style.display = 'none';
+    // unhide timer
+    document.getElementById('countdown-div').style.display = 'inline';
 
     // start timer
     startCountdown();
@@ -134,8 +175,10 @@ async function postTicketSelection(e){
     for (let i = 0; i < tix_selected.length; i++) {
         let tix_selected_innerHTML = tix_selected[i].innerHTML;
         if (tix_selected_innerHTML !== "") {
-            tix_number = tix_selected_innerHTML.split(',')[0];
-            tix_type = tix_selected_innerHTML.split(',')[1];
+            let tix_type_ = tix_selected_innerHTML.split('x')[0];
+            let tix_type = tix_type_.slice(0, -1);
+            let tix_number_ = tix_selected_innerHTML.split('x')[1];
+            let tix_number = tix_number_.slice(1);
             ticket_type_list.push(tix_type);
             ticket_number_list.push(tix_number);
         }
