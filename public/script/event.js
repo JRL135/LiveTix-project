@@ -1,3 +1,155 @@
+TPDirect.setupSDK(12348, 'app_pa1pQcKoY22IlnSXq5m5WP5jFKzoRG58VEXpT7wU62ud7mMbDOGzCYIlzzLF', 'sandbox')
+
+// 必填 CCV Example
+var fields = {
+    number: {
+        // css selector
+        element: '#card-number',
+        placeholder: '**** **** **** ****'
+    },
+    expirationDate: {
+        // DOM object
+        element: document.getElementById('card-expiration-date'),
+        placeholder: 'MM / YY'
+    },
+    ccv: {
+        element: '#card-ccv',
+        placeholder: '後三碼'
+    }
+}
+
+TPDirect.card.setup({
+    fields: fields,
+    styles: {
+        // Style all elements
+        'input': {
+            'color': 'gray'
+        },
+        // Styling ccv field
+        'input.ccv': {
+            // 'font-size': '16px'
+        },
+        // Styling expiration-date field
+        'input.expiration-date': {
+            // 'font-size': '16px'
+        },
+        // Styling card-number field
+        'input.card-number': {
+            // 'font-size': '16px'
+        },
+        // style focus state
+        ':focus': {
+            // 'color': 'black'
+        },
+        // style valid state
+        '.valid': {
+            'color': 'green'
+        },
+        // style invalid state
+        '.invalid': {
+            'color': 'red'
+        },
+        // Media queries
+        // Note that these apply to the iframe, not the root window.
+        '@media screen and (max-width: 400px)': {
+            'input': {
+                'color': 'orange'
+            }
+        }
+    }
+})
+
+TPDirect.card.onUpdate(function (update) {
+    // update.canGetPrime === true
+    // --> you can call TPDirect.card.getPrime()
+    if (update.canGetPrime) {
+        // Enable submit Button to get prime.
+        // submitButton.removeAttribute('disabled')
+    } else {
+        // Disable submit Button to get prime.
+        // submitButton.setAttribute('disabled', true)
+    }
+                                            
+    // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unknown']
+    if (update.cardType === 'visa') {
+        // Handle card type visa.
+    }
+
+    // number 欄位是錯誤的
+    if (update.status.number === 2) {
+        // setNumberFormGroupToError()
+    } else if (update.status.number === 0) {
+        // setNumberFormGroupToSuccess()
+    } else {
+        // setNumberFormGroupToNormal()
+    }
+    
+    if (update.status.expiry === 2) {
+        // setNumberFormGroupToError()
+    } else if (update.status.expiry === 0) {
+        // setNumberFormGroupToSuccess()
+    } else {
+        // setNumberFormGroupToNormal()
+    }
+    
+    if (update.status.ccv === 2) {
+        // setNumberFormGroupToError()
+    } else if (update.status.ccv === 0) {
+        // setNumberFormGroupToSuccess()
+    } else {
+        // setNumberFormGroupToNormal()
+    }
+})
+
+function onSubmit(event) {
+    event.preventDefault()
+
+    // 取得 TapPay Fields 的 status
+    const tappayStatus = TPDirect.card.getTappayFieldsStatus()
+
+    // 確認是否可以 getPrime
+    if (tappayStatus.canGetPrime === false) {
+        alert('Payment information incorrect, please try again.');
+        return;
+    }
+
+    // Get prime
+    TPDirect.card.getPrime(async (result) => {
+        if (result.status !== 0) {
+            window.alert('Payment unsuccessful, please try again');
+            return;
+        } else {
+            let TP_prime = result.card.prime;
+            console.log(TP_prime);
+            const buyURL = `/api/1.0/event/${product_id}/tickets/buy`;
+            let token = localStorage.getItem('token');
+            let headers = {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            }
+            let buyTix = await fetch(buyURL, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(postTixResponse)
+            });
+            let buyTixResponse = await buyTix.json();
+            console.log(buyTixResponse);
+
+            if (buyTixResponse.success) {
+                alert(`Thank you for ordering, your order number is #${buyTixResponse.success}`);
+                window.location.href = "/profile.html";
+            } else {
+                // console.log(buyTixResponse)
+                alert(`Sorry, purchase was unsuccessful, please try again!`);
+                window.location.href = "/index.html";
+            }
+        }
+        // send prime to your server, to pay with Pay by Prime API .
+        // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
+    })
+}
+
 let event_params = new URL(document.location).searchParams;
 let product_id = event_params.get("id");
 // console.log(document.location);
@@ -218,54 +370,35 @@ async function postTicketSelection(e){
 }
 
 // click pay now button
-// LATER: check timer_timestamp < 10m, then
-// post postTixResponse to backend
+// show pay SDK
 async function buyTickets(e){
     console.log("buyTickets triggered");
     //post data:
     //order: event_id, user_id
     //ticket: user_id, purchase_date
     //insert ticket_order table
-    const buyURL = `/api/1.0/event/${product_id}/tickets/buy`;
-    let token = localStorage.getItem('token');
-    let headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": `Bearer ${token}`,
-    }
-    let buyTix = await fetch(buyURL, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(postTixResponse)
-    });
-    let buyTixResponse = await buyTix.json();
-    // console.log("thanks for ordering, your order number is: ");
-    console.log(buyTixResponse);
-    if (buyTixResponse.success) {
-        alert(`Thank you for ordering, your order number is #${buyTixResponse.success}`);
-    } else {
-        // console.log(buyTixResponse)
-        alert(`Sorry, purchase was unsuccessful, please try again!`);
-    }
-    
-    // alert(buyTixResponse);
 
+    //show payment section
+    document.getElementsByClassName("main-container-s4")[0].style.display = 'inline-flex';
+
+    //click pay button, after getting prime confirmation, trigger save ticket
 }
 
-
-
+// timer section
 const timerElement = document.getElementById('countdown-text');
 let timer;
 
 function startCountdown() {
-    timer = 10;
+    timer = 20;
     const timeCountdown = setInterval(countdown, 1000);
 }
 
 function countdown() {
-    if (timer == 0) {
-        // window.location.replace("http://localhost:80/index.html");
+    if (timer == -1) {
         clearTimeout(timer);
+        alert('Sorry, time is up!');
+        window.location.replace("http://localhost:80/index.html");
+       
     } else {
         timerElement.innerHTML = timer + ' secs';
         timer--;

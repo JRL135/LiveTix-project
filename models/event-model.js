@@ -52,7 +52,7 @@ const checkTimerStatus = async (ticket_ids)=>{
     let array = [];
     for (let i = 0; i < ticket_ids.length; i++) {
         let ticket_id = ticket_ids[i];
-        let [tixWithinCountdown] = await pool.query(`SELECT * FROM ticket WHERE ticket_id =? AND DATE_ADD(timer_timestamp, INTERVAL 10 second) >= NOW()`, ticket_id);
+        let [tixWithinCountdown] = await pool.query(`SELECT * FROM ticket WHERE ticket_id =? AND DATE_ADD(timer_timestamp, INTERVAL 20 second) >= NOW()`, ticket_id);
         console.log(tixWithinCountdown);
         
         if (tixWithinCountdown.length === 0) {

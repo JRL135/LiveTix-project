@@ -14,6 +14,7 @@
     <link href="./css/header.css" rel="stylesheet">
     <link href="./css/footer.css" rel="stylesheet">
 
+
 </head>
 <body>
     <!-- navbar -->
@@ -65,7 +66,7 @@
                 </table>
             </div>
 
-            <div class="main-container-s3-summary-container">
+            <div class="main-container-s3-container">
                 <!-- order summary -->
                 <div id="ticket_selected_summary_container">
                     <div class="ticket_selected_summary_container_item" id="order_summary_title">Order Summary</div>
@@ -79,9 +80,43 @@
 
             </div>
         </div>
+
+        <div class="main-container-s4" style="display:none;">
+            <!-- <form>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                </div>
+                <div class="form-group card-number-group">
+                    <label for="card-number" class="control-label"><span id="cardtype"></span>卡號</label>
+                    <div class="form-control card-number"></div>
+                </div>
+                <div class="form-group expiration-date-group">
+                    <label for="expiration-date" class="control-label">卡片到期日</label>
+                    <div class="form-control expiration-date" id="tappay-expiration-date"></div>
+                </div>
+                <div class="form-group cvc-group">
+                    <label for="cvc" class="control-label">卡片後三碼</label>
+                    <div class="form-control cvc"></div>
+                </div>
+    
+                <button type="submit" class="btn btn-default">Pay</button>
+            </form> -->
+            <label for="card-number" class="control-label"><span id="cardtype"></span>Card Number</label>
+            <div class="tpfield" id="card-number"></div>
+            <label for="expiration-date" class="control-label">Expiration Date</label>
+            <div class="tpfield" id="card-expiration-date"></div>
+            <label for="cvc" class="control-label">CVC</label>
+            <div class="tpfield" id="card-ccv"></div>
+            <button type="button" id="paySDK-btn" onclick="onSubmit(event)">Pay</button>
+        </div>
     </main>
 
     <footer-component></footer-component>
+    <script src="https://js.tappaysdk.com/tpdirect/v5.12.3"></script>
     <script src="./script/event.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <!-- <script src="./script/checkout.js"></script> -->
+
 </body>
 </html>
