@@ -397,7 +397,7 @@ function countdown() {
     if (timer == -1) {
         clearTimeout(timer);
         alert('Sorry, time is up!');
-        window.location.replace("http://localhost:80/index.html");
+        window.location.href = "/index.html";
        
     } else {
         timerElement.innerHTML = timer + ' secs';
