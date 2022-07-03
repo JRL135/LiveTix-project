@@ -64,6 +64,9 @@ async function postSearchConditions(e){
     console.log(searchResultsDiv);
     searchResultsDiv.innerHTML = "";
 
+    if (postSearch.length === 0) {
+        searchResultsDiv.innerHTML += `<p id="no-result-text">Oops, there seems to be no matching events.</p>`;
+    }
     searchResultsDiv = document.getElementsByClassName('search-results-events-container')[0];
     for (let i = 0; i < postSearch.length; i++) {
         // render search results on screen
