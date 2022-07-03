@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Scanner</title>
+    <script src="https://raw.githubusercontent.com/mebjas/html5-qrcode/master/minified/html5-qrcode.min.js"></script>
+    <!-- <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script> -->
+    
+</head>
+<body>
+    <div id="reader" width="600px"> </div>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script type="text/javascript">
+        // This method will trigger user permissions
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+            var cameraId = devices[0].id;
+            const html5QrCode = new Html5Qrcode("reader");
+            const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+                alert(decodedText);
+            };
+            const config = {
+                fps: 25,
+                qrbox: {
+                width: 350,
+                height: 350
+                }
+            };
+            html5QrCode.start({
+                facingMode: "environment"
+            }, config, qrCodeSuccessCallback);
+            }
+        }).catch(err => {
+            // handle err
+        });
+    </script>
+</body>
+</html>
