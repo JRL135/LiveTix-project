@@ -42,19 +42,18 @@ async function genQRcode(ticket_ids){
     // save them into db
     for (let i = 0; i < ticket_ids.length; i++) {
         let ticket_id = ticket_ids[i];
-        //gen QRcode
-        // http://localhost:80/ticket/jiwoijgirowiogjireo
 
-        // const generateHash = new RandomHash({
-        //     length: 7,
-        //     charset: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_+',
-        //     rng: randomBytes
-        // });
-        // let ticketURLHash = generateHash();
+        // hashing ticket URL
         let ticketURLHash = await encryptTicketURL(ticket_id);
-        let ticketURL = `http://54.214.232.77/ticket/${ticketURLHash}`;
-        let ticketQR = await QRCode.toDataURL(ticketURL); //qrcode
-        // console.log(ticketQR);
+
+        // now hash = ticket_id
+        let ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
+        console.log(ticketURL);
+
+        // ticket URL to qrcode
+        let ticketQR = await QRCode.toDataURL(ticketURL); 
+        console.log(ticketQR);
+
         //link qrcode with ticket_id, save into DB
         await Ticket.saveTicketURLAndQR(ticketURL, ticketQR, ticket_id);
     }
@@ -104,7 +103,6 @@ async function s3UploadQR(ticketQR, ticket_id){
     // To delete, see: https://gist.github.com/SylarRuby/b3b1430ca633bc5ffec29bbcdac2bd52
 }
 
-
 function encryptTicketURL(ticket_id){
     console.log("encryptTicketURL triggered");
     console.log(ticket_id);
@@ -116,6 +114,7 @@ function encryptTicketURL(ticket_id){
     console.log(encryptedData);
     return encryptedData;
 }
+
 function decryptTicketURL(ticketURLHash){
     const decipher = crypto.createDecipheriv(algorithm, securityKey, initVector);
     let decryptedData_string = decipher.update(ticketURLHash, "hex", "utf-8");
@@ -127,21 +126,23 @@ function decryptTicketURL(ticketURLHash){
 
 async function authTicket(req, res, next){
     console.log('authTicket triggered');
-    //check req.result
-    //if admin, check ticket status
+    // scan qrcode -> call veritifcation api
+    // check req.result
+    // if admin, check ticket status
     let message;
     req.result = admin; // TEMP! REMOVE LATER
     if (req.result !== 'admin') {
         message = "not admin";
     } else { //check ticket status
-        // scan qrcode
-        // qrcode should lead to ticket url
-        // ticket url decoded 
-        await decryptTicketURL(ticketURLHash);
+        // decode ticket url to get ticket_id
+        let ticketURLHash = req.params.hash;
+        console.log("ticketURLHash: " + ticketURLHash);
+        let ticket_id = await decryptTicketURL(ticketURLHash);
+        console.log("ticket_id: " + ticket_id);
         let ticketDetails = await Ticket.getTicketDetails(ticket_id);
         if (ticketDetails[0].used_status === 0) {
             await Ticket.updateUsed(ticket_id);
-            message = "ticket authenticated";
+            message = `Ticket number ${ticket_id} authenticated`;
         } else {
             message = "invalid ticket";
         }

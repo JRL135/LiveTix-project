@@ -21,7 +21,6 @@ app.get('/', (req, res)=>{
 
 
 
-
 // API routes (frontend call backend)
 
 app.get(`/api/${process.env.api}/event/:id`, getEventDetailsAPI, (req, res)=>{
@@ -87,9 +86,15 @@ app.get(`/api/${process.env.api}/ticket/:id`, getTicketDetails, (req, res)=>{
 //     res.json(req.result);
 // })
 
-app.get(`/api/${process.env.api}/ticket/verification`, authTicket, (req, res)=>{
+// app.get(`/api/${process.env.api}/ticket/verification`, authTicket, (req, res)=>{
+//     res.json(req.result);
+// })
+
+app.get(`/ticket/verification/:hash`, authTicket, (req, res)=>{
     res.json(req.result);
 })
+
+
 
 
 
