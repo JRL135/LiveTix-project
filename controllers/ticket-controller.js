@@ -52,7 +52,7 @@ async function genQRcode(ticket_ids){
         // });
         // let ticketURLHash = generateHash();
         let ticketURLHash = await encryptTicketURL(ticket_id);
-        let ticketURL = `http://localhost:80/ticket/${ticketURLHash}`;
+        let ticketURL = `http://54.214.232.77/ticket/${ticketURLHash}`;
         let ticketQR = await QRCode.toDataURL(ticketURL); //qrcode
         // console.log(ticketQR);
         //link qrcode with ticket_id, save into DB
