@@ -331,6 +331,7 @@ async function postTicketSelection(e){
     if (ticket_type_list.length == 0) {
         alert('Please select ticket');
     } else {
+        alert('Selected ticket(s) has been reserved for 20 seconds');
         // hide add to cart button
         document.getElementById("addToCart_ticket_button").style.display = 'none';
         // unhide timer
