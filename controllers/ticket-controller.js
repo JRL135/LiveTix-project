@@ -130,7 +130,7 @@ async function authTicket(req, res, next){
     // scan qrcode -> call veritifcation api
     // check req.result
     // if admin, check ticket status
-    let userInfo = UserController.checkUserRole(req);
+    let userInfo = await UserController.checkUserRole(req);
     console.log(userInfo);
     let message;
     if (userInfo.role !== 'admin') {
