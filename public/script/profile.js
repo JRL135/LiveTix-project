@@ -20,10 +20,13 @@ async function checkTokenAndRenderProfile(){
     let checkToken = await fetch(checkTokenURL, {
         method: 'POST',
         headers: headers,
-        // body: JSON.stringify(body)
     });
     let userInfo = await checkToken.json();
     console.log(userInfo);
+    if (userInfo === "No token") {
+        alert("Please login first");
+        window.location.href = "/login.html";
+    }
     let usernameDiv = document.getElementById('name-id');
     usernameDiv.innerHTML +=  `${userInfo.name}`;
     let useremailDiv= document.getElementById('email-id');
