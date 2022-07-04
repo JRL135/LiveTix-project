@@ -115,11 +115,12 @@ async function checkUserRole(req, res, next){
                 user_id: userInfo.id
             };
         }
+        console.log(req.result);
     } catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});
     }
-    await next();
+    // await next();
 }
 
 async function getUserRegisteredEvents(req, res, next){
