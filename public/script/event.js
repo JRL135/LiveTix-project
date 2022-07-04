@@ -103,7 +103,9 @@ TPDirect.card.onUpdate(function (update) {
 
 function onSubmit(event) {
     event.preventDefault()
-
+    
+    // prevent multiple submit
+    document.getElementById("paySDK-btn").onclick = '';
     // 取得 TapPay Fields 的 status
     const tappayStatus = TPDirect.card.getTappayFieldsStatus()
 
@@ -386,6 +388,9 @@ async function buyTickets(e){
     //order: event_id, user_id
     //ticket: user_id, purchase_date
     //insert ticket_order table
+
+    // hide pay now button
+    document.getElementById("buy_ticket_button").style.display = 'none';
 
     //show payment section
     document.getElementsByClassName("main-container-s4")[0].style.display = 'inline-flex';
