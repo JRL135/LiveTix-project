@@ -21,7 +21,9 @@
             const qrCodeSuccessCallback = (decodedText, decodedResult) => {
                 console.log(decodedText);
                 if (window.confirm("Ticket QRcode detected, verifty ticket now?")) {
-                    window.open(decodedText);
+                    sessionStorage.setItem("ticketURL", decodedText);
+                    window.open('/ticket-verification.html');
+
                 }
             };
             const config = {

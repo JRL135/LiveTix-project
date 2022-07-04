@@ -101,7 +101,7 @@ async function checkUserRole(req, res, next){
     console.log('checkUserRole triggered');
     try {
         //check token
-        const authHeader = req.headers.authorization;
+        let authHeader = req.headers.authorization;
         console.log(authHeader);
         let token = authHeader.split(' ')[1];
         if (token == 'null') {
