@@ -94,6 +94,11 @@ app.get(`/ticket/verification/:hash`, authTicket, (req, res)=>{
     res.json(req.result);
 })
 
+//generic checkUserRole api
+app.get(`/user/role`, checkUserRole, (req, res)=>{
+    res.json(req.result);
+})
+
 
 
 
