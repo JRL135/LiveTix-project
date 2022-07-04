@@ -90,7 +90,7 @@ app.get(`/api/${process.env.api}/ticket/:id`, getTicketDetails, (req, res)=>{
 //     res.json(req.result);
 // })
 
-app.get(`/ticket/verification/:hash`, checkUserRole, authTicket, (req, res)=>{
+app.get(`/ticket/verification/:hash`, authTicket, (req, res)=>{
     res.json(req.result);
 })
 
