@@ -116,6 +116,7 @@ async function checkUserRole(req, res, next){
             };
         }
         console.log(req.result);
+        return req.result;
     } catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});
