@@ -124,6 +124,33 @@ async function checkUserRole(req, res, next){
     // await next();
 }
 
+async function checkUserMiddleware(req, res, next){
+    console.log('checkUserMiddleware triggered');
+    try {
+        //check token
+        let authHeader = req.headers.authorization;
+        console.log(authHeader);
+        let token = authHeader.split(' ')[1];
+        if (token == 'null') {
+            console.log("Missing token");
+            let message = "No token";
+            req.result = message;
+        } else {
+            let userInfo = await checkToken(token);
+            req.result = {
+                role: userInfo.role,
+                user_id: userInfo.id
+            };
+        }
+        console.log(req.result);
+        // return req.result;
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
 async function getUserRegisteredEvents(req, res, next){
     console.log('getUserRegisteredEvents triggered');
     try {
@@ -152,4 +179,4 @@ async function genToken(user_id, email, name, role, password){
 }
 
 
-module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkUserRole, getUserRegisteredEvents };
+module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkUserRole, checkUserMiddleware, getUserRegisteredEvents };

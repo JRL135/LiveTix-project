@@ -338,9 +338,11 @@ async function postTicketSelection(e){
         document.getElementById("addToCart_ticket_button").style.display = 'none';
         // unhide timer
         document.getElementById('countdown-div').style.display = 'inline';
+        // show buy ticket button
+        document.getElementById("buy_ticket_button").style.display = 'inline-block';
 
         // start timer
-        startCountdown();
+        // startCountdown();
 
         let token = localStorage.getItem('token');
         const reserveURL = `/api/1.0/event/${event_id}/tickets/reserve`;
@@ -374,8 +376,7 @@ async function postTicketSelection(e){
             window.location.href = "/login.html";
         }
 
-        // show buy ticket button
-        document.getElementById("buy_ticket_button").style.display = 'inline-block';
+        
     }
 
 }

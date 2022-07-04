@@ -4,7 +4,7 @@ const express = require("express");
 // const multer = require("multer");
 const path = require("path");
 const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents } = require("./controllers/event-controller");
-const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, checkUserRole} = require("./controllers/user-controller");
+const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, checkUserRole, checkUserMiddleware} = require("./controllers/user-controller");
 const {getTicketDetails, authTicket} = require("./controllers/ticket-controller");
 
 
@@ -32,7 +32,7 @@ app.get(`/api/${process.env.api}/event/:id/tickets`, getAvailableTickets, (req, 
     res.json(req.result);
 })
 
-app.post(`/api/${process.env.api}/event/:id/tickets/reserve`, checkUserRole, reserveTickets, (req, res)=>{
+app.post(`/api/${process.env.api}/event/:id/tickets/reserve`, checkUserMiddleware, reserveTickets, (req, res)=>{
     res.json(req.result);
 })
 
@@ -95,7 +95,7 @@ app.get(`/ticket/verification/:hash`, authTicket, (req, res)=>{
 })
 
 //generic checkUserRole api
-app.get(`/user/role`, checkUserRole, (req, res)=>{
+app.get(`/user/role`, checkUserMiddleware, (req, res)=>{
     res.json(req.result);
 })
 
