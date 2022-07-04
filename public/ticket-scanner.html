@@ -19,7 +19,10 @@
             var cameraId = devices[0].id;
             const html5QrCode = new Html5Qrcode("reader");
             const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-                confirm(window.location = decodedText);
+                console.log(decodedText);
+                if (window.confirm("Ticket QRcode detected, verifty ticket now?")) {
+                    window.open(decodedText);
+                }
             };
             const config = {
                 fps: 25,

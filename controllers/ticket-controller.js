@@ -130,8 +130,7 @@ async function authTicket(req, res, next){
     // check req.result
     // if admin, check ticket status
     let message;
-    req.result = admin; // TEMP! REMOVE LATER
-    if (req.result !== 'admin') {
+    if (req.result.role !== 'admin') {
         message = "not admin";
     } else { //check ticket status
         // decode ticket url to get ticket_id
