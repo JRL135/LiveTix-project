@@ -4,7 +4,7 @@ const express = require("express");
 // const multer = require("multer");
 const path = require("path");
 const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents } = require("./controllers/event-controller");
-const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, checkAdmin} = require("./controllers/user-controller");
+const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, checkUserRole} = require("./controllers/user-controller");
 const {getTicketDetails, authTicket} = require("./controllers/ticket-controller");
 
 
@@ -32,7 +32,7 @@ app.get(`/api/${process.env.api}/event/:id/tickets`, getAvailableTickets, (req, 
     res.json(req.result);
 })
 
-app.post(`/api/${process.env.api}/event/:id/tickets/reserve`, reserveTickets, (req, res)=>{
+app.post(`/api/${process.env.api}/event/:id/tickets/reserve`, checkUserRole, reserveTickets, (req, res)=>{
     res.json(req.result);
 })
 

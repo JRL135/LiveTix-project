@@ -97,18 +97,23 @@ async function getUserProfile(req, res, next){
     await next();
 }
 
-async function checkAdmin(req, res, next){
-    console.log('checkAdmin triggered');
+async function checkUserRole(req, res, next){
+    console.log('checkUserRole triggered');
     try {
         //check token
         const authHeader = req.headers.authorization;
         console.log(authHeader);
         let token = authHeader.split(' ')[1];
-        let userInfo = await checkToken(token);
-        if (userInfo.role === 'admin'){
-            req.result = 'admin';
+        if (token == 'null') {
+            console.log("Missing token");
+            let message = "No token";
+            req.result = message;
         } else {
-            req.result = 'user';
+            let userInfo = await checkToken(token);
+            req.result = {
+                role: userInfo.role,
+                user_id: userInfo.id
+            };
         }
     } catch(err) {
         console.log(err);
@@ -145,4 +150,4 @@ async function genToken(user_id, email, name, role, password){
 }
 
 
-module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkAdmin, getUserRegisteredEvents };
+module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkUserRole, getUserRegisteredEvents };

@@ -21,13 +21,13 @@ const getAvailTickets = async (id)=>{
     return availTickets;
 };
 
-const checkAndReserveTickets = async (user_id, ticketTypeName, ticketNumber)=>{
+const checkAndReserveTickets = async (event_id, user_id, ticketTypeName, ticketNumber)=>{
     // const [reservedTickets] = await pool.query(`CALL checkAvailTicketsAndreserveTicket(?, ?, ?, @out_ticket_id)`, [user_id, ticketType, ticketNumber]);
     
     const conn = await pool.getConnection();
     try {
         await conn.query('START TRANSACTION');
-        let [reservedTickets] = await conn.query(`SELECT ticket_id from ticket WHERE temp_status = '0' and type_name = ? limit ?`, [ticketTypeName, ticketNumber]);
+        let [reservedTickets] = await conn.query(`SELECT ticket_id from ticket WHERE event_id = ? and temp_status = '0' and type_name = ? limit ?`, [event_id, ticketTypeName, ticketNumber]);
         let ticket_id_array = [];
         for (let i = 0; i < reservedTickets.length; i++) {
             let ticket_id = reservedTickets[i].ticket_id;

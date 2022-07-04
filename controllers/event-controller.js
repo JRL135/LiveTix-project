@@ -61,55 +61,57 @@ async function reserveTickets(req, res, next){
     console.log('reserveTickets triggered');
     try {
         //temp: get user_id (check token) here
-        const authHeader = req.headers.authorization;
-        let token = authHeader.split(' ')[1];
-        if (token.length === 0){
-            
-        }
-        let userInfo = await UserController.checkToken(token);
-        console.log(userInfo);
-        let user_id = userInfo.id;
-        console.log("user_id: " + user_id);
-        //get ticket_type, ticket_number
-        let tickets = req.body;
-        console.log("------------------");
-        console.log(tickets);
-    
-        let ticketsOK = [];
-        for (let i = 0; i < tickets.ticket_number.length; i++) {
-            let ticketNumber = parseInt(tickets.ticket_number[i]);
-            let ticketTypeName = tickets.ticket_type[i];
+        // const authHeader = req.headers.authorization;
+        // let token = authHeader.split(' ')[1];
+        // let userInfo = await UserController.checkToken(token);
+        if (req.result == 'No token') {
+            console.log(req.result + ", calling next");
+            next();
+        } else {
+            console.log(req.result);
+            let user_id = req.result.user_id;
+            console.log("user_id: " + user_id);
+            //get ticket_type, ticket_number
+            let tickets = req.body;
+            console.log("------------------");
+            console.log(tickets);
+            let event_id = req.body.event_id;
+        
+            let ticketsOK = [];
+            for (let i = 0; i < tickets.ticket_number.length; i++) {
+                let ticketNumber = parseInt(tickets.ticket_number[i]);
+                let ticketTypeName = tickets.ticket_type[i];
 
-            // 1. check available tickets for each ticket type, grab ticket ids
-            let tic_ids = await Event.checkAndReserveTickets(user_id, ticketTypeName, ticketNumber);
-            
-            console.log("ticketTypeName: " + ticketTypeName);
-            console.log("tic_ids: ");
-            console.log(tic_ids);
-            // add error handling for no available ticket sitaution
+                // 1. check available tickets for each ticket type, grab ticket ids
+                let tic_ids = await Event.checkAndReserveTickets(event_id, user_id, ticketTypeName, ticketNumber);
+                
+                console.log("ticketTypeName: " + ticketTypeName);
+                console.log("tic_ids: ");
+                console.log(tic_ids);
+                // add error handling for no available ticket sitaution
 
-            // 2. push available ticket_ids to array
-            // for each ticket type
-            let ticketTypeObj = {};
-            if (!(ticketTypeName.ticket_type in ticketTypeObj)) {
-                ticketTypeObj.ticket_type = ticketTypeName;
-                // loop through each ticket_ids array
-                // let ticketIDsArray = [];
-                // for (let i = 0; i < tic_ids.length; i++) {
-                //     ticketIDsArray.push(tic_ids[i]["ticket_id"]);
-                // }
-                ticketTypeObj.ticket_ids = tic_ids;
-                console.log(ticketTypeObj);
-                ticketsOK.push(ticketTypeObj);
+                // 2. push available ticket_ids to array
+                // for each ticket type
+                let ticketTypeObj = {};
+                if (!(ticketTypeName.ticket_type in ticketTypeObj)) {
+                    ticketTypeObj.ticket_type = ticketTypeName;
+                    // loop through each ticket_ids array
+                    // let ticketIDsArray = [];
+                    // for (let i = 0; i < tic_ids.length; i++) {
+                    //     ticketIDsArray.push(tic_ids[i]["ticket_id"]);
+                    // }
+                    ticketTypeObj.ticket_ids = tic_ids;
+                    console.log(ticketTypeObj);
+                    ticketsOK.push(ticketTypeObj);
+                }
             }
+            // if all ticket types have available tickets
+            console.log("reserved tickets array: ");
+            console.log(ticketsOK);
+            console.log('sending reserved tickets array to frontend');
+            // 3. send tickets to frontend
+            req.result = ticketsOK;
         }
-        // if all ticket types have available tickets
-        console.log("reserved tickets array: ");
-        console.log(ticketsOK);
-        console.log('sending reserved tickets array to frontend');
-        // 3. send tickets to frontend
-        req.result = ticketsOK;
-
     } catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});

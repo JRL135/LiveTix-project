@@ -113,7 +113,7 @@ table {
 
 table > *{
     text-align: center;
-    padding: 1em;
+    padding: 1.2em;
 }
 
 #ticket_selected_summary_container {
@@ -130,6 +130,14 @@ table > *{
 
 .ticket_selected_summary_container_item{
     margin-top: 0;
+}
+
+table thead th {
+    border-bottom: 1px solid #bacdd8;
+}
+
+.main-container-s3-container {
+    padding: 1em;
 }
 
 .main-container-s3-summary-container {

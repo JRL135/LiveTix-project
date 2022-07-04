@@ -121,7 +121,7 @@ function onSubmit(event) {
         } else {
             let TP_prime = result.card.prime;
             console.log(TP_prime);
-            const buyURL = `/api/1.0/event/${product_id}/tickets/buy`;
+            const buyURL = `/api/1.0/event/${event_id}/tickets/buy`;
             let token = localStorage.getItem('token');
             let headers = {
                 "Content-Type": "application/json",
@@ -151,17 +151,17 @@ function onSubmit(event) {
 }
 
 let event_params = new URL(document.location).searchParams;
-let product_id = event_params.get("id");
+let event_id = event_params.get("id");
 // console.log(document.location);
 // let event_params = new URL(document.location);
 // console.log(event_params.pathname);
-console.log(product_id);
+console.log(event_id);
 
 // const ROOT_URL = `${environment.backendBaseUrl}`;
 
 //fetch event details
 async function getEventDetailsAPI(){
-    let eventFetch = await fetch(`/api/1.0/event/${product_id}`);
+    let eventFetch = await fetch(`/api/1.0/event/${event_id}`);
     let eventDetails = await eventFetch.json();
     document.getElementsByClassName("event_title")[0].innerHTML = eventDetails[0].title;
     console.log(document.getElementsByClassName("event_title")[0]);
@@ -188,7 +188,7 @@ getEventDetailsAPI();
 
 //fetch available tickets function
 async function fetchAvailTickets(){
-    let ticketsFetch = await fetch(`/api/1.0/event/${product_id}/tickets`);
+    let ticketsFetch = await fetch(`/api/1.0/event/${event_id}/tickets`);
     let ticketAvail = await ticketsFetch.json();
 
     let availableTickets = [];
@@ -301,7 +301,7 @@ function recordTicketSelection(e){
     let summary_div = document.querySelector(`[summary-id="${ticket_type}"]`);
     summary_div.innerHTML = `${summaryTicketList}`;
     // map selected tickets with available ticket_id
-    // let ticketsFetch = await fetch(`/api/1.0/event/${product_id}/tickets`);
+    // let ticketsFetch = await fetch(`/api/1.0/event/${event_id}/tickets`);
     // let ticketAvail = await ticketsFetch.json();
 }
 
@@ -310,14 +310,6 @@ let postTixResponse;
 
 async function postTicketSelection(e){
     console.log("postTicketSelection triggered");
-
-    // hide add to cart button
-    document.getElementById("addToCart_ticket_button").style.display = 'none';
-    // unhide timer
-    document.getElementById('countdown-div').style.display = 'inline';
-
-    // start timer
-    startCountdown();
 
     // get current shown input value
     let tix_selected = document.querySelectorAll(`[class="summary_row_tix"]`);
@@ -336,36 +328,52 @@ async function postTicketSelection(e){
         }
     }
 
-    let token = localStorage.getItem('token');
-    const reserveURL = `/api/1.0/event/${product_id}/tickets/reserve`;
-    
-    let headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": `Bearer ${token}`,
+    if (ticket_type_list.length == 0) {
+        alert('Please select ticket');
+    } else {
+        // hide add to cart button
+        document.getElementById("addToCart_ticket_button").style.display = 'none';
+        // unhide timer
+        document.getElementById('countdown-div').style.display = 'inline';
+
+        // start timer
+        startCountdown();
+
+        let token = localStorage.getItem('token');
+        const reserveURL = `/api/1.0/event/${event_id}/tickets/reserve`;
+        
+        let headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`,
+        }
+
+        let body = {
+            event_id: event_id,
+            ticket_type: ticket_type_list,
+            ticket_number: ticket_number_list
+        };
+
+        console.log(headers);
+        console.log("sorted body: ");
+        console.log(body);
+
+        let reserve = await fetch(reserveURL, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(body)
+        });
+        postTixResponse = await reserve.json();
+        console.log("postTixResponse:");
+        console.log(postTixResponse); // returns available tickets for each tix type
+        if (postTixResponse === 'No token') {
+            alert("Please login first.");
+            window.location.href = "/login.html";
+        }
+
+        // show buy ticket button
+        document.getElementById("buy_ticket_button").style.display = 'inline-block';
     }
-
-    let body = {
-        ticket_type: ticket_type_list,
-        ticket_number: ticket_number_list
-    };
-
-    console.log(headers);
-    console.log("sorted body: ");
-    console.log(body);
-
-    let reserve = await fetch(reserveURL, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(body)
-    });
-    postTixResponse = await reserve.json();
-    console.log("postTixResponse:");
-    console.log(postTixResponse); // returns available tickets for each tix type
-
-    // show buy ticket button
-    document.getElementById("buy_ticket_button").style.display = 'inline-block';
-    
 
 }
 
@@ -390,17 +398,17 @@ let timer;
 let timeCountdown;
 function startCountdown() {
     timer = 20;
-    console.log("000000")
+    // console.log("000000")
     timeCountdown = setInterval(countdown, 1000);
-    console.log(444444)
+    // console.log(444444)
 }
 
 function countdown() {
-    console.log("TIMER:",timer)
+    // console.log("TIMER:",timer)
     if (timer == -1) {
-        console.log(11111)
+        // console.log(11111)
         clearInterval(timeCountdown);
-        console.log(22222)
+        // console.log(22222)
         alert('Sorry, time is up!');
         window.location.href = "/index.html";
        
