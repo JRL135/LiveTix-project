@@ -76,11 +76,18 @@ async function getUserProfile(req, res, next){
     console.log('getUserProfile triggered');
     try {
         //check token
+        let userInfo;
         const authHeader = req.headers.authorization;
         console.log(authHeader);
         let token = authHeader.split(' ')[1];
-        let userInfo = await checkToken(token);
-        console.log(userInfo);
+        console.log(token);
+        if (token == 'null') {
+            console.log("missing token, block profile access");
+            userInfo = "No token";
+        } else {
+            userInfo = await checkToken(token);
+            console.log(userInfo);
+        }
         req.result = userInfo;
 
     } catch(err) {

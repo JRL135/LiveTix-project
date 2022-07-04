@@ -387,15 +387,20 @@ async function buyTickets(e){
 // timer section
 const timerElement = document.getElementById('countdown-text');
 let timer;
-
+let timeCountdown;
 function startCountdown() {
     timer = 20;
-    const timeCountdown = setInterval(countdown, 1000);
+    console.log("000000")
+    timeCountdown = setInterval(countdown, 1000);
+    console.log(444444)
 }
 
 function countdown() {
+    console.log("TIMER:",timer)
     if (timer == -1) {
-        clearTimeout(timer);
+        console.log(11111)
+        clearInterval(timeCountdown);
+        console.log(22222)
         alert('Sorry, time is up!');
         window.location.href = "/index.html";
        
