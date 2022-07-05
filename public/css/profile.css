@@ -1,6 +1,17 @@
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 main {
     /* margin-top: 4em; */
     margin-bottom: 4em;
+    flex: 1;
 }
 
 .user-info-container {
@@ -23,7 +34,6 @@ main {
     object-fit: cover;
     border-radius: 50%;
 }
-
 
 /* ------------------- tab ------------------- */
 .tab_css {
