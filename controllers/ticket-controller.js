@@ -44,14 +44,14 @@ async function genQRcode(ticket_ids){
         let ticket_id = ticket_ids[i];
 
         //TEMP
-        let ticketURLHash = ticket_id + 'xgJdHeKyh7vVWieommnq2rOPcVmS';
+        // let ticketURLHash = ticket_id + 'xgJdHeKyh7vVWieommnq2rOPcVmS';
 
-        // // hashing ticket URL
-        // let ticketURLHash = await encryptTicketURL(ticket_id);
+        // hashing ticket URL
+        let ticketURLHash = await encryptTicketURL(ticket_id);
         // now hash = ticket_id
-        // let ticketURL = `http://localhost:80/ticket/verification/${ticketURLHash}`;
-        let ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
-        // console.log(ticketURL);
+        let ticketURL = `http://localhost:80/ticket/verification/${ticketURLHash}`;
+        // let ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
+        console.log(ticketURL);
 
         // ticket URL to qrcode
         let ticketQR = await QRCode.toDataURL(ticketURL); 
@@ -109,74 +109,74 @@ async function s3UploadQR(ticketQR, ticket_id){
 const algorithm = 'aes-256-ctr';
 const initVector = crypto.randomBytes(16);
 // const securityKey = crypto.randomBytes(32);
-// const key = process.env.CRYPTOKEY;
+const key = process.env.CRYPTOKEY;
 
-
-// function encryptTicketURL(ticket_id){
-//     console.log("encryptTicketURL triggered");
-//     console.log(ticket_id);
-//     console.log(typeof(ticket_id));
-//     let ticket_id_string = toString(ticket_id);
-//     let ciphertext = CryptoJS.AES.encrypt(ticket_id_string, key).toString();
-//     let ciphertext_URLencoded = encodeURIComponent(ciphertext);
-//     console.log(ciphertext_URLencoded);
-//     return ciphertext_URLencoded;
-// }
 
 function encryptTicketURL(ticket_id){
-    let newsha256 = crypto.createHash("sha256")
-    newsha256.update("abc");
     console.log("encryptTicketURL triggered");
     console.log(ticket_id);
     console.log(typeof(ticket_id));
-    let ticket_id_string = toString(ticket_id);
-    const cipher = crypto.createCipheriv(algorithm, newsha256.digest(), initVector);
-    let encryptedData = cipher.update(Buffer.from(ticket_id_string));
-    let encryptedData1 = Buffer.concat([initVector, encryptedData, cipher.final()]);
-    encryptedData1 = encryptedData1.toString('Base64');
-    console.log("----------------------------------");
-    console.log(encryptedData1);
-    let ciphertext_URLencoded = encodeURIComponent(encryptedData1);
+    ticket_id = ticket_id.toString();
+    let ciphertext = CryptoJS.AES.encrypt(ticket_id, key).toString();
+    let ciphertext_URLencoded = encodeURIComponent(ciphertext);
     console.log(ciphertext_URLencoded);
     return ciphertext_URLencoded;
 }
 
-// function decryptTicketURL(ticketURLHash){
-//     console.log("decryptTicketURL triggered");
-//     console.log(ticketURLHash);
-//     console.log(typeof(ticketURLHash));
-//     let ticketURLHash_decoded = decodeURIComponent(ticketURLHash);
-//     console.log(ticketURLHash_decoded);
-//     let ciphertext = CryptoJS.AES.decrypt(ticketURLHash, key).toString(CryptoJS.enc.Utf8);
-//     console.log("ciphertext:");
-//     console.log(ciphertext);
-//     return ciphertext;
+// function encryptTicketURL(ticket_id){
+//     let newsha256 = crypto.createHash("sha256")
+//     newsha256.update("abc");
+//     console.log("encryptTicketURL triggered");
+//     console.log(ticket_id);
+//     console.log(typeof(ticket_id));
+//     let ticket_id_string = toString(ticket_id);
+//     const cipher = crypto.createCipheriv(algorithm, newsha256.digest(), initVector);
+//     let encryptedData = cipher.update(Buffer.from(ticket_id_string));
+//     let encryptedData1 = Buffer.concat([initVector, encryptedData, cipher.final()]);
+//     encryptedData1 = encryptedData1.toString('Base64');
+//     console.log("----------------------------------");
+//     console.log(encryptedData1);
+//     let ciphertext_URLencoded = encodeURIComponent(encryptedData1);
+//     console.log(ciphertext_URLencoded);
+//     return ciphertext_URLencoded;
 // }
 
 function decryptTicketURL(ticketURLHash){
-    let newsha256 = crypto.createHash("sha256")
-    newsha256.update("abc");
+    console.log("decryptTicketURL triggered");
+    console.log(ticketURLHash);
+    console.log(typeof(ticketURLHash));
     let ticketURLHash_decoded = decodeURIComponent(ticketURLHash);
-    console.log('==========================');
     console.log(ticketURLHash_decoded);
-    let input = Buffer.from(ticketURLHash_decoded, "base64")
-    let decIV = input.slice(0, 16);
-    const decipher = crypto.createDecipheriv(algorithm, newsha256.digest(), decIV);
-
-
-    let toDecipherBuffer = input.slice(16)
-    let decipherText = decipher.update(toDecipherBuffer) + decipher.final();
-    console.log(decipherText);
-    console.log(decipherText.toString('base64'))
-
-
-    // let decryptedData_string = decipher.update(ticketURLHash, "hex", "utf-8");
-    // decryptedData_string += decipher.final("utf8");
-    // let decryptedData = parseInt(decryptedData_string);
-    // console.log(decryptedData);
-    // return decryptedData;
-    return decipherText
+    let ciphertext = CryptoJS.AES.decrypt(ticketURLHash_decoded, key).toString(CryptoJS.enc.Utf8);
+    console.log("ciphertext:");
+    console.log(ciphertext);
+    return ciphertext;
 }
+
+// function decryptTicketURL(ticketURLHash){
+//     let newsha256 = crypto.createHash("sha256")
+//     newsha256.update("abc");
+//     let ticketURLHash_decoded = decodeURIComponent(ticketURLHash);
+//     console.log('==========================');
+//     console.log(ticketURLHash_decoded);
+//     let input = Buffer.from(ticketURLHash_decoded, "base64")
+//     let decIV = input.slice(0, 16);
+//     const decipher = crypto.createDecipheriv(algorithm, newsha256.digest(), decIV);
+
+
+//     let toDecipherBuffer = input.slice(16)
+//     let decipherText = decipher.update(toDecipherBuffer) + decipher.final();
+//     console.log(decipherText);
+//     console.log(decipherText.toString('base64'))
+
+
+//     // let decryptedData_string = decipher.update(ticketURLHash, "hex", "utf-8");
+//     // decryptedData_string += decipher.final("utf8");
+//     // let decryptedData = parseInt(decryptedData_string);
+//     // console.log(decryptedData);
+//     // return decryptedData;
+//     return decipherText
+// }
 
 async function authTicket(req, res, next){
     console.log('authTicket triggered');
@@ -190,13 +190,13 @@ async function authTicket(req, res, next){
         message = "not admin";
     } else { //check ticket status
         //TEMP
-        let ticketURLHash_temp = req.params.hash;
-        let ticket_id = ticketURLHash_temp.slice(0, 1);
+        // let ticketURLHash_temp = req.params.hash;
+        // let ticket_id = ticketURLHash_temp.slice(0, 1);
 
-        // // decode ticket url to get ticket_id
-        // let ticketURLHash = encodeURIComponent(req.params.hash);
-        // console.log("ticketURLHash: " + ticketURLHash);
-        // let ticket_id = await decryptTicketURL(ticketURLHash);
+        // decode ticket url to get ticket_id
+        let ticketURLHash = encodeURIComponent(req.params.hash);
+        console.log("ticketURLHash: " + ticketURLHash);
+        let ticket_id = await decryptTicketURL(ticketURLHash);
 
         console.log("ticket_id: " + ticket_id);
         let ticketDetails = await Ticket.getTicketDetails(ticket_id);
