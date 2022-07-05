@@ -9,3 +9,14 @@
     padding: 1em;
 }
 
+#error-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+#error-text {
+    text-align: center;
+}
+

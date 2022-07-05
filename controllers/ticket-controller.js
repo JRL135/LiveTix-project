@@ -9,6 +9,28 @@ const AWS = require('aws-sdk');
 AWS.config.update({region: process.env.AWS_REGION});
 
 
+async function checkTicketUserId(user_id, ticket_id){
+    console.log("getTicketUserId triggered");
+    try {
+        console.log("user_id: " + user_id);
+        let message;
+        console.log("ticket_id: " + ticket_id);
+        let ticketInfo = await Ticket.getTicketInfo(ticket_id);
+        console.log(ticketInfo);
+        if (ticketInfo[0].user_id === user_id){
+            message = 'user_id matches';
+        } else {
+            message = 'user_id does not match';
+        }
+        console.log(message);
+        return message;
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+}
+
+
 async function getTicketDetails(req, res, next){
     console.log("getTicketDetails triggered");
     try {
@@ -34,6 +56,7 @@ async function getTicketDetails(req, res, next){
     }
     await next();
 }
+
 
 async function genQRcode(ticket_ids){
     console.log("genQRcode triggered");
@@ -211,4 +234,4 @@ async function authTicket(req, res, next){
     await next();
 }
 
-module.exports = { getTicketDetails, genQRcode, authTicket };
+module.exports = { getTicketDetails, genQRcode, authTicket, checkTicketUserId };

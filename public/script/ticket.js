@@ -1,4 +1,4 @@
-// window.jsPDF = window.jspdf.jsPDF;
+
 let ticket_params = new URL(document.location).searchParams;
 let ticket_id = ticket_params.get("id");
 console.log(ticket_id);
@@ -16,15 +16,25 @@ async function getTicketDetails(){
     });
     let ticketDetails = await fetchTicketDetails.json();
     console.log(ticketDetails);
-    let ticketContainerDiv = document.getElementsByClassName('ticket-container')[0];
-    ticketContainerDiv.innerHTML += `
-        <div>Event: ${ticketDetails.title}</div>
-        <div>Location: ${ticketDetails.avenue} @ ${ticketDetails.city}</div>
-        <div>Date: ${ticketDetails.date}</div>
-        <div>Ticket Type: ${ticketDetails.ticket_type}</div>
-        <div>Ticket Price: ${ticketDetails.ticket_price}</div>
-        <img src="${ticketDetails.qrcode}">
-    `;
+
+    
+
+    if (ticketDetails.message == "Not authorized to access this page"){
+        let main = document.getElementsByClassName('main')[0];
+        main.innerHTML = `
+            <div id="error-div"><p id="error-text">Oops, nothing to see here!</p><div>
+        `;
+    } else {
+        let ticketContainerDiv = document.getElementsByClassName('ticket-container')[0];
+        ticketContainerDiv.innerHTML += `
+            <div>Event: ${ticketDetails.title}</div>
+            <div>Location: ${ticketDetails.avenue} @ ${ticketDetails.city}</div>
+            <div>Date: ${ticketDetails.date}</div>
+            <div>Ticket Type: ${ticketDetails.ticket_type}</div>
+            <div>Ticket Price: ${ticketDetails.ticket_price}</div>
+            <img src="${ticketDetails.qrcode}">
+        `;
+    }
 
 }
 getTicketDetails();

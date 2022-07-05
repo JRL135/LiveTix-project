@@ -1,6 +1,11 @@
 // require('dotenv').config();
 const {pool} = require('./sqlconfig.js');
 
+const getTicketInfo = async (ticket_id)=>{
+    const [ticketInfo] = await pool.query(`SELECT user_id FROM ticket WHERE ticket_id = ?`, ticket_id);
+    return ticketInfo;
+};
+
 const getTicketDetails = async (ticket_id)=>{
     const [ticketDetails] = await pool.query(`SELECT * FROM ticket WHERE ticket_id = ?`, ticket_id);
     return ticketDetails;
@@ -21,4 +26,4 @@ const saveTicketURLAndQR = async (ticketURL, ticketQR, ticket_id)=>{
     return ticketUpdated;
 }
 
-module.exports = {getTicketDetails, getEventDetailsForTicket, updateUsed, saveTicketURLAndQR};
+module.exports = { getTicketInfo, getTicketDetails, getEventDetailsForTicket, updateUsed, saveTicketURLAndQR };
