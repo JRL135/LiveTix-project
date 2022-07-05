@@ -1,6 +1,7 @@
 const ROOT_URL = `${environment.backendBaseUrl}`;
 
 async function postSignupInfo(){
+    console.log("posting signup info");
     let email = document.getElementById('email').value;
     console.log(email);
     let username = document.getElementById('username').value;
@@ -15,7 +16,7 @@ async function postSignupInfo(){
         username: username,
         password: password
     }
-    const postUserURL = `${ROOT_URL}/user/signup`;
+    const postUserURL = `${ROOT_URL}user/signup`;
     let postUser = await fetch(postUserURL, {
         method: 'POST',
         headers: headers,
