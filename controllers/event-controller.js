@@ -56,7 +56,6 @@ function printReq(req, res){
 }
 
 // save user_id, timer_timestamp
-// where 
 async function reserveTickets(req, res, next){
     console.log('reserveTickets triggered');
     try {
@@ -119,13 +118,14 @@ async function reserveTickets(req, res, next){
     await next();
 }
 
-// JWT token 10m save user_id, ticket_id??
+
 async function saveTicketOrder(req, res, next){
     console.log('saveTicketOrder triggered');
     let event_id = req.params.id;
     const authHeader = req.headers.authorization;
     let token = authHeader.split(' ')[1];
     let userInfo = await UserController.checkToken(token);
+    console.log("userInfo:");
     console.log(userInfo);
     let user_id = userInfo.id;
     console.log("user_id: " + user_id);

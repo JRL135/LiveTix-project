@@ -23,7 +23,7 @@ async function registerUser(req, res, next){
             let createNewUser = await User.registerUser(email, name, password);
             console.log("new user created");
             // gen JWT token for new user
-            let token = await genToken(user_id, email, name, password);
+            let token = await genToken(user_id, email, name, role, password);
             console.log(token);
             req.result = token;
         } else {
@@ -157,7 +157,7 @@ async function getUserRegisteredEvents(req, res, next){
         let username = req.params.username;
         console.log(username);
         let registeredEvents = await User.getRegisteredEvents(username);
-        // console.log(registeredEvents);
+        console.log(registeredEvents);
         req.result = registeredEvents;
 
     } catch(err) {
