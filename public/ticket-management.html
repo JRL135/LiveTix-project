@@ -12,16 +12,18 @@
     <script src="./components/footer.js" type="text/javascript" defer></script>
     <link href="./css/header.css" rel="stylesheet">
     <link href="./css/footer.css" rel="stylesheet">
+    <link href="./css/ticket-management.css" rel="stylesheet">
 
 </head>
 <body>
     <header-component></header-component>
 
     <main>
-        <div>Ticket management page</div>
-        <a href="/ticket-scanner.html" id="ticket-scanner-link">Go to ticket scanner</a>
+        <div class="main-container">
+            <div id="page-title">Ticket management page</div>
+            <a href="/ticket-scanner.html" id="ticket-scanner-link"><button>Go to ticket scanner</button></a>
+        </div>
     </main>
-
     <footer-component></footer-component>
     <script src="./script/ticket-management.js"></script>
 </body>
