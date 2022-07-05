@@ -43,13 +43,15 @@ async function genQRcode(ticket_ids){
     for (let i = 0; i < ticket_ids.length; i++) {
         let ticket_id = ticket_ids[i];
 
-        // hashing ticket URL
-        let ticketURLHash = await encryptTicketURL(ticket_id);
+        //TEMP
+        let ticketURLHash = ticket_id + 'xgJdHeKyh7vVWieommnq2rOPcVmS';
 
+        // // hashing ticket URL
+        // let ticketURLHash = await encryptTicketURL(ticket_id);
         // now hash = ticket_id
-        let ticketURL = `http://localhost:80/ticket/verification/${ticketURLHash}`;
-        // let ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
-        console.log(ticketURL);
+        // let ticketURL = `http://localhost:80/ticket/verification/${ticketURLHash}`;
+        let ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
+        // console.log(ticketURL);
 
         // ticket URL to qrcode
         let ticketQR = await QRCode.toDataURL(ticketURL); 
@@ -187,10 +189,15 @@ async function authTicket(req, res, next){
     if (userInfo.role !== 'admin') {
         message = "not admin";
     } else { //check ticket status
-        // decode ticket url to get ticket_id
-        let ticketURLHash = encodeURIComponent(req.params.hash);
-        console.log("ticketURLHash: " + ticketURLHash);
-        let ticket_id = await decryptTicketURL(ticketURLHash);
+        //TEMP
+        let ticketURLHash_temp = req.params.hash;
+        let ticket_id = ticketURLHash_temp.slice(0, 1);
+
+        // // decode ticket url to get ticket_id
+        // let ticketURLHash = encodeURIComponent(req.params.hash);
+        // console.log("ticketURLHash: " + ticketURLHash);
+        // let ticket_id = await decryptTicketURL(ticketURLHash);
+
         console.log("ticket_id: " + ticket_id);
         let ticketDetails = await Ticket.getTicketDetails(ticket_id);
         if (ticketDetails[0].used_status === 0) {

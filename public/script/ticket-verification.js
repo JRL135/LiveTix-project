@@ -23,7 +23,8 @@ async function checkAdminRoleAndVerify(){
     } else {
         message = "ticket verification failed";
     }
-    req.result = message;
+    // req.result = message;
+    document.getElementById('verification-text').innerHTML += `${message}`;
     sessionStorage.clear();
 }
 checkAdminRoleAndVerify();
