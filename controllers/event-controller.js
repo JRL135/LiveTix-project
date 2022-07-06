@@ -31,10 +31,14 @@ async function postEventFavStatus(req, res, next){
         let event_id = req.params.id;
         console.log("event_id: " + event_id);
         let userInfo = await UserController.checkUserRole(req);
-        let user_id = userInfo.user_id;
-        let favStatus = await Event.postEventFavStatus(event_id, user_id);
-        console.log(favStatus);
-        req.result = favStatus;
+        if (userInfo == 'No token') {
+            return res.status(401).send({message: userInfo})
+        } else {
+            let user_id = userInfo.user_id;
+            let favStatus = await Event.postEventFavStatus(event_id, user_id);
+            console.log(favStatus);
+            req.result = favStatus;
+        }
     }catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});

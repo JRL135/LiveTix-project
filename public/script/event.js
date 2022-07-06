@@ -204,9 +204,13 @@ async function toggleFav(e){
             method: 'POST',
             headers: headers
         });
-        fav_icon.setAttribute('src', '../img/fav-full.png');
-        fav_icon.setAttribute('status', 'full');
-        alert('Added to favorites!');
+        if (favStatusResult.status != 401) {
+            fav_icon.setAttribute('src', '../img/fav-full.png');
+            fav_icon.setAttribute('status', 'full');
+            alert('Added to favorites!');
+        } else {
+            alert('Please log in to favorite this event!');
+        }
     } else {
         favStatusResult = await fetch(favURL, {
             method: 'DELETE',

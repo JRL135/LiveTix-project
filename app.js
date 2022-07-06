@@ -94,7 +94,7 @@ app.get(`/api/${process.env.api}/event/:id/user/favorite`, getEventFavStatus, (r
     res.json(req.result);
 })
 
-app.post(`/api/${process.env.api}/event/:id/user/favorite`, postEventFavStatus, (req, res)=>{
+app.post(`/api/${process.env.api}/event/:id/user/favorite`, checkUserMiddleware, postEventFavStatus, (req, res)=>{
     res.json(req.result);
 })
 
