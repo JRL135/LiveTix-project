@@ -15,5 +15,10 @@ const getRegisteredEvents = async (username)=>{
     return registeredEvents;
 }
 
+const getUserFavEvents = async (username)=>{
+    const [favEvents] = await pool.query(`SELECT event_id FROM favorite WHERE user_id IN (SELECT user_id FROM user WHERE name = ?)`, username);
+    return favEvents;
+};
 
-module.exports = { checkEmail, registerUser, getRegisteredEvents };
+
+module.exports = { checkEmail, registerUser, getRegisteredEvents, getUserFavEvents };

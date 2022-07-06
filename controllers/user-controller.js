@@ -1,4 +1,5 @@
 const User = require('../models/user-model');
+const Event = require('../models/event-model');
 const bcrypt = require('bcrypt');
 const JWT = require('jsonwebtoken');
 const TicketController = require('./ticket-controller');
@@ -189,6 +190,27 @@ async function getUserRegisteredEvents(req, res, next){
     await next();
 }
 
+async function getUserFavEvents(req, res, next){
+    console.log('getUserFavEvents triggered');
+    try {
+        let username = req.params.username;
+        console.log(username);
+        let favEvents = await User.getUserFavEvents(username); //return event_id array
+        console.log(favEvents);
+        let events = [];
+        for (let i = 0; i < favEvents.length; i++){
+            let event_id = favEvents[i].event_id;
+            let eventDetails = await Event.getEventDetails(event_id);
+            events.push(eventDetails);
+        }
+        console.log(events);
+        req.result = events;
+    }catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
 
 async function checkToken(token){
     let userInfo = await JWT.verify(token, process.env.jwt_key);
@@ -201,4 +223,4 @@ async function genToken(user_id, email, name, role, password){
 }
 
 
-module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkUserRole, checkUserMiddleware, checkIndividualUser, getUserRegisteredEvents };
+module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkUserRole, checkUserMiddleware, checkIndividualUser, getUserRegisteredEvents, getUserFavEvents };

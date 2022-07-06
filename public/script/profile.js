@@ -2,9 +2,11 @@
 // let userParams = params.get("username");
 // console.log("user params: " + userParams);
 
+
 async function profilePageRender(){
     let username = await checkTokenAndRenderProfile();
     await getUserRegisteredEvents(username);
+    await getUserFavEvents(username);
 
 }
 profilePageRender();
@@ -37,9 +39,9 @@ async function checkTokenAndRenderProfile(){
 
 async function getUserRegisteredEvents(username){
     console.log(username);
-    const getUserRegisteredEventURL = `/api/1.0/user/${username}/events/registered`;
-    let userRegisteredEvents = await fetch(getUserRegisteredEventURL);
-    let registeredEvents = await userRegisteredEvents.json();
+    const getUserRegisteredEventsURL = `/api/1.0/user/${username}/events/registered`;
+    let userRegisteredsEvents = await fetch(getUserRegisteredEventsURL);
+    let registeredEvents = await userRegisteredsEvents.json();
     console.log(registeredEvents);
     let registeredEventDiv = document.getElementsByClassName('tab1-div')[0];
     for (let i = 0; i < registeredEvents.length; i++) {
@@ -52,6 +54,29 @@ async function getUserRegisteredEvents(username){
             <div>${registeredEvents[i].avenue} @ ${registeredEvents[i].city}</div>
             <a target="_parent" href="${ROOT_URL}ticket.html?id=${registeredEvents[i].ticket_id}"><button id="ticket-btn">Ticket</button></a>
             
+        </div>
+        `;
+    }
+
+}
+
+async function getUserFavEvents(username){
+    console.log(username);
+    const getUserFavEventsURL = `/api/1.0/user/${username}/events/favorite`;
+    let userFavEvents = await fetch(getUserFavEventsURL);
+    let favEvents = await userFavEvents.json();
+    console.log(favEvents);
+    let favEventsDiv = document.getElementsByClassName('tab2-div')[0];
+    console.log("length: " + favEvents.length);
+    for (let i = 0; i < favEvents.length; i++) {
+        let start_date = favEvents[i][0].start_date.split('T')[0];
+        favEventsDiv.innerHTML += `
+        <div class="fav-event-div">
+            <img src="${favEvents[i][0].main_picture}">
+            <div>${favEvents[i][0].title}</div>
+            <div>${start_date}</div>
+            <div>${favEvents[i][0].avenue} @ ${favEvents[i][0].city}</div>
+            <a target="_parent" href="${ROOT_URL}event.html?id=${favEvents[i][0].event_id}"><button id="event-page-btn">Details</button></a>
         </div>
         `;
     }

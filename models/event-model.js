@@ -16,7 +16,6 @@ const deleteEventFavStatus = async (event_id, user_id)=>{
     return eventFavStatus;
 };
 
-
 const getEventDetails = async (id)=>{
     const [eventDetails] = await pool.query(`SELECT * FROM event WHERE event_id = ?`, id);
     return eventDetails;

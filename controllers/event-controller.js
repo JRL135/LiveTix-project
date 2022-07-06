@@ -59,7 +59,6 @@ async function deleteEventFavStatus(req, res, next){
     await next();
 }
 
-
 async function getEventDetailsAPI(req, res, next){
     console.log('getEventDetailsAPI triggered');
     let id = req.params.id;
