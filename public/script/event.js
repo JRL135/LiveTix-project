@@ -393,52 +393,68 @@ async function postTicketSelection(e){
         }
     }
 
-    if (ticket_type_list.length == 0) {
-        alert('Please select ticket');
+    let token = localStorage.getItem('token');
+    let headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`,
+    }
+    const checkUserLoginURL = `/user/role`;
+    let loginResult = await fetch(checkUserLoginURL, {
+        headers: headers
+    });
+    let userLoginStatus = await loginResult.json();
+    console.log(userLoginStatus);
+
+    if (userLoginStatus == 'No token') {
+        alert('Please log in to reserve tickets');
     } else {
-        alert('Selected ticket(s) has been reserved for 20 seconds');
-        // hide add to cart button
-        document.getElementById("addToCart_ticket_button").style.display = 'none';
-        // unhide timer
-        document.getElementById('countdown-div').style.display = 'inline';
-        // show buy ticket button
-        document.getElementById("buy_ticket_button").style.display = 'inline-block';
+        if (ticket_type_list.length == 0) {
+            alert('Please select ticket');
+        } else {
+            alert('Selected ticket(s) has been reserved for 20 seconds');
+            // hide add to cart button
+            document.getElementById("addToCart_ticket_button").style.display = 'none';
+            // unhide timer
+            document.getElementById('countdown-div').style.display = 'inline';
+            // show buy ticket button
+            document.getElementById("buy_ticket_button").style.display = 'inline-block';
 
-        // start timer
-        // startCountdown();
+            // start timer
+            startCountdown();
 
-        let token = localStorage.getItem('token');
-        const reserveURL = `/api/1.0/event/${event_id}/tickets/reserve`;
-        
-        let headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": `Bearer ${token}`,
+            let token = localStorage.getItem('token');
+            const reserveURL = `/api/1.0/event/${event_id}/tickets/reserve`;
+            
+            let headers = {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`,
+            }
+
+            let body = {
+                event_id: event_id,
+                ticket_type: ticket_type_list,
+                ticket_number: ticket_number_list
+            };
+
+            console.log(headers);
+            console.log("sorted body: ");
+            console.log(body);
+
+            let reserve = await fetch(reserveURL, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(body)
+            });
+            postTixResponse = await reserve.json();
+            console.log("postTixResponse:");
+            console.log(postTixResponse); // returns available tickets for each tix type
+            if (postTixResponse === 'No token') {
+                alert("Please login first.");
+                window.location.href = "/login.html";
+            }
         }
-
-        let body = {
-            event_id: event_id,
-            ticket_type: ticket_type_list,
-            ticket_number: ticket_number_list
-        };
-
-        console.log(headers);
-        console.log("sorted body: ");
-        console.log(body);
-
-        let reserve = await fetch(reserveURL, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(body)
-        });
-        postTixResponse = await reserve.json();
-        console.log("postTixResponse:");
-        console.log(postTixResponse); // returns available tickets for each tix type
-        if (postTixResponse === 'No token') {
-            alert("Please login first.");
-            window.location.href = "/login.html";
-        }
-
         
     }
 
