@@ -5,8 +5,8 @@ const checkEmail = async (email)=>{
     return checkEmail;
 }
 
-const registerUser = async (email, name, password)=>{
-    const [newUser] = await pool.query(`INSERT INTO user (name, email, password) VALUES (?, ?, ?)`, [name, email, password]);
+const registerUser = async (email, name, password, role)=>{
+    const [newUser] = await pool.query(`INSERT INTO user (name, email, password, role) VALUES (?, ?, ?, ?)`, [name, email, password, role]);
     return newUser;
 }
 

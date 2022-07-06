@@ -14,6 +14,7 @@ async function registerUser(req, res, next){
         let email = userInfo.email;
         let name = userInfo.username;
         let password = userInfo.password;
+        let role = 'user';
         
         // encrypt password
         let salt = await bcrypt.genSalt();
@@ -22,7 +23,7 @@ async function registerUser(req, res, next){
         // check if email exists
         let emailCheck = await User.checkEmail(email);
         if (emailCheck.length === 0) {
-            let createNewUser = await User.registerUser(email, name, password);
+            let createNewUser = await User.registerUser(email, name, password, role);
             console.log("new user created");
             // gen JWT token for new user
             let token = await genToken(user_id, email, name, role, password);
