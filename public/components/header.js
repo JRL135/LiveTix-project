@@ -15,7 +15,8 @@ class Header extends HTMLElement {
                 </div>
                 <div class="header-right">
                     <a target="_parent" href="${ROOT_URL}profile.html" class="nav-link slide">Profile</a>
-                    <a href="${ROOT_URL}signup.html" class="nav-link slide">Sign In/Sign Up</a>
+                    <a href="${ROOT_URL}signup.html" class="nav-link slide">Sign Up</a>
+                    <a href="${ROOT_URL}login.html" class="nav-link slide">Log In</a>
                     <div class="nav-link" id="signout-div">Sign Out</div>
                 </div>
             </div>

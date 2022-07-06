@@ -1,4 +1,7 @@
 const ROOT_URL = `${environment.backendBaseUrl}`;
+const previousURL = document.referrer;
+console.log(previousURL);
+
 
 async function postLoginInfo(){
     let email = document.getElementById('email').value;
@@ -30,7 +33,13 @@ async function postLoginInfo(){
     } else {
         localStorage.setItem("token", loginUserToken);
         alert("Welcome back!");
-        location.assign(`${ROOT_URL}index.html`);
+
+        if (previousURL != '') {
+            location.assign(previousURL);
+        }
+        else {
+            location.assign(`${ROOT_URL}index.html`);
+        }
     }
 }
 
