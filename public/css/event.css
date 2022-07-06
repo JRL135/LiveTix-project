@@ -16,7 +16,13 @@ main {
     flex: 1;
 }
 
-img {
+#fav-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.event_main-image {
     width: 430px;
     height: 270px;
     object-fit: cover;

@@ -3,7 +3,7 @@ const express = require("express");
 // const mysql = require("mysql2");
 // const multer = require("multer");
 const path = require("path");
-const { printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents } = require("./controllers/event-controller");
+const { printReq, getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents } = require("./controllers/event-controller");
 const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, checkUserRole, checkUserMiddleware, checkIndividualUser} = require("./controllers/user-controller");
 const {getTicketDetails, authTicket} = require("./controllers/ticket-controller");
 
@@ -82,17 +82,22 @@ app.get(`/api/${process.env.api}/ticket/:id`, checkUserMiddleware, checkIndividu
     res.json(req.result);
 })
 
-// app.get(`/api/${process.env.api}/ticket/:id/qrcode/`, checkAdmin, authTicket, (req, res)=>{
-//     res.json(req.result);
-// })
-
-// app.get(`/api/${process.env.api}/ticket/verification`, authTicket, (req, res)=>{
-//     res.json(req.result);
-// })
-
 app.get(`/ticket/verification/:hash`, authTicket, (req, res)=>{
     res.json(req.result);
 })
+
+app.get(`/api/${process.env.api}/event/:id/user/favorite`, getEventFavStatus, (req, res)=>{
+    res.json(req.result);
+})
+
+app.post(`/api/${process.env.api}/event/:id/user/favorite`, postEventFavStatus, (req, res)=>{
+    res.json(req.result);
+})
+
+app.delete(`/api/${process.env.api}/event/:id/user/favorite`, deleteEventFavStatus, (req, res)=>{
+    res.json(req.result);
+})
+
 
 //generic checkUserRole api
 app.get(`/user/role`, checkUserMiddleware, (req, res)=>{

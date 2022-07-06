@@ -1,8 +1,24 @@
 const {pool} = require('./sqlconfig.js');
 
-// select from event table
+
+const getEventFavStatus = async (event_id, user_id)=>{
+    const [eventFavStatus] = await pool.query(`SELECT * FROM favorite WHERE event_id = ? AND user_id = ?`, [event_id, user_id]);
+    return eventFavStatus;
+};
+
+const postEventFavStatus = async (event_id, user_id)=>{
+    const [eventFavStatus] = await pool.query(`INSERT INTO favorite (event_id, user_id) VALUES(?, ?)`, [event_id, user_id]);
+    return eventFavStatus;
+};
+
+const deleteEventFavStatus = async (event_id, user_id)=>{
+    const [eventFavStatus] = await pool.query(`DELETE FROM favorite WHERE event_id = ? AND user_id = ?`, [event_id, user_id]);
+    return eventFavStatus;
+};
+
+
 const getEventDetails = async (id)=>{
-    const [eventDetails] = await pool.query(`SELECT * FROM event where event_id=?`, id);
+    const [eventDetails] = await pool.query(`SELECT * FROM event WHERE event_id = ?`, id);
     return eventDetails;
 };
 
@@ -88,7 +104,7 @@ const saveTicketOrder = async (event_id, user_id, ticket_ids)=>{
         await conn.query('START TRANSACTION');
 
 
-        // order_query: ...
+        // order_query
         let [order_query] = await conn.query(`INSERT INTO live.order (event_id, user_id) VALUES (?, ?)`, [event_id, user_id]);
         console.log(typeof(order_query));
         console.log(order_query);
@@ -152,4 +168,4 @@ const getSearchedEvents = async (keyword, category, city, start_date, end_date)=
 };
 
 
-module.exports = {getEventDetails, getEventArtists, getEventDates, getAvailTickets, checkAndReserveTickets, checkTimerStatus, saveTicketOrder, getCurrentEvents, getCurrentEventsByCategory, getSearchedEvents};
+module.exports = { getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetails, getEventArtists, getEventDates, getAvailTickets, checkAndReserveTickets, checkTimerStatus, saveTicketOrder, getCurrentEvents, getCurrentEventsByCategory, getSearchedEvents };

@@ -3,6 +3,62 @@ const UserController = require('./user-controller');
 const TicketController = require('./ticket-controller');
 // var CryptoJS = require("crypto-js");
 
+async function getEventFavStatus(req, res, next){
+    console.log('getEventFavStatus triggered');
+    try {
+        let event_id = req.params.id;
+        console.log("event_id: " + event_id);
+        let userInfo = await UserController.checkUserRole(req);
+        let user_id = userInfo.user_id;
+        console.log("user_id: " + user_id);
+        let favStatus = await Event.getEventFavStatus(event_id, user_id);
+        console.log(favStatus);
+        if (favStatus.length === 0) {
+            req.result = 0; // not fav
+        } else {
+            req.result = 1; // fav
+        }
+    }catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+async function postEventFavStatus(req, res, next){
+    console.log('postEventFavStatus triggered');
+    try {
+        let event_id = req.params.id;
+        console.log("event_id: " + event_id);
+        let userInfo = await UserController.checkUserRole(req);
+        let user_id = userInfo.user_id;
+        let favStatus = await Event.postEventFavStatus(event_id, user_id);
+        console.log(favStatus);
+        req.result = favStatus;
+    }catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+async function deleteEventFavStatus(req, res, next){
+    console.log('deleteEventFavStatus triggered');
+    try {
+        let event_id = req.params.id;
+        console.log("event_id: " + event_id);
+        let userInfo = await UserController.checkUserRole(req);
+        let user_id = userInfo.user_id;
+        let favStatus = await Event.deleteEventFavStatus(event_id, user_id);
+        console.log(favStatus);
+        req.result = favStatus;
+    }catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
 
 async function getEventDetailsAPI(req, res, next){
     console.log('getEventDetailsAPI triggered');
@@ -237,4 +293,4 @@ async function getSearchedEvents (req, res, next){
 
 
 
-module.exports = {printReq, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents};
+module.exports = {printReq, getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents};

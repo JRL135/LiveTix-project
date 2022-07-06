@@ -159,7 +159,66 @@ let event_id = event_params.get("id");
 // console.log(event_params.pathname);
 console.log(event_id);
 
-// const ROOT_URL = `${environment.backendBaseUrl}`;
+
+async function getEventFavStatus(){
+    console.log("getFavStatus triggered");
+    let fav_icon = document.getElementById('fav-icon');
+    let token = localStorage.getItem('token');
+    let headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`,
+    }
+    const favURL = `/api/1.0/event/${event_id}/user/favorite`;
+    let favStatusResult = await fetch(favURL, {
+        headers: headers
+    });
+    let favStatus = await favStatusResult.json();
+    console.log(favStatus);
+    if (favStatus === 1) {
+        console.log('favStatus: y');
+        fav_icon.setAttribute('src', '../img/fav-full.png');
+        fav_icon.setAttribute('status', 'full');
+    } else {
+        console.log('favStatus: n');
+        fav_icon.setAttribute('src', '../img/fav-empty.png');
+        fav_icon.setAttribute('status', 'empty');
+    }
+}
+getEventFavStatus();
+
+async function toggleFav(e){
+    console.log("toggleFav triggered");
+    let token = localStorage.getItem('token');
+    let headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`,
+    }
+    let fav_icon = document.getElementById('fav-icon');
+    const favURL = `/api/1.0/event/${event_id}/user/favorite`;
+    let favStatusResult;
+    let fav_iconStatus = fav_icon.getAttribute('status');
+    if (fav_iconStatus === 'empty'){
+        favStatusResult = await fetch(favURL, {
+            method: 'POST',
+            headers: headers
+        });
+        fav_icon.setAttribute('src', '../img/fav-full.png');
+        fav_icon.setAttribute('status', 'full');
+        alert('Added to favorites!');
+    } else {
+        favStatusResult = await fetch(favURL, {
+            method: 'DELETE',
+            headers: headers
+        });
+        fav_icon.setAttribute('src', '../img/fav-empty.png');
+        fav_icon.setAttribute('status', 'empty');
+        alert('Removed from favorites!');
+    }
+    let favStatus = await favStatusResult.json();
+    console.log(favStatus);
+}
 
 //fetch event details
 async function getEventDetailsAPI(){
