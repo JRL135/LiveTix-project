@@ -19,13 +19,16 @@ body {
 .header-left {
     display: flex;
     justify-content: space-around;
-    /* gap: 20px; */
     align-items: center;
     margin-left: 2em;
 }
 
 .header-right {
-    /* gap: 20px; */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: 2em;
+    margin-right: 2em;
 }
 
 .nav-link {
@@ -75,6 +78,9 @@ body {
     width: 100px;
 }
 
+#signout-div {
+    cursor: pointer;
+}
 
 /* .navbar {
     transition: all 0.4s;

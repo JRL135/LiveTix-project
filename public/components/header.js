@@ -16,11 +16,20 @@ class Header extends HTMLElement {
                 <div class="header-right">
                     <a target="_parent" href="${ROOT_URL}profile.html" class="nav-link slide">Profile</a>
                     <a href="${ROOT_URL}signup.html" class="nav-link slide">Sign In/Sign Up</a>
+                    <div class="nav-link" id="signout-div">Sign Out</div>
                 </div>
             </div>
         `;
         let search = document.getElementById('search-btn');
         search.setAttribute('href', `${ROOT_URL}search.html`);
+
+        let signout_div = document.getElementById('signout-div');
+        signout_div.addEventListener('click', signOut);
+        function signOut(){
+            localStorage.removeItem('token');
+            alert('You have signed out.');
+            window.location.reload();
+        }
     }
 }
 
