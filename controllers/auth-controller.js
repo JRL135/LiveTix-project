@@ -1,5 +1,5 @@
 const JWT = require('jsonwebtoken');
-const TicketController = require('./ticket-controller');
+const Ticket = require('../models/ticket-model');
 require('dotenv').config({path: '../.env'});
 
 async function checkIndividualUser(req, res, next){
@@ -9,7 +9,7 @@ async function checkIndividualUser(req, res, next){
         console.log("user_id: " + user_id);
         let ticket_id = req.params.id;
         console.log("ticket_id: " + ticket_id);
-        let result = await TicketController.checkTicketUserId(user_id, ticket_id);
+        let result = await checkTicketUserId(user_id, ticket_id);
         console.log(result); //result = 'user_id matches'
         if (result === 'user_id does not match'){
             return res.status(403).send({
@@ -21,6 +21,27 @@ async function checkIndividualUser(req, res, next){
         res.status(500).send({error: err.message});
     }
     await next();
+}
+
+async function checkTicketUserId(user_id, ticket_id){
+    console.log("getTicketUserId triggered");
+    try {
+        console.log("user_id: " + user_id);
+        let message;
+        console.log("ticket_id: " + ticket_id);
+        let ticketInfo = await Ticket.getTicketInfo(ticket_id);
+        console.log(ticketInfo);
+        if (ticketInfo[0].user_id === user_id){
+            message = 'user_id matches';
+        } else {
+            message = 'user_id does not match';
+        }
+        console.log(message);
+        return message;
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
 }
 
 async function checkUserRole(req, res, next){

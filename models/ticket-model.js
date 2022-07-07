@@ -7,14 +7,19 @@ const getTicketInfo = async (ticket_id)=>{
 };
 
 const getTicketDetails = async (ticket_id)=>{
-    const [ticketDetails] = await pool.query(`SELECT * FROM ticket WHERE ticket_id = ?`, ticket_id);
+    const [ticketDetails] = await pool.query(`SELECT t1.ticket_id as ticket_id, t1.purchase_date as purchase_date, t1.used_status as used_status, t1.price as price, t1.type_name as type_name, t1.ticket_url as ticket_url, t1.qrcode as qrcode, DATE_FORMAT(t1.ticket_start_date,'%Y-%m-%d') as ticket_start_date, DATE_FORMAT(t1.ticket_end_date,'%Y-%m-%d') as ticket_end_date, DATE_FORMAT(t1.verified_time,'%Y-%m-%d') as verified_time, t2.category as category, t2.title as title, t2.city as city, t2.avenue as avenue from live.ticket t1 INNER JOIN live.event t2 ON t1.event_id = t2.event_id WHERE ticket_id = ?`, ticket_id);
     return ticketDetails;
 };
 
-const getEventDetailsForTicket = async (ticket_id)=>{
-    const [eventDetails] = await pool.query(`select title, city, avenue, DATE_FORMAT(start_date,'%Y-%m-%d') as start_date from event where event_id in (select event_id from live.ticket where ticket_id = ?)`, ticket_id);
-    return eventDetails;
-}
+// const getTicketDetails = async (ticket_id)=>{
+//     const [ticketDetails] = await pool.query(`SELECT * FROM ticket WHERE ticket_id = ?`, ticket_id);
+//     return ticketDetails;
+// };
+
+// const getEventDetailsForTicket = async (ticket_id)=>{
+//     const [eventDetails] = await pool.query(`select title, city, avenue, DATE_FORMAT(start_date,'%Y-%m-%d') as start_date from event where event_id in (select event_id from live.ticket where ticket_id = ?)`, ticket_id);
+//     return eventDetails;
+// }
 
 const updateUsed = async (ticket_id)=>{
     const [ticketUpdated] = await pool.query(`UPDATE ticket SET used_status = '1' WHERE ticket_id = ?`, ticket_id);
@@ -31,4 +36,4 @@ const getVerifiedTickets = async (admin_id)=>{
     return ticketDetails;
 };
 
-module.exports = { getTicketInfo, getTicketDetails, getEventDetailsForTicket, updateUsed, saveTicketURLAndQR, getVerifiedTickets };
+module.exports = { getTicketInfo, getTicketDetails, updateUsed, saveTicketURLAndQR, getVerifiedTickets };

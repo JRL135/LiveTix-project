@@ -9,26 +9,7 @@ const AWS = require('aws-sdk');
 AWS.config.update({region: process.env.AWS_REGION});
 
 
-async function checkTicketUserId(user_id, ticket_id){
-    console.log("getTicketUserId triggered");
-    try {
-        console.log("user_id: " + user_id);
-        let message;
-        console.log("ticket_id: " + ticket_id);
-        let ticketInfo = await Ticket.getTicketInfo(ticket_id);
-        console.log(ticketInfo);
-        if (ticketInfo[0].user_id === user_id){
-            message = 'user_id matches';
-        } else {
-            message = 'user_id does not match';
-        }
-        console.log(message);
-        return message;
-    } catch(err) {
-        console.log(err);
-        res.status(500).send({error: err.message});
-    }
-}
+
 
 
 async function getTicketDetails(req, res, next){
@@ -38,18 +19,19 @@ async function getTicketDetails(req, res, next){
         console.log(ticket_id);
         let ticketDetails = await Ticket.getTicketDetails(ticket_id);
         console.log(ticketDetails);
-        let eventDetailsForTicket = await Ticket.getEventDetailsForTicket(ticket_id);
-        console.log(eventDetailsForTicket);
-        let arrayObj = {};
-        // for (let i = 0; i < .length; i++) {}
-        arrayObj.title = eventDetailsForTicket[0].title;
-        arrayObj.city = eventDetailsForTicket[0].city;
-        arrayObj.avenue = eventDetailsForTicket[0].avenue;
-        arrayObj.date = eventDetailsForTicket[0].start_date;
-        arrayObj.ticket_price = ticketDetails[0].price;
-        arrayObj.ticket_type = ticketDetails[0].type_name;
-        arrayObj.qrcode = ticketDetails[0].qrcode;
-        req.result = arrayObj;
+
+        // let eventDetailsForTicket = await Ticket.getEventDetailsForTicket(ticket_id);
+        // console.log(eventDetailsForTicket);
+
+        // let arrayObj = {};
+        // arrayObj.title = eventDetailsForTicket[0].title;
+        // arrayObj.city = eventDetailsForTicket[0].city;
+        // arrayObj.avenue = eventDetailsForTicket[0].avenue;
+        // arrayObj.date = eventDetailsForTicket[0].start_date;
+        // arrayObj.ticket_price = ticketDetails[0].price;
+        // arrayObj.ticket_type = ticketDetails[0].type_name;
+        // arrayObj.qrcode = ticketDetails[0].qrcode;
+        req.result = ticketDetails;
     } catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});
@@ -247,4 +229,4 @@ async function getVerifiedTickets(req, res, next){
     await next();
 }
 
-module.exports = { getTicketDetails, genQRcode, authTicket, getVerifiedTickets, checkTicketUserId };
+module.exports = { getTicketDetails, genQRcode, authTicket, getVerifiedTickets };

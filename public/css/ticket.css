@@ -7,8 +7,44 @@
     border: 1px solid #bacdd8;
     border-radius: 12px;
     padding: 1em;
+    font-size: 0.9em;
 }
 
+
+.watermark{
+    user-select: none; /* Non-prefixed version for chorme, opera and*/
+    -ms-user-select: none; /* Internet Explorer, Edge */
+    -moz-user-select: none; /* Firefox */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+}
+
+img {
+    width: 150px;
+}
+
+.watermark:before{
+    content: 'USED';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    
+    color: #0d745e;
+    font-size: 100px;
+    font-weight: 500px;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    opacity: 0.2;
+    transform: rotate(-45deg);
+}
+
+
+/* For 403 access */
 #error-div {
     display: flex;
     justify-content: center;
