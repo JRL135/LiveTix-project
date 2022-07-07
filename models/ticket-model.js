@@ -26,4 +26,9 @@ const saveTicketURLAndQR = async (ticketURL, ticketQR, ticket_id)=>{
     return ticketUpdated;
 }
 
-module.exports = { getTicketInfo, getTicketDetails, getEventDetailsForTicket, updateUsed, saveTicketURLAndQR };
+const getVerifiedTickets = async (admin_id)=>{
+    const [ticketDetails] = await pool.query(`SELECT t1.event_id as event_id, t1.category as category, t1.title as title, DATE_FORMAT(t1.start_date,'%Y-%m-%d') as start_date, DATE_FORMAT(t1.end_date,'%Y-%m-%d') as end_date, t1.city as city, t1.avenue as avenue, t2.ticket_id as ticket_id, t2.user_id as user_id, DATE_FORMAT(t2.verified_time,'%Y-%m-%d') as verified_time, t2.price as price, t2.type_name as type_name, DATE_FORMAT(t2.ticket_start_date,'%Y-%m-%d') ticket_start_date, DATE_FORMAT(t2.ticket_end_date,'%Y-%m-%d') as ticket_end_date from event t1 INNER JOIN ticket t2 ON t1.event_id = t2.event_id WHERE verified_id = ?`, admin_id);
+    return ticketDetails;
+};
+
+module.exports = { getTicketInfo, getTicketDetails, getEventDetailsForTicket, updateUsed, saveTicketURLAndQR, getVerifiedTickets };

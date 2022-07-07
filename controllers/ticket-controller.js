@@ -212,9 +212,6 @@ async function authTicket(req, res, next){
     if (userInfo.role !== 'admin') {
         message = "not admin";
     } else { //check ticket status
-        //TEMP
-        // let ticketURLHash_temp = req.params.hash;
-        // let ticket_id = ticketURLHash_temp.slice(0, 1);
 
         // decode ticket url to get ticket_id
         let ticketURLHash = encodeURIComponent(req.params.hash);
@@ -222,16 +219,32 @@ async function authTicket(req, res, next){
         let ticket_id = await decryptTicketURL(ticketURLHash);
 
         console.log("ticket_id: " + ticket_id);
+
+        // check if ticket has already been verified
         let ticketDetails = await Ticket.getTicketDetails(ticket_id);
         if (ticketDetails[0].used_status === 0) {
             await Ticket.updateUsed(ticket_id);
             message = `Ticket number ${ticket_id} authenticated`;
         } else {
-            message = "invalid ticket";
+            message = `Ticket number ${ticket_id} has already been verified`;
         }
     }
     req.result = message;
     await next();
 }
 
-module.exports = { getTicketDetails, genQRcode, authTicket, checkTicketUserId };
+async function getVerifiedTickets(req, res, next){
+    console.log('getVerifiedTickets triggered');
+    try {
+        let admin_id = req.params.id;
+        let verifiedTickets = await Ticket.getVerifiedTickets(admin_id);
+        console.log(verifiedTickets);
+        req.result = verifiedTickets;        
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+module.exports = { getTicketDetails, genQRcode, authTicket, getVerifiedTickets, checkTicketUserId };

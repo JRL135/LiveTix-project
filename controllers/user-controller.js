@@ -183,7 +183,7 @@ async function getUserRegisteredEvents(req, res, next){
         let registeredEvents = await User.getRegisteredEvents(username);
         console.log(registeredEvents);
         req.result = registeredEvents;
-        
+
     } catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});

@@ -5,7 +5,7 @@ const express = require("express");
 const path = require("path");
 const { printReq, getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents } = require("./controllers/event-controller");
 const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, getUserFavEvents, checkUserRole, checkUserMiddleware, checkIndividualUser} = require("./controllers/user-controller");
-const {getTicketDetails, authTicket} = require("./controllers/ticket-controller");
+const {getTicketDetails, authTicket, getVerifiedTickets} = require("./controllers/ticket-controller");
 
 
 const app = express();
@@ -99,6 +99,10 @@ app.post(`/api/${process.env.api}/event/:id/user/favorite`, checkUserMiddleware,
 })
 
 app.delete(`/api/${process.env.api}/event/:id/user/favorite`, deleteEventFavStatus, (req, res)=>{
+    res.json(req.result);
+})
+
+app.get(`/api/${process.env.api}/ticket/ticket-management/verified-tickets/admin/:id`, getVerifiedTickets, (req, res)=>{
     res.json(req.result);
 })
 

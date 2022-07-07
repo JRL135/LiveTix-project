@@ -15,14 +15,45 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    border: 1px solid #bacdd8;
+    border-radius: 12px;
+    margin: 2em;
+    padding: 1em;
+}
+
+.ticket-list-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid #bacdd8;
+    border-radius: 12px;
+    margin: 1em;
+    padding: 1em;
+}
+
+table {
+    text-align: center;
+    padding: 1em;
+}
+
+table > *{
+    text-align: center;
+    padding: 1.2em;
+}
+
+table thead th {
+    border-bottom: 1px solid #bacdd8;
 }
 
 #page-title {
     text-align: center;
-    margin: 2em;
+    margin: 0.5em;
     font-size: 1.2em;
 }
 
 #ticket-scanner-link {
-
+    margin: 0.5em;
 }

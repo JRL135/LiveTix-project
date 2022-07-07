@@ -22,6 +22,25 @@
     <main>
         <div class="main-container">
             <div id="page-title">Ticket management page</div>
+            <div class="ticket-list-container">
+                <p>Tickets verified</p>
+                <table class="tickets-table">
+                    <thead>
+                        <tr>
+                            <th id="tb_ticket_id">Ticket ID</th>
+                            <th id="tb_user_id">User ID</th>
+                            <th id="tb_event_title">Event Title</th>
+                            <th id="tb_event_id">Event ID</th>
+                            <th id="tb_verified_time">Verified Time</th>
+                            <th id="tb_ticket_price">Ticket Price</th>
+                            <th id="tb_ticket_type">Ticket Type</th>
+                            <th id="tb_ticket_start_date">Ticket Start Date</th>
+                            <th id="tb_ticket_end_date">Ticket End Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ticket_tb_tbody"></tbody>
+                </table>
+            </div>
             <a href="/ticket-scanner.html" id="ticket-scanner-link"><button>Go to ticket scanner</button></a>
         </div>
     </main>
