@@ -69,7 +69,8 @@ class Header extends HTMLElement {
         function signOut(){
             localStorage.removeItem('token');
             alert('You have signed out.');
-            window.location.reload();
+            // window.location.reload();
+            window.location.href = "/index.html";
         }
     }
 }
