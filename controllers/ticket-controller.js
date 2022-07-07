@@ -1,6 +1,6 @@
 const QRCode = require('qrcode');
 const Ticket = require('../models/ticket-model');
-const UserController = require('./user-controller');
+const AuthController = require('./auth-controller');
 const crypto = require('crypto');
 const CryptoJS = require('crypto-js');
 
@@ -206,7 +206,7 @@ async function authTicket(req, res, next){
     // scan qrcode -> call veritifcation api
     // check req.result
     // if admin, check ticket status
-    let userInfo = await UserController.checkUserRole(req);
+    let userInfo = await AuthController.checkUserRole(req);
     console.log(userInfo);
     let message;
     if (userInfo.role !== 'admin') {

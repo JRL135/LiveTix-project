@@ -3,9 +3,10 @@ const express = require("express");
 // const mysql = require("mysql2");
 // const multer = require("multer");
 const path = require("path");
-const { printReq, getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents } = require("./controllers/event-controller");
-const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, getUserFavEvents, checkUserRole, checkUserMiddleware, checkIndividualUser} = require("./controllers/user-controller");
+const {printReq, getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents} = require("./controllers/event-controller");
+const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, getUserFavEvents, checkUserMiddleware} = require("./controllers/user-controller");
 const {getTicketDetails, authTicket, getVerifiedTickets} = require("./controllers/ticket-controller");
+const {checkUserRole, checkIndividualUser} = require("./controllers/auth-controller");
 
 
 const app = express();
@@ -19,10 +20,7 @@ app.get('/', (req, res)=>{
     res.send("homepage");
 })
 
-
-
-// API routes (frontend call backend)
-
+//APIs
 app.get(`/api/${process.env.api}/event/:id`, getEventDetailsAPI, (req, res)=>{
     console.log("Entered event details page");
     res.json(req.result);
@@ -113,17 +111,6 @@ app.get(`/user/role`, checkUserMiddleware, (req, res)=>{
 })
 
 
-
-
-
-
-
-// frontend routes
-// event.html
-
-// app.get(`/events/:id`, getEventDetailsAPI, (req, res)=>{
-//     res.json(req.result);
-// })
 
 
 
