@@ -148,7 +148,7 @@ const getCurrentEventsByCategory = async (category)=>{
 };
 
 
-//search filter querie
+//search querie
 const getSearchedEvents = async (keyword, category, city, start_date, end_date)=>{
     let category_condition;
     if (category != 0) {
@@ -167,4 +167,16 @@ const getSearchedEvents = async (keyword, category, city, start_date, end_date)=
 };
 
 
-module.exports = { getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetails, getEventArtists, getEventDates, getAvailTickets, checkAndReserveTickets, checkTimerStatus, saveTicketOrder, getCurrentEvents, getCurrentEventsByCategory, getSearchedEvents };
+//ticket-listing queries
+// const getCurrentEventsForExchange = async ()=>{
+//     const [currentEvents] = await pool.query(`SELECT DISTINCT t1.event_id as event_id, t1.title as title, t2.type as type, t2.type_name as type_name, DATE_FORMAT(t2.ticket_start_date,'%Y-%m-%d') as ticket_start_date, DATE_FORMAT(t2.ticket_end_date,'%Y-%m-%d') as ticket_end_date from event t1 INNER JOIN ticket t2 ON t1.event_id = t2.event_id;`);
+//     return currentEvents;
+// };
+
+const getCurrentEventsForExchange = async ()=>{
+    const [currentEvents] = await pool.query(`SELECT * FROM event WHERE end_date >= CURDATE()`);
+    return currentEvents;
+};
+
+
+module.exports = { getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetails, getEventArtists, getEventDates, getAvailTickets, checkAndReserveTickets, checkTimerStatus, saveTicketOrder, getCurrentEvents, getCurrentEventsByCategory, getSearchedEvents, getCurrentEventsForExchange };

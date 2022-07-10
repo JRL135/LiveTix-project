@@ -294,6 +294,17 @@ async function getSearchedEvents (req, res, next){
     await next();
 }
 
+async function getCurrentEventsForExchange (req, res, next){
+    console.log('getCurrentEventsForExchange triggered');
+    try {
+        let currentEvents = await Event.getCurrentEventsForExchange();
+        console.log(currentEvents);
+        req.result = currentEvents;
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
 
-
-module.exports = {printReq, getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents};
+module.exports = {printReq, getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents, getCurrentEventsForExchange};

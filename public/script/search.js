@@ -79,7 +79,7 @@ async function postSearchConditions(e){
                 <div class="searched-event-card-title-plus-container">
                     <div class="searched-card-item">${searchResults.title}</div>
                     <div class="searched-card-item">${start_date}</div>
-                    <div class="searched-card-item">${searchResults.avenue} @ ${searchResults.city}</div>
+                    <div class="searched-card-item">${searchResults.venue} @ ${searchResults.city}</div>
                     <a target="_parent" href="${ROOT_URL}event.html?id=${searchResults.event_id}"><button id="details-btn" class="searched-card-item">Details</button></a>
                 </div>
                 <img id="searched-image" src="${searchResults.main_picture}" alt="${searchResults.title}">

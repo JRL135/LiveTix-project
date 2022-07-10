@@ -51,7 +51,7 @@ async function getUserRegisteredEvents(username){
             <img src="${registeredEvents[i].main_picture}">
             <div>${registeredEvents[i].title}</div>
             <div>${start_date}</div>
-            <div>${registeredEvents[i].avenue} @ ${registeredEvents[i].city}</div>
+            <div>${registeredEvents[i].venue} @ ${registeredEvents[i].city}</div>
             <a target="_parent" href="${ROOT_URL}ticket.html?id=${registeredEvents[i].ticket_id}"><button id="ticket-btn">Ticket</button></a>
             
         </div>
@@ -75,7 +75,7 @@ async function getUserFavEvents(username){
             <img src="${favEvents[i][0].main_picture}">
             <div>${favEvents[i][0].title}</div>
             <div>${start_date}</div>
-            <div>${favEvents[i][0].avenue} @ ${favEvents[i][0].city}</div>
+            <div>${favEvents[i][0].venue} @ ${favEvents[i][0].city}</div>
             <a target="_parent" href="${ROOT_URL}event.html?id=${favEvents[i][0].event_id}"><button id="event-page-btn">Details</button></a>
         </div>
         `;

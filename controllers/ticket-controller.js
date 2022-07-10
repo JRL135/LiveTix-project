@@ -9,9 +9,6 @@ const AWS = require('aws-sdk');
 AWS.config.update({region: process.env.AWS_REGION});
 
 
-
-
-
 async function getTicketDetails(req, res, next){
     console.log("getTicketDetails triggered");
     try {
@@ -19,18 +16,6 @@ async function getTicketDetails(req, res, next){
         console.log(ticket_id);
         let ticketDetails = await Ticket.getTicketDetails(ticket_id);
         console.log(ticketDetails);
-
-        // let eventDetailsForTicket = await Ticket.getEventDetailsForTicket(ticket_id);
-        // console.log(eventDetailsForTicket);
-
-        // let arrayObj = {};
-        // arrayObj.title = eventDetailsForTicket[0].title;
-        // arrayObj.city = eventDetailsForTicket[0].city;
-        // arrayObj.avenue = eventDetailsForTicket[0].avenue;
-        // arrayObj.date = eventDetailsForTicket[0].start_date;
-        // arrayObj.ticket_price = ticketDetails[0].price;
-        // arrayObj.ticket_type = ticketDetails[0].type_name;
-        // arrayObj.qrcode = ticketDetails[0].qrcode;
         req.result = ticketDetails;
     } catch(err) {
         console.log(err);
@@ -39,6 +24,20 @@ async function getTicketDetails(req, res, next){
     await next();
 }
 
+async function getUserUnusedTickets(req, res, next){
+    console.log("getUserUnusedTickets triggered");
+    try {
+        let user_id = req.params.id;
+        let unusedTickets = await Ticket.getUserUnusedTickets(user_id);
+        console.log(unusedTickets);
+        req.result = unusedTickets;
+
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
 
 async function genQRcode(ticket_ids){
     console.log("genQRcode triggered");
@@ -229,4 +228,53 @@ async function getVerifiedTickets(req, res, next){
     await next();
 }
 
-module.exports = { getTicketDetails, genQRcode, authTicket, getVerifiedTickets };
+async function getSelectedEventTicketTypes(req, res, next){
+    console.log('getVerifiedTickets triggered');
+    try {
+        let event_id = req.params.id;
+        let ticketTypes = await Ticket.getSelectedEventTicketTypes(event_id);
+        console.log(ticketTypes);
+        req.result = ticketTypes;        
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+async function postExchangeCondition(req, res, next){
+    console.log('postExchangeCondition triggered');
+    try {
+        console.log(req.body);
+        let user_id = req.body.user_id;
+        let ticket_id = parseInt(req.body.ticket_id);
+        let selected_event_id = parseInt(req.body.selected_event_id);
+        let selected_ticket_type = req.body.selected_ticket_type;
+        let listing_id = await Ticket.saveExchangeAndListing(selected_event_id, selected_ticket_type, user_id, ticket_id);
+        console.log(listing_id);
+        req.result = {
+            status: 'success',
+            listing_id: listing_id
+        };
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+async function getCurrentListings(req, res, next){
+    console.log('getCurrentListings triggered');
+    try {
+        let listings = await Ticket.getCurrentListings();
+        console.log(listings);
+        req.result = listings;
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+
+module.exports = { getTicketDetails, getUserUnusedTickets, genQRcode, authTicket, getVerifiedTickets, getSelectedEventTicketTypes, postExchangeCondition, getCurrentListings };

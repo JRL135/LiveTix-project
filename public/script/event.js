@@ -239,7 +239,7 @@ async function getEventDetailsAPI(){
     } else {
         document.getElementsByClassName("event_date")[0].innerHTML = `Date: ${event_start_date} - ${event_end_date}`;
     }
-    document.getElementsByClassName("event_avenue")[0].innerHTML = `Location: ${eventDetails[0].avenue}`;
+    document.getElementsByClassName("event_venue")[0].innerHTML = `Location: ${eventDetails[0].venue}`;
     document.getElementsByClassName("event_location")[0].innerHTML = `City: ${eventDetails[0].city}`;
     document.getElementsByClassName("event_category")[0].innerHTML = `Category: ${eventDetails[0].category}`;
     document.getElementsByClassName("event_artist")[0].innerHTML = `

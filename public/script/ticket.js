@@ -35,7 +35,7 @@ async function getTicketDetails(){
         if (ticketDetails[0].used_status == 1) {
             ticketContainerDiv.innerHTML += `
                 <div>Event: ${ticketDetails[0].title}</div>
-                <div>Location: ${ticketDetails[0].avenue} @ ${ticketDetails[0].city}</div>
+                <div>Location: ${ticketDetails[0].venue} @ ${ticketDetails[0].city}</div>
                 <div>Date: ${date}</div>
                 <div>Ticket Type: ${ticketDetails[0].type_name}</div>
                 <div>Ticket Price: ${ticketDetails[0].price}</div>
@@ -45,7 +45,7 @@ async function getTicketDetails(){
         } else {
             ticketContainerDiv.innerHTML += `
                 <div>Event: ${ticketDetails[0].title}</div>
-                <div>Location: ${ticketDetails[0].avenue} @ ${ticketDetails[0].city}</div>
+                <div>Location: ${ticketDetails[0].venue} @ ${ticketDetails[0].city}</div>
                 <div>Date: ${date}</div>
                 <div>Ticket Type: ${ticketDetails[0].type_name}</div>
                 <div>Ticket Price: ${ticketDetails[0].price}</div>
