@@ -183,31 +183,39 @@ function recordSelectedTicketType(e){
 async function postExchangeCondition(){
     console.log("postExchangeCondition triggered");
 
-    let headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        // "Authorization": `Bearer ${token}`,
-    }
-    let body = {
-        user_id: user_id,
-        ticket_id: selected_ticket_id,
-        selected_event_id: selected_event_id,
-        selected_ticket_type: selected_ticket_type
-    }
-    const postExchangeURL = `/api/1.0/ticket/ticket-listing/exchange`;
-    let result = await fetch(postExchangeURL, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(body)
-    });
-    let postStatus = await result.json();
-    console.log(postStatus);
-
-    if (postStatus.status === 'success'){
-        alert(`Your listing has been saved! Listing number: ${postStatus.listing_id}`);
-        location.assign(`${ROOT_URL}marketplace.html`);
+    if (selected_ticket_id == undefined || selected_ticket_id == 'default'){
+        alert("Please select your ticket");
+    } else if (selected_event_id == undefined || selected_event_id == 'default') {
+        alert("Please select an event");
+    } else if (selected_ticket_type == undefined || selected_ticket_type == 'default') {
+        alert("Please select a ticket type");
     } else {
-        alert('Something went wrong. please try again, thank you!');
-        location.reload();
+        let headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            // "Authorization": `Bearer ${token}`,
+        }
+        let body = {
+            user_id: user_id,
+            ticket_id: selected_ticket_id,
+            selected_event_id: selected_event_id,
+            selected_ticket_type: selected_ticket_type
+        }
+        const postExchangeURL = `/api/1.0/ticket/ticket-listing/exchange`;
+        let result = await fetch(postExchangeURL, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(body)
+        });
+        let postStatus = await result.json();
+        console.log(postStatus);
+
+        if (postStatus.status === 'success'){
+            alert(`Your listing has been saved! Listing number: ${postStatus.listing_id}`);
+            location.assign(`${ROOT_URL}marketplace.html`);
+        } else {
+            alert('Something went wrong. please try again, thank you!');
+            location.reload();
+        }
     }
 }
