@@ -34,12 +34,12 @@ async function postLoginInfo(){
         localStorage.setItem("token", loginUserToken);
         alert("Welcome back!");
 
-        if (previousURL != '') {
-            location.assign(previousURL);
-        }
-        else {
+        // if (previousURL != '') {
+        //     location.assign(previousURL);
+        // }
+        // else {
             location.assign(`${ROOT_URL}index.html`);
-        }
+        // }
     }
 }
 

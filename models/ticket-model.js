@@ -17,12 +17,19 @@ const getUserUnusedTickets = async (user_id)=>{
     let listedTicketArray = userListedTickets[0].ticket_id;
     console.log(listedTicketArray);
 
-    const [unusedTickets] = await pool.query(`SELECT t1.ticket_id as ticket_id, DATE_FORMAT(t1.purchase_date, '%Y-%m-%d') as purchase_date, t1.used_status as used_status, t1.price as price, t1.type_name as type_name, DATE_FORMAT(t1.ticket_start_date,'%Y-%m-%d') as ticket_start_date, DATE_FORMAT(t1.ticket_end_date,'%Y-%m-%d') as ticket_end_date, DATE_FORMAT(t1.verified_time,'%Y-%m-%d') as verified_time, t2.category as category, t2.title as title, t2.city as city, t2.venue as venue from tickets t1 INNER JOIN events t2 ON t1.event_id = t2.event_id WHERE user_id = ? and used_status = '0' and purchase_date is not null and ticket_id not in (?)`, [user_id, listedTicketArray]);
+    let condition;
+    if (listedTicketArray != null) {
+        condition = ' and ticket_id not in (?)';
+    } else {
+        condition = '';
+    }
+    console.log(condition);
+    const [unusedTickets] = await pool.query(`SELECT t1.ticket_id as ticket_id, DATE_FORMAT(t1.purchase_date, '%Y-%m-%d') as purchase_date, t1.used_status as used_status, t1.price as price, t1.type_name as type_name, DATE_FORMAT(t1.ticket_start_date,'%Y-%m-%d') as ticket_start_date, DATE_FORMAT(t1.ticket_end_date,'%Y-%m-%d') as ticket_end_date, DATE_FORMAT(t1.verified_time,'%Y-%m-%d') as verified_time, t2.category as category, t2.title as title, t2.city as city, t2.venue as venue from tickets t1 INNER JOIN events t2 ON t1.event_id = t2.event_id WHERE user_id = ? and used_status = '0' and purchase_date is not null${condition}`, [user_id, listedTicketArray]);
     return unusedTickets;
 };
 
-const updateUsed = async (ticket_id)=>{
-    const [ticketUpdated] = await pool.query(`UPDATE tickets SET used_status = '1' WHERE ticket_id = ?`, ticket_id);
+const updateUsed = async (ticket_id, admin_id)=>{
+    const [ticketUpdated] = await pool.query(`UPDATE tickets SET used_status = '1', verified_id = ?, verified_time = NOW() WHERE ticket_id = ?`, [admin_id, ticket_id]);
     return ticketUpdated;
 }
 
@@ -145,7 +152,6 @@ const executeExchange = async (user_id, ticket_id, ticketURL, ticketQR, poster_u
         // console.log(ticketQR);
         // console.log(ticket_id);
         const [ticketExchanged] = await conn.query(`UPDATE tickets SET user_id = ?, ticket_url = ?, qrcode = ? WHERE ticket_id = ?`, [poster_user_id, ticketURL, ticketQR, ticket_id]);
-        // const [ticketExchanged] = await conn.query(`UPDATE tickets SET user_id = ? and ticket_url = ? and qrcode = ? WHERE ticket_id = ?`, [poster_user_id, ticketURL, ticketQR, ticket_id]);
         console.log(ticketExchanged);
 
         // original A (poster) ticket, to B
@@ -154,7 +160,6 @@ const executeExchange = async (user_id, ticket_id, ticketURL, ticketQR, poster_u
         // console.log(poster_ticketQR);
         // console.log(poster_ticket_id);
         const [posterTicketExchanged] = await conn.query(`UPDATE tickets SET user_id = ?, ticket_url = ?, qrcode = ? WHERE ticket_id = ?`, [user_id, poster_ticketURL, poster_ticketQR, poster_ticket_id]);
-        // const [posterTicketExchanged] = await conn.query(`UPDATE tickets SET user_id = ? and ticket_url = ? and qrcode = ? WHERE ticket_id = ?`, [user_id, poster_ticketURL, poster_ticketQR, poster_ticket_id]);
         console.log(posterTicketExchanged);
 
         await conn.query('COMMIT');

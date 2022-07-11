@@ -192,6 +192,7 @@ async function authTicket(req, res, next){
     // if admin, check ticket status
     let userInfo = await AuthController.checkUserRole(req);
     console.log(userInfo);
+    let admin_id = userInfo.user_id;
     let message;
     if (userInfo.role !== 'admin') {
         message = "not admin";
@@ -214,7 +215,7 @@ async function authTicket(req, res, next){
             req_ticket_url = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
         }
         if (ticketDetails[0].used_status === 0 && ticketDetails[0].ticket_url === req_ticket_url) {
-            await Ticket.updateUsed(ticket_id);
+            await Ticket.updateUsed(ticket_id, admin_id);
             message = {
                 status: 1,
                 message: `Ticket number ${ticket_id} authenticated`
@@ -347,7 +348,7 @@ async function postListingSelection(req, res, next){
             } else if (process.env.MODE === 'production'){
                 poster_ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
             }
-            let poster_ticketQR = await QRCode.toDataURL(ticketURL);
+            let poster_ticketQR = await QRCode.toDataURL(poster_ticketURL);
             let exchangeResult = await Ticket.executeExchange(user_id, ticket_id, ticketURL, ticketQR, poster_user_id, poster_ticket_id, poster_ticketURL, poster_ticketQR);
             if (exchangeResult.length == 0 || exchangeResult == null || exchangeResult == undefined) {
                 console.log("exchange db error");
