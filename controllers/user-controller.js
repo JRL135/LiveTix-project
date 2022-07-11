@@ -169,6 +169,21 @@ async function getUserFavEvents(req, res, next){
     await next();
 }
 
+async function getUserMessages(req, res, next){
+    console.log('getUserMessages triggered');
+    try {
+        let user_id = req.params.id;
+        console.log(user_id);
+        let userMessages = await User.getUserMessages(user_id);
+        console.log(userMessages);
+        req.result = userMessages;
+    }catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
 async function checkToken(token){
     let userInfo = await JWT.verify(token, process.env.jwt_key);
     return userInfo;
@@ -180,4 +195,4 @@ async function genToken(user_id, email, name, role, password){
 }
 
 
-module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkUserMiddleware, getUserRegisteredEvents, getUserFavEvents };
+module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkUserMiddleware, getUserRegisteredEvents, getUserFavEvents, getUserMessages };

@@ -22,5 +22,10 @@ const getUserFavEvents = async (username)=>{
     return favEvents;
 };
 
+const getUserMessages = async (user_id)=>{
+    const [messages] = await pool.query(`SELECT * FROM messages WHERE user_id = ? ORDER BY message_id DESC`, user_id);
+    return messages;
+};
 
-module.exports = { checkEmail, registerUser, getRegisteredEvents, getUserFavEvents };
+
+module.exports = { checkEmail, registerUser, getRegisteredEvents, getUserFavEvents, getUserMessages };
