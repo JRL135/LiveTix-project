@@ -346,7 +346,7 @@ async function postListingSelection(req, res, next){
             if (process.env.MODE === 'development'){
                 poster_ticketURL = `http://localhost:80/ticket/verification/${poster_ticketURLHash}`;
             } else if (process.env.MODE === 'production'){
-                poster_ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
+                poster_ticketURL = `https://${process.env.DOMAIN}ticket/verification/${poster_ticketURLHash}`;
             }
             let poster_ticketQR = await QRCode.toDataURL(poster_ticketURL);
             let exchangeResult = await Ticket.executeExchange(user_id, ticket_id, ticketURL, ticketQR, poster_user_id, poster_ticket_id, poster_ticketURL, poster_ticketQR);
