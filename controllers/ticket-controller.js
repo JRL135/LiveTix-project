@@ -49,9 +49,14 @@ async function genQRcode(ticket_ids){
 
         // hashing ticket URL
         let ticketURLHash = await encryptTicketURL(ticket_id);
+
         // now hash = ticket_id
-        let ticketURL = `http://localhost:80/ticket/verification/${ticketURLHash}`;
-        // let ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
+        let ticketURL;
+        if (process.env.MODE === 'development'){
+            ticketURL = `${process.env.ROOT_URL}ticket/verification/${ticketURLHash}`;
+        } else if (process.env.MODE === 'production'){
+            ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
+        }
         console.log(ticketURL);
 
         // ticket URL to qrcode
@@ -202,7 +207,12 @@ async function authTicket(req, res, next){
         // check if ticket has already been verified
         // only qrcode currently saved in db is valid (to account for exchanged condition)
         let ticketDetails = await Ticket.getTicketDetails(ticket_id);
-        let req_ticket_url = `http://localhost:80/ticket/verification/${ticketURLHash}`;
+        let req_ticket_url;
+        if (process.env.MODE === 'development'){
+            req_ticket_url = `${process.env.ROOT_URL}ticket/verification/${ticketURLHash}`;
+        } else if (process.env.MODE === 'production'){
+            req_ticket_url = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
+        }
         if (ticketDetails[0].used_status === 0 && ticketDetails[0].ticket_url === req_ticket_url) {
             await Ticket.updateUsed(ticket_id);
             message = {
@@ -323,10 +333,20 @@ async function postListingSelection(req, res, next){
             console.log("poster_ticket_id: " + poster_ticket_id);
 
             let ticketURLHash = await encryptTicketURL(ticket_id);
-            let ticketURL = `http://localhost:80/ticket/verification/${ticketURLHash}`;
+            let ticketURL;
+            if (process.env.MODE === 'development'){
+                ticketURL = `${process.env.ROOT_URL}ticket/verification/${ticketURLHash}`;
+            } else if (process.env.MODE === 'production'){
+                ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
+            }
             let ticketQR = await QRCode.toDataURL(ticketURL);
             let poster_ticketURLHash = await encryptTicketURL(poster_ticket_id);
-            let poster_ticketURL = `http://localhost:80/ticket/verification/${poster_ticketURLHash}`;
+            let poster_ticketURL;
+            if (process.env.MODE === 'development'){
+                poster_ticketURL = `http://localhost:80/ticket/verification/${poster_ticketURLHash}`;
+            } else if (process.env.MODE === 'production'){
+                poster_ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
+            }
             let poster_ticketQR = await QRCode.toDataURL(ticketURL);
             let exchangeResult = await Ticket.executeExchange(user_id, ticket_id, ticketURL, ticketQR, poster_user_id, poster_ticket_id, poster_ticketURL, poster_ticketQR);
             if (exchangeResult.length == 0 || exchangeResult == null || exchangeResult == undefined) {

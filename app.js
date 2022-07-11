@@ -183,4 +183,5 @@ app.get(`/user/role`, checkUserMiddleware, (req, res)=>{
 // })
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
+const MODE = process.env.MODE;
+app.listen(PORT, () => console.log(`Server is listening on port ${PORT} on ${MODE} mode`));
