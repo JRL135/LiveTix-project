@@ -23,7 +23,7 @@ const getUserFavEvents = async (username)=>{
 };
 
 const getUserMessages = async (user_id)=>{
-    const [messages] = await pool.query(`SELECT * FROM messages WHERE user_id = ? ORDER BY message_id DESC`, user_id);
+    const [messages] = await pool.query(`SELECT message_id, user_id, content, DATE_FORMAT(date,'%Y-%m-%d') as date, message_type FROM messages WHERE user_id = ? ORDER BY message_id DESC`, user_id);
     return messages;
 };
 

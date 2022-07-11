@@ -170,7 +170,7 @@ const executeExchange = async (user_id, ticket_id, ticketURL, ticketQR, poster_u
 }
 
 const sendMessage = async (user_id, content)=>{
-    const [message] = await pool.query(`INSERT INTO messages SET user_id = ?, content = ?`, [user_id, content]);
+    const [message] = await pool.query(`INSERT INTO messages SET user_id = ?, content = ?, date = NOW(), message_type = 'marketplace'`, [user_id, content]);
     return message;
 }
 

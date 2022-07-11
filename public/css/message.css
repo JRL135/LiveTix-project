@@ -28,3 +28,25 @@ main {
     margin-bottom: 0.5em;
 }
 
+.message-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 1em;
+
+    border: 1px solid #bacdd8;
+    border-radius: 12px;
+
+}
+
+.message-container > * {
+    padding: 1em;
+}
+
+#msg-source-div {
+    border-right: 1px solid #bacdd8;
+}
+
+#msg-date-div {
+    border-right: 1px solid #bacdd8;
+}
