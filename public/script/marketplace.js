@@ -122,9 +122,9 @@ async function postListingSelection(){
 
     if (postStatus.status == 1){
         alert(`${postStatus.message}`);
-        // location.assign(`${ROOT_URL}profile.html`);
+        location.assign(`${ROOT_URL}profile.html`);
     } else {
         alert(`${postStatus.message}`);
-        // location.reload();
+        location.reload();
     }
 }
