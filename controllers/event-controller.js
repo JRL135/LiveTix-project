@@ -1,5 +1,6 @@
 const Event = require('../models/event-model');
 const UserController = require('./user-controller');
+const AuthController = require('./auth-controller');
 const TicketController = require('./ticket-controller');
 // var CryptoJS = require("crypto-js");
 
@@ -30,7 +31,7 @@ async function postEventFavStatus(req, res, next){
     try {
         let event_id = req.params.id;
         console.log("event_id: " + event_id);
-        let userInfo = await UserController.checkUserRole(req);
+        let userInfo = await AuthController.checkUserRole(req);
         if (userInfo == 'No token') {
             return res.status(401).send({message: userInfo})
         } else {
