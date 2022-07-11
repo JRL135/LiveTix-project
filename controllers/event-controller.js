@@ -52,7 +52,7 @@ async function deleteEventFavStatus(req, res, next){
     try {
         let event_id = req.params.id;
         console.log("event_id: " + event_id);
-        let userInfo = await UserController.checkUserRole(req);
+        let userInfo = await AuthController.checkUserRole(req);
         let user_id = userInfo.user_id;
         let favStatus = await Event.deleteEventFavStatus(event_id, user_id);
         console.log(favStatus);
