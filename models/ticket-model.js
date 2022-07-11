@@ -49,7 +49,7 @@ const saveExchangeAndListing = async (selected_event_id, selected_ticket_type, u
 
         let exchange_condition_id;
         // save exchange condition
-        let [exchange_select_query] = await conn.query(`SELECT exchange_condition_id FROM exchange_condition WHERE event_id = ? AND ticket_type = ?`, [selected_event_id, selected_ticket_type]);
+        let [exchange_select_query] = await conn.query(`SELECT exchange_condition_id FROM exchange_conditions WHERE event_id = ? AND ticket_type = ?`, [selected_event_id, selected_ticket_type]);
         console.log('===========================');
         console.log(exchange_select_query);
         if (exchange_select_query.length === 0){
