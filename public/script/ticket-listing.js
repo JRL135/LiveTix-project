@@ -56,10 +56,10 @@ async function getUserTickets(){
     let ticketsFetch = await fetch(`/api/1.0/ticket/ticket-listing/unused-tickets/user/${user_id}`);
     let ticketsAvail = await ticketsFetch.json();
     console.log(ticketsAvail);
-
+    let choice_1_container = document.getElementsByClassName('choice-1-container')[0];
     //USER UNUSED TICKETS dropdown create & populate
-    form.innerHTML += `
-        <label for="ticket">Your tickets available for listing:</label>
+    choice_1_container.innerHTML += `
+        <label for="ticket">1. Choose one of your tickets available for marketplace listing:</label>
         <select name="ticket" id="ticket">
         <option value="default">Choose a ticket</option>
         </select>
@@ -88,10 +88,10 @@ async function getCurrentEvents(){
     let eventsAvail = await currentEventsFetch.json();
     console.log(eventsAvail);
     console.log(eventsAvail.length);
-
+    let choice_2_container = document.getElementsByClassName('choice-2-container')[0];
     //EVENT dropdown create & populate
-    form.innerHTML += `
-        <div>Select your exchange conditions</div>
+    choice_2_container.innerHTML += `
+        <div>2. Select your exchange conditions: </div>
         <label for="event">Current Events:</label>
         <select name="event" id="event">
             <option value="default" selected>Choose an event</option>
@@ -110,11 +110,11 @@ async function getCurrentEvents(){
 
 
 async function getTicketTypes(){
-    form.innerHTML += `<div id="event-btn" onclick='getSelectedEventTicketTypes()'>Choose Event</div>`;
+    let choice_2_container = document.getElementsByClassName('choice-2-container')[0];
+    choice_2_container.innerHTML += `<div id="event-btn" onclick='getSelectedEventTicketTypes()'>Check out selected event ticket types</div>`;
     let event_btn = document.getElementById("event-btn");
-    
     //TICKET TYPES dropdown create
-    form.innerHTML += `
+    choice_2_container.innerHTML += `
         <label for="ticket-types">Ticket Types:</label>
         <select name="ticket-types" id="ticket-types">
             <option value="default" selected>Choose a ticket type</option>
