@@ -1,0 +1,106 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+body {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+main {
+    flex: 1;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* border: 1px solid #bacdd8;
+    border-radius: 12px; */
+    margin: 2em;
+    padding: 1em;;
+}
+
+main > * {
+    width: 100%;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid #bacdd8;
+    border-radius: 12px;
+    padding: 1em;
+}
+
+#welcome-text {
+    font-size: 1.2em;
+}
+
+#instruction-text {
+    font-size: 1em;
+    text-align: center;
+    border-bottom: 1px solid #bacdd8;
+    padding-bottom: 0.5em;
+}
+
+#current-listing-text {
+    text-align: center;
+    font-size: 1.2em;
+}
+
+table {
+    text-align: center;
+    padding: 1em;
+}
+
+table > *{
+    text-align: center;
+    padding: 1.2em;
+}
+
+table thead th {
+    border-bottom: 1px solid #bacdd8;
+}
+
+table tbody tr:hover {
+    background-color: #a8daef;
+    cursor: pointer;
+}
+
+.listing-selection-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid #bacdd8;
+    border-radius: 12px;
+    padding: 1em;
+}
+
+#selected-listing-text {
+    border-bottom: 1px solid #bacdd8;
+    padding: 0.5em;
+}
+
+.summary-div {
+    padding: 0.5em;
+}
+
+.summary-div > * {
+    margin: 0.3em;
+}
+
+/* .listing-selection-container > * {
+    padding: 0.5em;
+} */
+
+
