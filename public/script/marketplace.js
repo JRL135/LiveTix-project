@@ -80,6 +80,7 @@ async function renderListingsTable(){
 
 function renderListingSelectionDiv(e){
     let summary_div = document.getElementsByClassName('summary-div')[0];
+    summary_div.innerHTML = ``;
     console.log(e.currentTarget);
     listing_selection_id = e.currentTarget.id;
     listing_selection_title = e.currentTarget.title;
@@ -89,10 +90,10 @@ function renderListingSelectionDiv(e){
     summary_div.innerHTML += `
         <div>Listing ID: ${listing_selection_id}</div>
         <div>Listing Event: ${listing_selection_title}</div>
-        
     `;
-    let listing_selection_container = document.getElementsByClassName('listing-selection-container')[0];
-    listing_selection_container.innerHTML += `<button id="post-btn" onclick="postListingSelection()">Submit</button>`;
+    let btn_div = document.getElementsByClassName('btn-div')[0];
+    btn_div.innerHTML =``;
+    btn_div.innerHTML += `<button id="post-btn" onclick="postListingSelection()">Submit</button>`;
 
 }
 
