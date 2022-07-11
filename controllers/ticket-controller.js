@@ -47,9 +47,6 @@ async function genQRcode(ticket_ids){
     for (let i = 0; i < ticket_ids.length; i++) {
         let ticket_id = ticket_ids[i];
 
-        //TEMP
-        // let ticketURLHash = ticket_id + 'xgJdHeKyh7vVWieommnq2rOPcVmS';
-
         // hashing ticket URL
         let ticketURLHash = await encryptTicketURL(ticket_id);
         // now hash = ticket_id
@@ -110,11 +107,8 @@ async function s3UploadQR(ticketQR, ticket_id){
     // To delete, see: https://gist.github.com/SylarRuby/b3b1430ca633bc5ffec29bbcdac2bd52
 }
 
-const algorithm = 'aes-256-ctr';
-const initVector = crypto.randomBytes(16);
-// const securityKey = crypto.randomBytes(32);
-const key = process.env.CRYPTOKEY;
 
+const key = process.env.CRYPTOKEY;
 
 function encryptTicketURL(ticket_id){
     console.log("encryptTicketURL triggered");
@@ -126,6 +120,10 @@ function encryptTicketURL(ticket_id){
     console.log(ciphertext_URLencoded);
     return ciphertext_URLencoded;
 }
+
+// const algorithm = 'aes-256-ctr';
+// const initVector = crypto.randomBytes(16);
+// const securityKey = crypto.randomBytes(32);
 
 // function encryptTicketURL(ticket_id){
 //     let newsha256 = crypto.createHash("sha256")
@@ -202,12 +200,25 @@ async function authTicket(req, res, next){
         console.log("ticket_id: " + ticket_id);
 
         // check if ticket has already been verified
+        // only qrcode currently saved in db is valid (to account for exchanged condition)
         let ticketDetails = await Ticket.getTicketDetails(ticket_id);
-        if (ticketDetails[0].used_status === 0) {
+        let req_ticket_url = `http://localhost:80/ticket/verification/${ticketURLHash}`;
+        if (ticketDetails[0].used_status === 0 && ticketDetails[0].ticket_url === req_ticket_url) {
             await Ticket.updateUsed(ticket_id);
-            message = `Ticket number ${ticket_id} authenticated`;
+            message = {
+                status: 1,
+                message: `Ticket number ${ticket_id} authenticated`
+            }
+        } else if (ticketDetails[0].used_status === 0 && ticketDetails[0].ticket_url != req_ticket_url) {
+            message = {
+                status: 0,
+                message: `Invalid ticket QRcode`
+            }
         } else {
-            message = `Ticket number ${ticket_id} has already been verified`;
+            message = {
+                status: 0,
+                message: `Ticket number ${ticket_id} has already been verified`
+            }
         }
     }
     req.result = message;
@@ -251,11 +262,17 @@ async function postExchangeCondition(req, res, next){
         let selected_event_id = parseInt(req.body.selected_event_id);
         let selected_ticket_type = req.body.selected_ticket_type;
         let listing_id = await Ticket.saveExchangeAndListing(selected_event_id, selected_ticket_type, user_id, ticket_id);
-        console.log(listing_id);
-        req.result = {
-            status: 'success',
-            listing_id: listing_id
-        };
+        console.log("listing_id: " + listing_id);
+        if (listing_id != undefined) {
+            req.result = {
+                status: 'success',
+                listing_id: listing_id
+            };
+        } else {
+            req.result = {
+                status: 'failure'
+            }
+        }
     } catch(err) {
         console.log(err);
         res.status(500).send({error: err.message});
@@ -276,5 +293,78 @@ async function getCurrentListings(req, res, next){
     await next();
 }
 
+async function postListingSelection(req, res, next){
+    console.log('postListingSelection triggered');
+    try {
+        //check if user_id has ticket that meets listing_id requirement
+        let user_id = parseInt(req.body.user_id);
+        let listing_selection_id = parseInt(req.body.listing_selection_id);
+        console.log("user_id: " + user_id);
+        console.log("listing_selection_id: " + listing_selection_id);
 
-module.exports = { getTicketDetails, getUserUnusedTickets, genQRcode, authTicket, getVerifiedTickets, getSelectedEventTicketTypes, postExchangeCondition, getCurrentListings };
+        let userMatchingTickets = await Ticket.getUserMatchingTicketsForExchange(user_id, listing_selection_id);
+        console.log("userMatchingTickets:");
+        console.log(userMatchingTickets);
+        let matchingTixLength = userMatchingTickets.length;
+        if (userMatchingTickets.length > 0) {
+            console.log(`${matchingTixLength} matching ticket(s) detected`);
+
+            // update user_id, ticket_url, qrcode
+            // need matched user_ids & ticket_ids
+            // user_id = i have user_id
+            // poster user_id (i want user_id)
+            // ticket_id = i have ticket_id
+            // poster ticket_id (i want ticket_id)
+            let ticket_id = userMatchingTickets[0].ticket_id;
+            console.log("ticket_id: " + ticket_id);
+            let poster_user_id = userMatchingTickets[0].poster_user_id;
+            console.log("poster_user_id: " + poster_user_id);
+            let poster_ticket_id = userMatchingTickets[0].poster_ticket_id;
+            console.log("poster_ticket_id: " + poster_ticket_id);
+
+            let ticketURLHash = await encryptTicketURL(ticket_id);
+            let ticketURL = `http://localhost:80/ticket/verification/${ticketURLHash}`;
+            let ticketQR = await QRCode.toDataURL(ticketURL);
+            let poster_ticketURLHash = await encryptTicketURL(poster_ticket_id);
+            let poster_ticketURL = `http://localhost:80/ticket/verification/${poster_ticketURLHash}`;
+            let poster_ticketQR = await QRCode.toDataURL(ticketURL);
+            let exchangeResult = await Ticket.executeExchange(user_id, ticket_id, ticketURL, ticketQR, poster_user_id, poster_ticket_id, poster_ticketURL, poster_ticketQR);
+            if (exchangeResult.length == 0 || exchangeResult == null || exchangeResult == undefined) {
+                console.log("exchange db error");
+                return res.status(500).send({
+                    message: 'Something went wrong during the exchange, please try again'
+                });
+            } else {
+                console.log('exchange completed, returning exchange ticket ids to users');
+                //return exchanged ticket ids to users
+                //current_user:
+                req.result = {
+                    status: 1,
+                    new_ticket_id: poster_ticket_id,
+                    message: `Congratulations! Your new ticket ID is ${poster_ticket_id}`
+                }
+                //poster_user: send message to poster_user
+                //ticket_id
+                let poster_message = `Congratulations, your marketplace listing #${listing_selection_id} was successfully exchanged. Your new ticket ID is ${ticket_id}.`;
+                let poster_message_query = await Ticket.sendMessage(poster_user_id, poster_message);
+                //current_user: send message to current_user
+                let message = `Congratulations, you have successfully exchanged your ticket #${ticket_id} for ticket #${poster_ticket_id}.`;
+                let message_query = await Ticket.sendMessage(user_id, message);
+            }
+            
+        } else {
+            console.log('no matching tickets');
+            req.result = {
+                status: 0,
+                message: `Exchange was unsuccessful, please try again later.`
+            };
+        }
+
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+module.exports = { getTicketDetails, getUserUnusedTickets, genQRcode, authTicket, getVerifiedTickets, getSelectedEventTicketTypes, postExchangeCondition, getCurrentListings, postListingSelection };

@@ -15,13 +15,13 @@ async function checkAdminRoleAndVerify(){
     let verifyStatus = await fetch(URL, {
         headers: headers,
     });
-    let status = await verifyStatus.json();
-    console.log(status);
+    let result = await verifyStatus.json();
+    console.log(result);
     let message;
-    if (status != 'invalid ticket' && status != 'invalid ticket') {
-        message = status;
+    if (result.status == 1) {
+        message = result.message;
     } else {
-        message = "ticket verification failed";
+        message = result.message;
     }
     // req.result = message;
     document.getElementById('verification-text').innerHTML += `${message}`;

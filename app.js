@@ -5,7 +5,7 @@ const express = require("express");
 const path = require("path");
 const {printReq, getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents, getCurrentEventsForExchange} = require("./controllers/event-controller");
 const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, getUserFavEvents, checkUserMiddleware} = require("./controllers/user-controller");
-const {getTicketDetails, authTicket, getVerifiedTickets, getUserUnusedTickets, getSelectedEventTicketTypes, postExchangeCondition, getCurrentListings} = require("./controllers/ticket-controller");
+const {getTicketDetails, authTicket, getVerifiedTickets, getUserUnusedTickets, getSelectedEventTicketTypes, postExchangeCondition, getCurrentListings, postListingSelection} = require("./controllers/ticket-controller");
 const {checkUserRole, checkIndividualUser} = require("./controllers/auth-controller");
 
 
@@ -131,7 +131,10 @@ app.get(`/api/${process.env.api}/ticket/marketplace/listings`, getCurrentListing
     res.json(req.result);
 })
 
-
+//marketplace: postListingSelection
+app.post(`/api/${process.env.api}/ticket/marketplace/selection`, postListingSelection, (req, res)=>{
+    res.json(req.result);
+})
 
 
 //generic checkUserRole api
