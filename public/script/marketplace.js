@@ -72,13 +72,6 @@ async function renderListingsTable(){
         tbody.appendChild(tr);
     }
 
-    let main_container = document.getElementsByClassName('main-container')[0];
-    main_container.innerHTML += `
-        <div class="listing-selection-container">
-            <div>Selected listing<div>
-        </div>
-    `;
-
     let listing_tr = document.querySelectorAll('.listing-tr');
     for (let i = 0; i < listing_tr.length; i++) {
         listing_tr[i].setAttribute('onclick', 'renderListingSelectionDiv(event)');
@@ -86,19 +79,20 @@ async function renderListingsTable(){
 }
 
 function renderListingSelectionDiv(e){
-    let listing_selection_container = document.getElementsByClassName('listing-selection-container')[0];
-    listing_selection_container.innerHTML = `<div>Selected listing<div>`;
+    let summary_div = document.getElementsByClassName('summary-div')[0];
     console.log(e.currentTarget);
     listing_selection_id = e.currentTarget.id;
     listing_selection_title = e.currentTarget.title;
     // listing_selection_type = e.currentTarget.type;
     console.log("listing_selection_id: " + listing_selection_id);
     // console.log(listing_selection_type);
-    listing_selection_container.innerHTML += `
-        <div>Listing Id: ${listing_selection_id}<div>
-        <div>Listing Event: ${listing_selection_title}<div>
-        <button id="post-btn" onclick="postListingSelection()">Submit</button>
+    summary_div.innerHTML += `
+        <div>Listing ID: ${listing_selection_id}</div>
+        <div>Listing Event: ${listing_selection_title}</div>
+        
     `;
+    let listing_selection_container = document.getElementsByClassName('listing-selection-container')[0];
+    listing_selection_container.innerHTML += `<button id="post-btn" onclick="postListingSelection()">Submit</button>`;
 
 }
 
