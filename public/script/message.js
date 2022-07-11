@@ -40,11 +40,13 @@ async function fetchMessages(){
     console.log(userMessages);
 
     for (let i = 0; i < userMessages.length; i++) {
-        let message_container = document.getElementsByClassName('message-container')[0];
-        message_container.innerHTML += `
-            <div id='msg-source-div'>From: ${userMessages[i].message_type}</div>
-            <div id='msg-date-div'>Date: ${userMessages[i].date}</div>
-            <div>${userMessages[i].content}</div>
+        let messages_container = document.getElementsByClassName('messages-container')[0];
+        messages_container.innerHTML += `
+            <div class="message-box">
+                <div id='msg-source-div'>From: ${userMessages[i].message_type}</div>
+                <div id='msg-date-div'>Date: ${userMessages[i].date}</div>
+                <div>${userMessages[i].content}</div>
+            </div>
         `;
     }
 
