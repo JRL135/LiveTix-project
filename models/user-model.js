@@ -7,7 +7,8 @@ const checkEmail = async (email)=>{
 
 const registerUser = async (email, name, password, role)=>{
     const [newUser] = await pool.query(`INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)`, [name, email, password, role]);
-    return newUser;
+    let user_id = newUser.insertId;
+    return user_id;
 }
 
 const getRegisteredEvents = async (username)=>{

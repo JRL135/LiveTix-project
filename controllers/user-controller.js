@@ -10,7 +10,7 @@ async function registerUser(req, res, next){
     try {
         let userInfo = req.body;
         console.log(userInfo);
-        let user_id = userInfo.user_id;
+        let user_id;
         let email = userInfo.email;
         let name = userInfo.username;
         let password = userInfo.password;
@@ -23,7 +23,7 @@ async function registerUser(req, res, next){
         // check if email exists
         let emailCheck = await User.checkEmail(email);
         if (emailCheck.length === 0) {
-            let createNewUser = await User.registerUser(email, name, password, role);
+            user_id = await User.registerUser(email, name, password, role);
             console.log("new user created");
             // gen JWT token for new user
             let token = await genToken(user_id, email, name, role, password);
