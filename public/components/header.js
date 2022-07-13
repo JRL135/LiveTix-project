@@ -24,7 +24,7 @@ class Header extends HTMLElement {
                     <a target="_parent" href="${ROOT_URL}index.html" class="nav-link"><img id="logo-id" src="../img/LiveTixLogo.png"></a>
                     <a target="_parent" href="${ROOT_URL}index.html?category=concert" class="nav-link slide">Concert</a>
                     <a target="_parent" href="${ROOT_URL}index.html?category=festival" class="nav-link slide">Festival</a>
-                    <a target="_parent" id="search-btn" class="nav-link slide">Search</a>
+                    <a target="_parent" id="search-div" class="nav-link slide">Search</a>
                 </div>
                 <div class="header-right">
                     <a target="_parent" href="${ROOT_URL}ticket-management.html" class="nav-link slide">Ticket Management</a>
@@ -38,10 +38,10 @@ class Header extends HTMLElement {
                     <a target="_parent" href="${ROOT_URL}index.html" class="nav-link"><img id="logo-id" src="../img/LiveTixLogo.png"></a>
                     <a target="_parent" href="${ROOT_URL}index.html?category=concert" class="nav-link slide">Concert</a>
                     <a target="_parent" href="${ROOT_URL}index.html?category=festival" class="nav-link slide">Festival</a>
-                    <a target="_parent" id="search-btn" class="nav-link slide">Search</a>
+                    <a target="_parent" id="search-div" class="nav-link slide">Search</a>
                 </div>
                 <div class="header-right">
-                    <a target="_parent" href="${ROOT_URL}marketplace.html" class="nav-link slide">Marketplace</a>
+                    <a target="_parent" href="${ROOT_URL}.html" class="nav-link slide">Marketplace</a>
                     <a target="_parent" href="${ROOT_URL}ticket-listing.html" class="nav-link slide">Listing</a>
                     <a target="_parent" href="${ROOT_URL}profile.html" class="nav-link slide">Profile</a>
                     <a target="_parent" href="${ROOT_URL}message.html" class="nav-link slide">Messages</a>
@@ -55,7 +55,7 @@ class Header extends HTMLElement {
                     <a target="_parent" href="${ROOT_URL}index.html" class="nav-link"><img id="logo-id" src="../img/LiveTixLogo.png"></a>
                     <a target="_parent" href="${ROOT_URL}index.html?category=concert" class="nav-link slide">Concert</a>
                     <a target="_parent" href="${ROOT_URL}index.html?category=festival" class="nav-link slide">Festival</a>
-                    <a target="_parent" id="search-btn" class="nav-link slide">Search</a>
+                    <a target="_parent" id="search-div" class="nav-link slide">Search</a>
                 </div>
                 <div class="header-right">
                     <a href="${ROOT_URL}signup.html" class="nav-link slide">Sign Up</a>
@@ -64,7 +64,7 @@ class Header extends HTMLElement {
             </div>
         `;
         }
-        let search = document.getElementById('search-btn');
+        let search = document.getElementById('search-div');
         search.setAttribute('href', `${ROOT_URL}search.html`);
 
         let signout_div = document.getElementById('signout-div');
