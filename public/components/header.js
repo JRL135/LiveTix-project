@@ -41,7 +41,7 @@ class Header extends HTMLElement {
                     <a target="_parent" id="search-div" class="nav-link slide">Search</a>
                 </div>
                 <div class="header-right">
-                    <a target="_parent" href="${ROOT_URL}.html" class="nav-link slide">Marketplace</a>
+                    <a target="_parent" href="${ROOT_URL}marketplace.html" class="nav-link slide">Marketplace</a>
                     <a target="_parent" href="${ROOT_URL}ticket-listing.html" class="nav-link slide">Listing</a>
                     <a target="_parent" href="${ROOT_URL}profile.html" class="nav-link slide">Profile</a>
                     <a target="_parent" href="${ROOT_URL}message.html" class="nav-link slide">Messages</a>
