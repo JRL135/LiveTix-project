@@ -180,6 +180,10 @@ table thead th {
     padding: 1em;
 }
 
+#order_summary_title {
+    border-bottom: 1px solid #bacdd8;
+}
+
 .main-container-s4 {
     display: flex;
     flex-direction: column;
