@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search</title>
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/daterangepicker.css">
     <script src="./settings/settings.js"></script>
@@ -23,35 +24,48 @@
     <header-component></header-component>
 
     <main>
+        <div class="title-div">
+            <button id="search-btn" class="" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Select your search conditions</button>
+        </div>
         
-    <div class="main-container-s1">
-        <div class="keyword-search-container">
-            <label for="keyword">Search for anything:</label>
-            <input type="text" class="search-item" id="keyword" name="keyword">
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Search Conditions</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="category-search-container">
-            <label for="category">Category:</label>
-            <select class="search-item" name="category" id="category">
-                <option value="0"></option>
-                <option value="Concert">Concert</option>
-                <option value="Festival">Festival</option>
-            </select>
-        </div>
-        <div class="city-search-container">
-            <label for="city">City:</label>
-            <select class="search-item" name="city" id="city">
-                <option value="0"></option>
-            </select>
-        </div>
-        <div class="date-container">
-            <label for="date">Date: </label>
-            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-                <i class="fa fa-calendar"></i>&nbsp;
-                <span class="search-item" id="date"></span> <i class="fa fa-caret-down"></i>
+        <div class="offcanvas-body">
+            <p>Search for anything!</p>
+            <div class="input-group mb-3 main-container-s1">
+                <div class="keyword-search-container">
+                    <label for="keyword">Keyword:</label>
+                    <input type="text" class=" form-control search-item" id="keyword" name="keyword">
+                </div>
+                <div class="category-search-container">
+                    <label for="category">Category:</label>
+                    <select class="search-item form-select" name="category" id="category">
+                        <option value="0"></option>
+                        <option value="Concert">Concert</option>
+                        <option value="Festival">Festival</option>
+                    </select>
+                </div>
+                <div class="city-search-container">
+                    <label for="city">City:</label>
+                    <select class="search-item form-select" name="city" id="city">
+                        <option value="0"></option>
+                    </select>
+                </div>
+                <div class="date-container">
+                    <label for="date">Date: </label>
+                    <div class="form-control" id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                        <i class="fa fa-calendar"></i>&nbsp;
+                        <span class="search-item" id="date"></span> <i class="fa fa-caret-down"></i>
+                    </div>
+                </div>
+                <button id="search-btn" onclick="postSearchConditions(event)">Search!</button>
             </div>
         </div>
-        <button onclick="postSearchConditions(event)">Search!</button>
     </div>
+    
     
 
     <div class="main-container-s2">
@@ -59,12 +73,13 @@
             <p id="search-results-text">Search Results</p>
             <div class="search-results-events-container"></div>
         </div>
-        <div class="map-container"></div>
+        <!-- <div class="map-container"></div> -->
     </div>
 
     </main>
 
     <footer-component></footer-component>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 
     <script src="./script/search.js"></script>
 

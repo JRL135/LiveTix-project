@@ -13,6 +13,9 @@
 // }
 // getSearchedEvents();
 
+let searchResultsDiv = document.getElementsByClassName('search-results-events-container')[0];
+console.log(searchResultsDiv);
+searchResultsDiv.innerHTML = "<p id='search-results-placeholder-text'>Try searching for anything! Need some ideas? How about your favorite artist?</p>";
 
 async function getSearchConditions(){
     const searchConditionsURL = `/api/1.0/search/events`;
@@ -73,12 +76,17 @@ async function postSearchConditions(e){
         let searchResults = postSearch[i];
         let start_date = searchResults.start_date.split('T')[0];
         let end_date = searchResults.end_date.split('T')[0];
-
+        let date;
+        if (start_date === end_date) {
+            date = start_date;
+        } else {
+            date = `${start_date} - ${end_date}`;
+        }
         searchResultsDiv.innerHTML += `
             <div class="searched-event-card">
                 <div class="searched-event-card-title-plus-container">
-                    <div class="searched-card-item">${searchResults.title}</div>
-                    <div class="searched-card-item">${start_date}</div>
+                    <div class="searched-card-item" id="searched-card-title">${searchResults.title}</div>
+                    <div class="searched-card-item" id="searched-card-date">${date}</div>
                     <div class="searched-card-item">${searchResults.venue} @ ${searchResults.city}</div>
                     <a target="_parent" href="${ROOT_URL}event.html?id=${searchResults.event_id}"><button id="details-btn" class="searched-card-item">Details</button></a>
                 </div>
