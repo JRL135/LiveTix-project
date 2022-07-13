@@ -6,11 +6,19 @@ let categoryParams = params.get("category");
 // console.log(event_params.pathname);
 console.log("category params: " + categoryParams);
 
+
 async function getCurrentEvents(){
     // fetch events
     let eventsFetch = await fetch(`/api/1.0/events/${categoryParams}`);
     let currentEvents = await eventsFetch.json();
     console.log(currentEvents);
+
+    let current_event_text = document.getElementById('current-event-text');
+    if (categoryParams == 'concert') {
+       current_event_text.innerHTML = `Current Concerts`; 
+    } else if (categoryParams == 'festival') {
+        current_event_text.innerHTML = `Current Festivals`; 
+    }
 
     let currentEventContainer = document.getElementsByClassName('current-events-container')[0];
     
