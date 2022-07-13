@@ -105,11 +105,13 @@ main {
     }
 }
 
-.registered-event-div {
+.registered-event-div,
+.fav-event-div {
     place-self: center;
     display: flex;
     flex-direction: column;
-    /* flex-wrap: wrap; */
+    justify-content: space-around;
+    height: 400px;
     width: 300px;
     margin-top: 2em;
     margin-bottom: 2em;
@@ -122,6 +124,18 @@ main {
 .registered-event-div > * {
     text-align: center;
     margin-bottom: 0.3em;
+}
+
+#register-event-div-title,
+#fav-event-div-title {
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+#register-event-div-date,
+#fav-event-div-date {
+    font-size: 0.9em;
+    color: #6c6c6c;
 }
 
 #ticket-btn {
@@ -176,19 +190,6 @@ main {
     }
 }
 
-.fav-event-div {
-    place-self: center;
-    display: flex;
-    flex-direction: column;
-    /* flex-wrap: wrap; */
-    width: 300px;
-    margin-top: 2em;
-    margin-bottom: 2em;
-    border: 1px solid #bacdd8;
-    border-radius: 12px;
-    padding: 8px;
-
-}
 
 .fav-event-div > * {
     text-align: center;
