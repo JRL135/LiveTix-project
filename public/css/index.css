@@ -27,43 +27,49 @@ a, a:hover, a:focus, a:active {
 .main-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+    /* justify-content: space-around; */
+    /* align-items: center; */
     margin-top: 3em;
     margin-bottom: 3em;
-    gap: 20px;
+    /* gap: 20px; */
 }
 
 .current-events-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     /* row-gap: 20px; */
-    gap: 4em;
+    gap: 1em;
+}
+
+@media only screen and (max-width: 1070px) {
+    .current-events-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1em;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .current-events-container{
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1em;
+    }
 }
 
 #current-event-text {
     /* font-size: 1.2em; */
     font-weight: 400;
-}
-
-
-
-
-
-
-
-
-.card-container{
-    margin: 0;
+    text-align: center;
+    margin-bottom: 2em;
 }
 
 #container {
     max-width: 300px;
-    /* height: 530px; */
+    height: 530px;
     /* Center the container in middle on horizontal axis */
     margin: 0 auto;
-    /* Add empty space above the container (20% of the view height) */
-    /* margin-top: 20vh; */
+
 }
 
 .card {
