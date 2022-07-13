@@ -47,12 +47,6 @@
             <div class="event_description"></div>
         </div>
 
-        <!-- countdown -->
-        <div id="countdown-div" style="display:none;">
-            <p>Time remaining to complete purchase:</p>
-            <div id="countdown-text"></div>
-        </div>
-
         <div class="main-container-s3" style="display:none;">
             <!-- ticket selection -->
             <div class="main-container-s3-selection-container">
@@ -84,7 +78,14 @@
             </div>
         </div>
 
+        <!-- countdown -->
+        <div id="countdown-div" style="display:none;">
+            <p id="countdown-p">Time remaining to complete purchase:</p>
+            <div id="countdown-text"></div>
+        </div>
+
         <div class="main-container-s4" style="display:none;">
+            <div id="paySDK-text">Please enter your credit card information</div>
             <label for="card-number" class="control-label"><span id="cardtype"></span>Card Number</label>
             <div class="tpfield" id="card-number"></div>
             <label for="expiration-date" class="control-label">Expiration Date</label>

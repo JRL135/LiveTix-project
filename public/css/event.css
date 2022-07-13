@@ -79,8 +79,8 @@ main > * {
 }
 
 .event_title {
-    font-weight: 900;
-    font-size: larger;
+    font-weight: 800;
+    font-size: 1.2em;
 }
 
 .main-container-s2 {
@@ -97,8 +97,8 @@ main > * {
 }
 
 #event_description_header {
-    font-weight: 900;
-    font-size: larger;
+    font-weight: 800;
+    font-size: 1.2em;
 }
 
 .event_description {
@@ -108,7 +108,7 @@ main > * {
 
 #countdown-div {
     text-align: center;
-    margin-bottom: 1em;
+    margin: 1em;
 }
 
 .main-container-s3 {
@@ -182,6 +182,8 @@ table thead th {
 
 #order_summary_title {
     border-bottom: 1px solid #bacdd8;
+    font-size: 1.1em;
+    font-weight: 500;
 }
 
 .main-container-s4 {
@@ -189,6 +191,17 @@ table thead th {
     flex-direction: column;
     align-items: center;
     padding: 1em;
+}
+
+#countdown-p {
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+#paySDK-text {
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-bottom: 1em;
 }
 
 .tpfield {

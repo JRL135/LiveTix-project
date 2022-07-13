@@ -415,7 +415,7 @@ async function postTicketSelection(e){
         if (ticket_type_list.length == 0) {
             alert('Please select ticket');
         } else {
-            alert('Selected ticket(s) has been reserved for 20 seconds');
+            alert('Selected ticket(s) has been reserved for 5 minutes');
             // hide add to cart button
             document.getElementById("addToCart_ticket_button").style.display = 'none';
             // unhide timer
@@ -486,25 +486,39 @@ const timerElement = document.getElementById('countdown-text');
 let timer;
 let timeCountdown;
 function startCountdown() {
-    timer = 20;
-    // console.log("000000")
+    timer = 300;
     timeCountdown = setInterval(countdown, 1000);
-    // console.log(444444)
 }
 
 function countdown() {
-    // console.log("TIMER:",timer)
-    if (timer == -1) {
-        // console.log(11111)
+    if (timer == 0) {
+        timer = 0;
         clearInterval(timeCountdown);
-        // console.log(22222)
         alert('Sorry, time is up!');
         window.location.href = "/index.html";
-       
-    } else {
-        timerElement.innerHTML = timer + ' secs';
-        timer--;
+    } 
+    else {
+        timer = parseInt(timer) - 1;
+
     }
+    var minutes = Math.floor(timer / 60)
+    var seconds = timer % 60
+    if (minutes<10) minutes = '0'+minutes      
+    if (seconds<10) seconds = '0'+seconds    
+    timerElement.innerHTML = `${minutes} : ${seconds}`;
+
+
+
+
+    // if (timer == -1) {
+    //     clearInterval(timeCountdown);
+    //     alert('Sorry, time is up!');
+    //     window.location.href = "/index.html";
+       
+    // } else {
+    //     timerElement.innerHTML = timer + ' secs';
+    //     timer--;
+    // }
 }
 
 
