@@ -23,8 +23,8 @@ main {
 }
 
 .event_main-image {
-    width: 430px;
-    height: 270px;
+    /* width: 430px; */
+    height: 450px;
     object-fit: cover;
     border-radius: 12px;
 }
@@ -65,13 +65,17 @@ main > * {
     display: flex;
     flex-direction: column;
     align-items: center;
-
-
 }
 
 .main-container-s1-date-container > * {
     text-align: center;
     margin-bottom: 0.5em;
+}
+
+.main-container-s1-photo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .event_title {
@@ -86,12 +90,20 @@ main > * {
     border: 1px solid #bacdd8;
     border-radius: 12px;
 
-    padding: 2em;
+    padding-top: 2em;
+    padding-bottom: 3em;
+    padding-right: 6em;
+    padding-left: 6em;
 }
 
 #event_description_header {
     font-weight: 900;
     font-size: larger;
+}
+
+.event_description {
+    text-align: left;
+    font-size: 1em;
 }
 
 #countdown-div {
@@ -103,8 +115,10 @@ main > * {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+}
 
-    
+.main-container-s3-selection-container {
+    padding: 2em;
 }
 
 .main-container-s3 > * {
@@ -146,6 +160,10 @@ table > *{
     margin-top: 0;
 }
 
+#ticket_tb_tbody {
+    /* text-align: match-parent; */
+}
+
 table thead th {
     border-bottom: 1px solid #bacdd8;
 }
@@ -176,4 +194,12 @@ table thead th {
     margin: 5px 0;
     padding: 5px;
     text-align: center;
+}
+
+#ticket-btn {
+    margin-top: 0.5em;
+}
+
+#paySDK-btn {
+    margin-top: 0.5em;
 }

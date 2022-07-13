@@ -230,6 +230,9 @@ async function getEventDetailsAPI(){
     let eventDetails = await eventFetch.json();
     document.getElementsByClassName("event_title")[0].innerHTML = eventDetails[0].title;
     console.log(document.getElementsByClassName("event_title")[0]);
+    let event_description = eventDetails[0].description;
+    event_description = event_description.replaceAll("\r\n", '<br/>');
+    event_description = event_description.replaceAll("\t", '&emsp;');
     let event_start_date_unsorted = eventDetails[0].start_date;
     let event_end_date_unsorted = eventDetails[0].end_date;
     let event_start_date = event_start_date_unsorted.split('T')[0];
@@ -246,7 +249,7 @@ async function getEventDetailsAPI(){
     Artist: ${eventDetails[0].artist}`;
     document.getElementsByClassName("event_main-image")[0].setAttribute('src', eventDetails[0].main_picture);
     // document.getElementsByClassName("event_main-image")[0].innerHTML = "main_image";
-    document.getElementsByClassName("event_description")[0].innerHTML = eventDetails[0].description;
+    document.getElementsByClassName("event_description")[0].innerHTML = event_description;
 }
 getEventDetailsAPI();
 
