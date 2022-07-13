@@ -41,19 +41,23 @@ main > * {
 }
 
 #welcome-text {
-    font-size: 1.2em;
+    font-size: 1.4em;
+    font-weight: 500;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
 }
 
 #instruction-text {
     font-size: 1em;
     text-align: center;
     border-bottom: 1px solid #bacdd8;
-    padding-bottom: 0.5em;
+    padding-bottom: 1.5em;
 }
 
 #current-listing-text {
     text-align: center;
     font-size: 1.2em;
+    padding: 0.5em;
 }
 
 table {
