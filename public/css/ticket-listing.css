@@ -31,8 +31,8 @@ main > * {
 
 .main-container {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-around;
     align-items: center;
 }
 
@@ -55,7 +55,7 @@ main > * {
     align-items: center;
     margin: 0.5em;
 
-    border-bottom: 1px solid #bacdd8;
+    /* border-bottom: 1px solid #bacdd8; */
 }
 
 .choice-1-container > * {
@@ -70,16 +70,25 @@ main > * {
     text-align: center;
     margin: 0.5em;
     
-    border-bottom: 1px solid #bacdd8;
+    /* border-bottom: 1px solid #bacdd8; */
 }
 
 .choice-2-container > * {
     padding: 0.5em;
 }
 
+#choice-container-title {
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+#ticket-type-label {
+    margin-top: 1em;
+}
+
 .condition-container {
-    border: 1px solid #bacdd8;
-    border-radius: 12px;
+    /* border: 1px solid #bacdd8;
+    border-radius: 12px; */
     text-align: center;
     margin-bottom: 1em;
     padding: 1em;
@@ -91,6 +100,8 @@ main > * {
 
 #condition-summary-text {
     border-bottom: 1px solid #bacdd8;
+    font-size: 1.1em;
+    font-weight: 500;
 }
 
 #event-btn {

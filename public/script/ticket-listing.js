@@ -59,9 +59,10 @@ async function getUserTickets(){
     let choice_1_container = document.getElementsByClassName('choice-1-container')[0];
     //USER UNUSED TICKETS dropdown create & populate
     choice_1_container.innerHTML += `
-        <label for="ticket">1. Choose one of your tickets available for marketplace listing:</label>
+        <div id="choice-container-title">Your tickets available for marketplace listing: </div>
+        <label for="ticket">1. Select one of your tickets:</label>
         <select name="ticket" id="ticket">
-        <option value="default">Choose a ticket</option>
+        <option value="default">Select a ticket</option>
         </select>
     `;
     let ticket_dropdown = document.getElementById('ticket');
@@ -91,10 +92,10 @@ async function getCurrentEvents(){
     let choice_2_container = document.getElementsByClassName('choice-2-container')[0];
     //EVENT dropdown create & populate
     choice_2_container.innerHTML += `
-        <div>2. Select your exchange conditions: </div>
-        <label for="event">Current Events:</label>
+        <div id="choice-container-title">Your exchange conditions: </div>
+        <label for="event">2. Select an event you are interested in:</label>
         <select name="event" id="event">
-            <option value="default" selected>Choose an event</option>
+            <option value="default" selected>Select an event</option>
         </select>
     `;
     event_dropdown = document.getElementById('event');
@@ -111,13 +112,13 @@ async function getCurrentEvents(){
 
 async function getTicketTypes(){
     let choice_2_container = document.getElementsByClassName('choice-2-container')[0];
-    choice_2_container.innerHTML += `<div id="event-btn" onclick='getSelectedEventTicketTypes()'>Check out selected event ticket types</div>`;
+    choice_2_container.innerHTML += `<div id="event-btn" onclick='getSelectedEventTicketTypes()'>Click here to generate selected event ticket types</div>`;
     let event_btn = document.getElementById("event-btn");
     //TICKET TYPES dropdown create
     choice_2_container.innerHTML += `
-        <label for="ticket-types">Ticket Types:</label>
+        <label id="ticket-type-label" for="ticket-types">3. Select a ticket type you are interested in:</label>
         <select name="ticket-types" id="ticket-types">
-            <option value="default" selected>Choose a ticket type</option>
+            <option value="default" selected>Select an event first</option>
         </select>
     `;
     //TICKET TYPES dropdown populate in getSelectedEventTicketTypes()
@@ -132,17 +133,21 @@ function recordSelectedEvent(e){
     let selected_ticket_type_div = document.getElementById('selected-ticket-type-condition-container');
     selected_ticket_type_div.innerHTML = ``;
     let ticketTypes_dropdown = document.getElementById('ticket-types');
-    ticketTypes_dropdown.innerHTML = `<option value="default" selected>Choose a ticket type</option>`;
+    ticketTypes_dropdown.innerHTML = `<option value="default" selected>Please press button to generate ticket types</option>`;
 
     const selectedIndex = e.target.options.selectedIndex;
     selected_event_id = e.target.children[selectedIndex].value;
     let selected_event_title = e.target.children[selectedIndex].text;
     console.log(e.target.children[selectedIndex].value);
     
+    if (selected_event_id == 'default') {
+        selected_event_div.innerHTML = ``;
+    } else {
     //render in condition container
     selected_event_div.innerHTML += `
         <div id='${selected_event_id}'>${selected_event_title}</div>
     `;
+    }
 }
 
 //fetch ticket types for the selected event & populate TICKET TYPES dropdown
@@ -153,7 +158,12 @@ async function getSelectedEventTicketTypes(){
     console.log(ticketTypesAvail);
 
     let ticketTypes_dropdown = document.getElementById('ticket-types');
-    ticketTypes_dropdown.innerHTML = `<option value="default" selected>Choose a ticket type</option>`;
+    if (ticketTypesAvail.length == 0) {
+        ticketTypes_dropdown.innerHTML = `<option value="default" selected>Select a valid event first</option>`;
+    }
+    else {
+        ticketTypes_dropdown.innerHTML = `<option value="default" selected>Select a ticket type</option>`;
+    }
     for (let i = 0; i < ticketTypesAvail.length; i++) {
        ticketTypes_dropdown.innerHTML += `
             <option value="${ticketTypesAvail[i].type}">${ticketTypesAvail[i].type_name}</option>
