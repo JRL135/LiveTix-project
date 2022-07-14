@@ -19,7 +19,7 @@ const registerUser = async (email, name, password, role)=>{
 const getRegisteredEvents = async (username)=>{
     const [userId] = await pool.query(`SELECT user_id FROM users WHERE name = ?`, username);
     let user_id = userId[0].user_id;
-    const [registeredEvents] = await pool.query(`SELECT t1.category as category, t1.title as title, t1.start_date as start_date, t1.end_date as end_date, t1.city as city, t1.venue as venue, t1.main_picture as main_picture, t2.ticket_id as ticket_id, t2.purchase_date as purchase_date FROM events t1 INNER JOIN tickets t2 ON t1.event_id = t2.event_id WHERE user_id = ? ORDER BY purchase_date ASC`, user_id);
+    const [registeredEvents] = await pool.query(`SELECT t1.category as category, t1.title as title, DATE_FORMAT(t1.start_date, '%Y-%m-%d') as start_date, DATE_FORMAT(t1.end_date, '%Y-%m-%d') as end_date, t1.city as city, t1.venue as venue, t1.main_picture as main_picture, t2.ticket_id as ticket_id, t2.type_name as ticket_type_name, DATE_FORMAT(t2.purchase_date, '%Y-%m-%d') as purchase_date FROM events t1 INNER JOIN tickets t2 ON t1.event_id = t2.event_id WHERE user_id = ? ORDER BY purchase_date ASC`, user_id);
     return registeredEvents;
 }
 
