@@ -79,6 +79,10 @@ table tbody tr:hover {
     cursor: pointer;
 }
 
+/* table tbody tr td {
+    padding: 1.2em;
+} */
+
 .listing-selection-container {
     display: flex;
     flex-direction: column;

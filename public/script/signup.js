@@ -6,10 +6,10 @@ async function postSignupInfo(){
     let username = document.getElementById('username').value;
     let password = document.getElementById('password').value;
 
-    let regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
-    if (regex.test(password) === false){
-        alert('Please enter a valid email address.');
-    } else {
+    // let regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+    // if (regex.test(password) === false){
+    //     alert('Please enter a valid email address.');
+    // } else {
 
         let headers = {
             "Content-Type": "application/json",
@@ -36,7 +36,7 @@ async function postSignupInfo(){
             alert(newUserStatus.message);
             location.reload();
         }
-    }
+    // }
 
 }
 
