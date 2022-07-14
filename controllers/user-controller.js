@@ -70,20 +70,32 @@ async function loginUser(req, res, next){
         // check password
         let existingUser = await User.checkEmail(email);
         console.log(existingUser);
-        let user_id = existingUser[0].user_id;
-        let name = existingUser[0].name;
-        let hashed_password = existingUser[0].password;
-        let role = existingUser[0].role;
-        const match = await bcrypt.compare(password, hashed_password);
-        if (match) {
-            console.log("password check ok");
-            let token = await genToken(user_id, email, name, role, hashed_password);
-            console.log(token);
-            req.result = token;
+        if (existingUser.length === 0){
+            req.result = {
+                status: 0,
+                message: "Email does not exist."
+            }
         } else {
-            console.log("password check failed");
-            let message = "Email or password does not match";
-            req.result = message;
+            let user_id = existingUser[0].user_id;
+            let name = existingUser[0].name;
+            let hashed_password = existingUser[0].password;
+            let role = existingUser[0].role;
+            const match = await bcrypt.compare(password, hashed_password);
+            if (match) {
+                console.log("password check ok");
+                let token = await genToken(user_id, email, name, role, hashed_password);
+                req.result = {
+                    status: 1,
+                    message: "Welcome back!",
+                    token: token
+                }
+            } else {
+                console.log("password check failed");
+                req.result = {
+                    status: 0,
+                    message: "Email and password do not match."
+                }
+            }
         }
     } catch(err) {
         console.log(err);

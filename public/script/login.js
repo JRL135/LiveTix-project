@@ -25,21 +25,15 @@ async function postLoginInfo(){
         headers: headers,
         body: JSON.stringify(body)
     });
-    let loginUserToken = await postUser.json();
-    console.log(loginUserToken);
-    if (loginUserToken === "Email or password does not match"){
-        alert(loginUserToken);
-        location.reload();
+    let loginUser = await postUser.json();
+    console.log(loginUser);
+    if (loginUser.status === 1 ){
+        localStorage.setItem("token", loginUser.token);
+        alert(loginUser.message);
+        location.assign(`${ROOT_URL}index.html`);
     } else {
-        localStorage.setItem("token", loginUserToken);
-        alert("Welcome back!");
-
-        // if (previousURL != '') {
-        //     location.assign(previousURL);
-        // }
-        // else {
-            location.assign(`${ROOT_URL}index.html`);
-        // }
+        alert(loginUser.message);
+        location.reload();
     }
 }
 
