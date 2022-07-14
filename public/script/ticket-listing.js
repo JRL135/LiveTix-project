@@ -57,29 +57,40 @@ async function getUserTickets(){
     let ticketsAvail = await ticketsFetch.json();
     console.log(ticketsAvail);
     let choice_1_container = document.getElementsByClassName('choice-1-container')[0];
+
     //USER UNUSED TICKETS dropdown create & populate
-    choice_1_container.innerHTML += `
-        <div id="choice-container-title">Your tickets available for marketplace listing: </div>
-        <label for="ticket">1. Select one of your tickets:</label>
-        <select name="ticket" id="ticket">
-        <option value="default">Select a ticket</option>
-        </select>
-    `;
-    let ticket_dropdown = document.getElementById('ticket');
-    for (let i = 0; i < ticketsAvail.length; i++) {
-        ticket_dropdown.innerHTML += `
-            <option value="${ticketsAvail[i].ticket_id}">Event: ${ticketsAvail[i].title}, Ticket Type: ${ticketsAvail[i].type_name}, Price: ${ticketsAvail[i].price}</option>
-    `;
+    if (ticketsAvail.length === 0){
+        choice_1_container.innerHTML += `<div id="choice-container-title">Your tickets available for marketplace listing: </div>
+        <div>You do not have any tickets available for marketplace listing, please come back after buying some tickets :)</div>`;
+        let ticket_dropdown = document.getElementById('ticket');
+        ticket_dropdown.innerHTML = ``;
+
     }
-    ticket_dropdown.setAttribute('onchange', 'recordSelectedUserTicket(event)');
+    else {
+        //unhide condition container
+        document.getElementsByClassName('condition-container')[0].style.display = 'flex';
+
+        choice_1_container.innerHTML += `
+            <div id="choice-container-title">Your tickets available for marketplace listing: </div>
+            <label for="ticket">1. Select one of your tickets:</label>
+            <select name="ticket" id="ticket">
+            <option value="default">Select a ticket</option>
+            </select>
+        `;
+        let ticket_dropdown = document.getElementById('ticket');
+        for (let i = 0; i < ticketsAvail.length; i++) {
+            ticket_dropdown.innerHTML += `
+                <option value="${ticketsAvail[i].ticket_id}">Event: ${ticketsAvail[i].title}, Ticket Type: ${ticketsAvail[i].type_name}, Price: ${ticketsAvail[i].price}</option>
+        `;
+        }
+        ticket_dropdown.setAttribute('onchange', 'recordSelectedUserTicket(event)');
+    }
 }
 
 function recordSelectedUserTicket(e){
-
     const selectedIndex = e.target.options.selectedIndex;
     selected_ticket_id = e.target.children[selectedIndex].value;
     console.log(e.target.children[selectedIndex].value);
-
 }
 
 async function getCurrentEvents(){
@@ -112,7 +123,7 @@ async function getCurrentEvents(){
 
 async function getTicketTypes(){
     let choice_2_container = document.getElementsByClassName('choice-2-container')[0];
-    choice_2_container.innerHTML += `<div id="event-btn" onclick='getSelectedEventTicketTypes()'>Click here to generate selected event ticket types</div>`;
+    choice_2_container.innerHTML += `<div id="event-btn" onclick='getSelectedEventTicketTypes()'>Generate ticket types</div>`;
     let event_btn = document.getElementById("event-btn");
     //TICKET TYPES dropdown create
     choice_2_container.innerHTML += `

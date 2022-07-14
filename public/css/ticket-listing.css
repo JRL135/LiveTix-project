@@ -87,8 +87,10 @@ main > * {
 }
 
 .condition-container {
-    /* border: 1px solid #bacdd8;
-    border-radius: 12px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
     text-align: center;
     margin-bottom: 1em;
     padding: 1em;
@@ -123,4 +125,8 @@ main > * {
 #event-btn:hover {
     background-color: #0077ff;
     color: #e0efff;
+}
+
+#post-btn {
+    margin-top: 0.5em;
 }
