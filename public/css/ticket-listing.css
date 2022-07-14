@@ -108,25 +108,26 @@ main > * {
 
 #event-btn {
     border: none;
-    padding: 12px 24px;
+    padding: 8px 20px;
     border-radius: 50px;
 
     font-weight: 600;
-    color: #0077ff;
-    background-color: #e0efff;
+    color: #0e9ada;
+    background-color: #bee3f9;
     margin: 0 auto;
     display: block;
     cursor: pointer;
     width: fit-content;
-    margin: 0.3em;
+    margin-top: 0.5em;
     font-size: 0.9em;
 }
 #event-btn:focus,
 #event-btn:hover {
-    background-color: #0077ff;
+    background-color: #2fb1d2;
     color: #e0efff;
 }
 
 #post-btn {
+    padding: 8px 20px;
     margin-top: 0.5em;
 }

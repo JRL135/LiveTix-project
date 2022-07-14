@@ -115,15 +115,15 @@ label {
     border-radius: 50px;
 
     font-weight: 600;
-    color: #0077ff;
-    background-color: #e0efff;
+    color: #0e9ada;
+    background-color: #bee3f9;
     margin: 0 auto;
     display: block;
     cursor: pointer;
 }
 #submit-btn:focus,
 #submit-btn:hover {
-    background-color: #0077ff;
+    background-color: #2fb1d2;
     color: #e0efff;
 }
 

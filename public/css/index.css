@@ -117,12 +117,12 @@ a, a:hover, a:focus, a:active {
 /* Style button element */
 button {
     border: none;
-    padding: 12px 24px;
+    padding: 8px 20px;
     border-radius: 50px;
 
     font-weight: 600;
-    color: #0077ff;
-    background-color: #e0efff;
+    color: #0e9ada;
+    background-color: #bee3f9;
 
     /* Button is inline-block element by default, it need to have block display for margin: 0 auto; to work */
     margin: 0 auto;
@@ -141,8 +141,8 @@ button {
 /* Add style when button is focused or hovered */
 button:focus,
 button:hover {
-  background-color: #0077ff;
-  color: #e0efff;
+    background-color: #2fb1d2;
+    color: #e0efff;
 }
 
 
