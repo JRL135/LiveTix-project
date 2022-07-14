@@ -146,6 +146,9 @@ function recordSelectedEvent(e){
     let ticketTypes_dropdown = document.getElementById('ticket-types');
     ticketTypes_dropdown.innerHTML = `<option value="default" selected>Please press button to generate ticket types</option>`;
 
+    //hide submit btn
+    document.getElementById("post-btn").style.display = 'none';
+
     const selectedIndex = e.target.options.selectedIndex;
     selected_event_id = e.target.children[selectedIndex].value;
     let selected_event_title = e.target.children[selectedIndex].text;
@@ -156,7 +159,7 @@ function recordSelectedEvent(e){
     } else {
     //render in condition container
     selected_event_div.innerHTML += `
-        <div id='${selected_event_id}'>${selected_event_title}</div>
+        <div id='${selected_event_id}'>Event: ${selected_event_title}</div>
     `;
     }
 }
@@ -177,7 +180,7 @@ async function getSelectedEventTicketTypes(){
     }
     for (let i = 0; i < ticketTypesAvail.length; i++) {
        ticketTypes_dropdown.innerHTML += `
-            <option value="${ticketTypesAvail[i].type}">${ticketTypesAvail[i].type_name}</option>
+            <option value="${ticketTypesAvail[i].type}">Ticket Type: ${ticketTypesAvail[i].type_name}</option>
         `;
     }
 
@@ -198,10 +201,16 @@ function recordSelectedTicketType(e){
     //render in condition container
     selected_ticket_type_div.innerHTML += `
         <div id='${selected_ticket_type}'>${selected_ticketType}</div>
-    `; 
+    `;
+
+    //unhide submit btn
+    document.getElementById("post-btn").style.display = 'inline-block';
 }
 
 async function postExchangeCondition(){
+    //disable submit btn to prevent dup submit
+    document.getElementById("post-btn").disabled = true;
+
     console.log("postExchangeCondition triggered");
 
     if (selected_ticket_id == undefined || selected_ticket_id == 'default'){
