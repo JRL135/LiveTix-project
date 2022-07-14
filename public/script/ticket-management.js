@@ -1,10 +1,6 @@
 //check admin
 //if admin, show link to go to scanner page
 
-// let ticket_params = new URL(document.location).searchParams;
-// let ticket_id = ticket_params.get("id");
-// console.log(ticket_id);
-
 let admin_id;
 
 async function pageRender(){
@@ -40,7 +36,6 @@ async function checkAdminRole(){
 }
 
 
-
 async function populateTicketTable(){
     console.log("admin_id: " + admin_id);
     let getVerifiedTickets = await fetch(`/api/1.0/ticket/ticket-management/verified-tickets/admin/${admin_id}`);
@@ -63,3 +58,6 @@ async function populateTicketTable(){
         tbody.appendChild(tr);
     }
 }
+
+
+

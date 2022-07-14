@@ -164,23 +164,7 @@ app.get(`/user/role`, checkUserMiddleware, (req, res)=>{
 
 
 
-// not used
-// app.get('/ticket/details', getTicketDetailsAPI, (req, res)=>{
-//     res.json(req.result);
-// })
 
-
-// app.post('/ticket/type', saveTicketSelection, (req, res)=>{
-//     res.send('ticket selection sent');
-// })
-
-// app.post('/ticket/attendee', saveAttendeeInfo, (req, res)=>{
-//     res.send('attendee info sent')
-// })
-
-// app.get(`/event/:id/reserve`, (req, res)=>{
-//     res.sendFile(path.join(__dirname, '/reserve.html'));
-// })
 
 const PORT = process.env.PORT;
 const MODE = process.env.MODE;
