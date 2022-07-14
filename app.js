@@ -5,7 +5,7 @@ const express = require("express");
 const path = require("path");
 const {printReq, getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents, getCurrentEventsForExchange} = require("./controllers/event-controller");
 const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, getUserFavEvents, checkUserMiddleware, getUserMessages} = require("./controllers/user-controller");
-const {getTicketDetails, authTicket, getVerifiedTickets, getUserUnusedTickets, getSelectedEventTicketTypes, postExchangeCondition, getCurrentListings, postListingSelection} = require("./controllers/ticket-controller");
+const {getTicketDetails, authTicket, getVerifiedTickets, getUserUnusedTickets, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection} = require("./controllers/ticket-controller");
 const {checkUserRole, checkIndividualUser} = require("./controllers/auth-controller");
 
 
@@ -126,8 +126,13 @@ app.post(`/api/${process.env.api}/ticket/ticket-listing/exchange`, postExchangeC
     res.json(req.result);
 })
 
-//marketplace: get listings
-app.get(`/api/${process.env.api}/ticket/marketplace/listings`, getCurrentListings, (req, res)=>{
+//marketplace: get all listings
+app.get(`/api/${process.env.api}/ticket/marketplace/listings`, getAllCurrentListings, (req, res)=>{
+    res.json(req.result);
+})
+
+//marketplace: get user listings
+app.get(`/api/${process.env.api}/ticket/marketplace/listings/user/:id`, getUserCurrentListings, (req, res)=>{
     res.json(req.result);
 })
 

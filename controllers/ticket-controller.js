@@ -291,10 +291,26 @@ async function postExchangeCondition(req, res, next){
     await next();
 }
 
-async function getCurrentListings(req, res, next){
+async function getAllCurrentListings(req, res, next){
     console.log('getCurrentListings triggered');
     try {
-        let listings = await Ticket.getCurrentListings();
+        let userInfo = await AuthController.checkUserRole(req);
+        let user_id = userInfo.user_id;
+        let listings = await Ticket.getAllCurrentListings(user_id);
+        console.log(listings);
+        req.result = listings;
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+async function getUserCurrentListings(req, res, next){
+    console.log('getCurrentListings triggered');
+    try {
+        let user_id = req.params.id;
+        let listings = await Ticket.getUserCurrentListings(user_id);
         console.log(listings);
         req.result = listings;
     } catch(err) {
@@ -388,4 +404,4 @@ async function postListingSelection(req, res, next){
     await next();
 }
 
-module.exports = { getTicketDetails, getUserUnusedTickets, genQRcode, authTicket, getVerifiedTickets, getSelectedEventTicketTypes, postExchangeCondition, getCurrentListings, postListingSelection };
+module.exports = { getTicketDetails, getUserUnusedTickets, genQRcode, authTicket, getVerifiedTickets, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection };

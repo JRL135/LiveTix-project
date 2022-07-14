@@ -2,16 +2,19 @@
 // call api for all current listings
 let listings;
 let user_id;
+let token;
 
 async function pageRender(){
     await checkUserId();
+    await getUSerListings();
+    await renderUserListingsTable();
     await getListings();
     await renderListingsTable();
 }
 pageRender();
 
 async function checkUserId(){
-    let token = localStorage.getItem('token');
+    token = localStorage.getItem('token');
     let headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -34,15 +37,50 @@ async function checkUserId(){
         console.log("user_id: " + user_id);
     }
 }
+async function getUSerListings(){
+    let headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+    }
+    const userListingsURL = `/api/1.0/ticket/marketplace/listings/user/${user_id}`;
+    let userListingsStatus = await fetch(userListingsURL, {
+        headers: headers
+    });
+    userListings = await userListingsStatus.json();
+    console.log(userListings);
+}
+async function renderUserListingsTable(){
+    for (let i = 0; i < userListings.length; i++) {
+        let tbody = document.getElementById("user_listings_tb_tbody");
+        let tr = document.createElement('tr');
+        tr.setAttribute('class', 'user-listing-tr');
+        tr.setAttribute('id', `${userListings[i].listing_id}`);
+        tr.setAttribute('title', `${userListings[i].my_event_title}`);
+        tr.setAttribute('type', `${userListings[i].my_event_type_name}`);
+
+        // populate table
+        tr.innerHTML += `
+            <td>${userListings[i].listing_id}</td>
+            <td>${userListings[i].my_event_title}</td>
+            <td>${userListings[i].my_event_type_name}</td>
+            <td>${userListings[i].i_want_event_title}</td>
+            <td>${userListings[i].i_want_ticket_type_name}</td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+}
+
 
 async function getListings(){
     let headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
+        "Authorization": `Bearer ${token}`,
     }
     const listingsURL = `/api/1.0/ticket/marketplace/listings`;
     let listingsStatus = await fetch(listingsURL, {
-        headers: headers
+        headers: headers,
     });
     listings = await listingsStatus.json();
     console.log(listings);
@@ -123,3 +161,4 @@ async function postListingSelection(){
         location.reload();
     }
 }
+

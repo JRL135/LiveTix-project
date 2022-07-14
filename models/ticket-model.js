@@ -86,7 +86,7 @@ const saveExchangeAndListing = async (selected_event_id, selected_ticket_type, u
     }
 }
 
-const getCurrentListings = async ()=>{
+const getAllCurrentListings = async (user_id)=>{
     const [ticketListing] = await pool.query(`SELECT distinct
 	l.listing_id AS listing_id,
     l.ticket_id AS my_ticket_id,
@@ -120,8 +120,51 @@ FROM
     tickets t_mine on t_mine.ticket_id = l.ticket_id
 		inner join
     events e_mine on t_mine.event_id = e_mine.event_id
+WHERE
+    l.user_id <> ? and t_mine.used_status = '0'
 ORDER BY
-    listing_id`);
+    listing_id`, user_id);
+    return ticketListing;
+}
+
+const getUserCurrentListings = async (user_id)=>{
+    const [ticketListing] = await pool.query(`SELECT distinct
+	l.listing_id AS listing_id,
+    l.ticket_id AS my_ticket_id,
+    l.user_id AS my_user_id,
+    l.exchange_condition_id AS my_exchange_condition_id,
+    i_want.event_id AS i_want_event_id,
+    e_i_want.title AS i_want_event_title,
+    e_i_want.city AS i_want_event_city,
+    e_i_want.venue AS i_want_event_venue,
+    t_i_want.type AS i_want_ticket_type,
+    t_i_want.type_name AS i_want_ticket_type_name,
+    t_mine.event_id AS my_event_id,
+    t_mine.type AS my_event_type,
+    t_mine.type_name AS my_event_type_name,
+    t_mine.price AS my_event_price,
+    DATE_FORMAT(t_mine.ticket_start_date,'%Y-%m-%d') AS my_ticket_start_date,
+    DATE_FORMAT(t_mine.ticket_end_date,'%Y-%m-%d') AS my_ticket_end_date,
+    e_mine.title AS my_event_title,
+    e_mine.city AS my_event_city,
+    e_mine.venue AS my_event_venue
+FROM
+    listings l
+        INNER JOIN
+    exchange_conditions i_want ON l.exchange_condition_id = i_want.exchange_condition_id
+		inner join
+	events e_i_want ON e_i_want.event_id = i_want.event_id
+        inner join
+    tickets t_i_want ON e_i_want.event_id = t_i_want.event_id
+		and i_want.ticket_type = t_i_want.type
+		INNER JOIN
+    tickets t_mine on t_mine.ticket_id = l.ticket_id
+		inner join
+    events e_mine on t_mine.event_id = e_mine.event_id
+WHERE
+    l.user_id = ? and t_mine.used_status = '0'
+ORDER BY
+    listing_id`, user_id);
     return ticketListing;
 }
 
@@ -179,4 +222,4 @@ const sendMessage = async (user_id, content)=>{
     return message;
 }
 
-module.exports = { getTicketInfo, getTicketDetails, getUserUnusedTickets, updateUsed, saveTicketURLAndQR, getVerifiedTickets, getSelectedEventTicketTypes, saveExchangeAndListing, getCurrentListings, getUserMatchingTicketsForExchange, executeExchange, sendMessage };
+module.exports = { getTicketInfo, getTicketDetails, getUserUnusedTickets, updateUsed, saveTicketURLAndQR, getVerifiedTickets, getSelectedEventTicketTypes, saveExchangeAndListing, getAllCurrentListings, getUserCurrentListings, getUserMatchingTicketsForExchange, executeExchange, sendMessage };

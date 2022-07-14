@@ -25,8 +25,15 @@
             <div class="main-container">
                 <div id="welcome-text">Welcome to the TicketSwap Marketplace!</div>
                 <p id="instruction-text">Please select a listing you are interested in, and make sure you have the ticket that the listing owner is asking for a successful exchange:</p>
-                <div class="listings-table-container">
-                    <div id="current-listing-text">Current Exchange Listings:</div>
+
+            <div class="listings-tab-container">
+                <div class="tab_css">
+                    <!-- tab 1 -->
+                    <input id="tab1" type="radio" name="tab" checked="checked"/>
+                    <label for="tab1">My Current Marketplace Listings</label>
+                    <div class="tab_content">
+                        <div class="user-listings-table-container">
+                    <div id="current-listing-text">My Exchange Listings:</div>
                     <table class="table">
                         <thead>
                             <tr>
@@ -39,9 +46,35 @@
                                 <!-- <th id="tb-date-want">Want: Date</th> -->
                             </tr>
                         </thead>
-                        <tbody id="listings_tb_tbody"></tbody>
+                        <tbody id="user_listings_tb_tbody"></tbody>
                     </table>
+                
+                    </div>
                 </div>
+                
+                    <input id="tab2" type="radio" name="tab"/>
+                    <label for="tab2">All Current Marketplace Listings</label>
+                    <div class="tab_content">
+                        <div class="listings-table-container">
+                            <div id="current-listing-text">Current Exchange Listings:</div>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th id="tb-listing-id-have">Listing ID</th>
+                                            <th id="tb-event-title-have">Event Title</th>
+                                            <th id="tb-ticket-type-have">Ticket Type</th>
+                                            <!-- <th id="tb-date-have">Date</th> -->
+                                            <th id="tb-event-title-want">Asking for: Event Title</th>
+                                            <th id="tb-ticket-type-want">Asking for: Ticket Type</th>
+                                            <!-- <th id="tb-date-want">Want: Date</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listings_tb_tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+            </div>
                 <div class="listing-selection-container">
                     <div id="selected-listing-text">Selected Listing</div>
                     <div class="summary-div"></div>
