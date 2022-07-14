@@ -10,6 +10,14 @@ async function postSignupInfo(){
     // if (regex.test(password) === false){
     //     alert('Please enter a valid email address.');
     // } else {
+    
+    if (email == '') {
+        alert('Please enter a valid email address.');
+    } else if (username == '') {
+        alert('Username cannot be empty.');
+    } else if (password == '') {
+        alert('Password cannot be empty.');
+    } else {
 
         let headers = {
             "Content-Type": "application/json",
@@ -36,7 +44,7 @@ async function postSignupInfo(){
             alert(newUserStatus.message);
             location.reload();
         }
-    // }
+    }
 
 }
 
