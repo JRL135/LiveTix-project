@@ -5,6 +5,11 @@ const checkEmail = async (email)=>{
     return checkEmail;
 }
 
+const checkUsername = async (name)=>{
+    const [checkUsername] = await pool.query(`SELECT * FROM users WHERE name = ?`, name);
+    return checkUsername;
+}
+
 const registerUser = async (email, name, password, role)=>{
     const [newUser] = await pool.query(`INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)`, [name, email, password, role]);
     let user_id = newUser.insertId;
@@ -29,4 +34,4 @@ const getUserMessages = async (user_id)=>{
 };
 
 
-module.exports = { checkEmail, registerUser, getRegisteredEvents, getUserFavEvents, getUserMessages };
+module.exports = { checkEmail, checkUsername, registerUser, getRegisteredEvents, getUserFavEvents, getUserMessages };

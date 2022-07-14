@@ -20,20 +20,38 @@ async function registerUser(req, res, next){
         let salt = await bcrypt.genSalt();
         let hashed_password = await bcrypt.hash(password, salt);
         password = hashed_password;
-        // check if email exists
+        // check if email or username exist
         let emailCheck = await User.checkEmail(email);
-        if (emailCheck.length === 0) {
+        let usernameCheck = await User.checkUsername(name);
+        if (emailCheck.length === 0 && usernameCheck.length === 0) {
             user_id = await User.registerUser(email, name, password, role);
             console.log("new user created");
             // gen JWT token for new user
             let token = await genToken(user_id, email, name, role, password);
-            console.log(token);
-            req.result = token;
-        } else {
-            console.log("email already exists");
-            let message = "Email already exists";
-            req.result = message;
-            // res.status(409).send({message: "Email already exists"});
+            // console.log(token);
+            req.result = {
+                status: 1,
+                message: "Thank you for signing up!",
+                token: token
+            }
+        } else if (emailCheck.length === 0 && usernameCheck.length > 0){
+            console.log("Username already exists");
+            req.result = {
+                status: 0,
+                message: "Username already exists."
+            }
+        } else if (emailCheck.length > 0 && usernameCheck.length === 0){
+            console.log("Email already exists");
+            req.result = {
+                status: 0,
+                message: "Email already exists."
+            }
+        } else if (emailCheck.length > 0 && usernameCheck.length > 0){
+            console.log("Email and username already exist");
+            req.result = {
+                status: 0,
+                message: "Email and username already exist."
+            }
         }
     } catch(err) {
         console.log(err);
