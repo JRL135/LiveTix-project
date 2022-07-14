@@ -29,8 +29,32 @@
             <div class="listings-tab-container">
                 <div class="tab_css">
                     <!-- tab 1 -->
-                    <input id="tab1" type="radio" name="tab" checked="checked"/>
-                    <label for="tab1">My Current Marketplace Listings</label>
+                    <input id="tab1" type="radio" name="tab"/>
+                    <label for="tab1">All Current Marketplace Listings</label>
+                    <div class="tab_content">
+                        <div class="listings-table-container">
+                            <div id="current-listing-text">Current Exchange Listings:</div>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th id="tb-listing-id-have">Listing ID</th>
+                                            <th id="tb-event-title-have">Event Title</th>
+                                            <th id="tb-ticket-type-have">Ticket Type</th>
+                                            <!-- <th id="tb-date-have">Date</th> -->
+                                            <th id="tb-event-title-want">Asking for: Event Title</th>
+                                            <th id="tb-ticket-type-want">Asking for: Ticket Type</th>
+                                            <!-- <th id="tb-date-want">Want: Date</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listings_tb_tbody"></tbody>
+                                </table>
+                            </div>
+                        
+                    </div>
+
+                    <!-- tab 2 -->
+                    <input id="tab2" type="radio" name="tab" checked="checked"/>
+                    <label for="tab2">My Current Marketplace Listings</label>
                     <div class="tab_content">
                         <div class="user-listings-table-container">
                     <div id="current-listing-text">My Exchange Listings:</div>
@@ -50,33 +74,13 @@
                     </table>
                 
                     </div>
-                </div>
-                
-                    <input id="tab2" type="radio" name="tab"/>
-                    <label for="tab2">All Current Marketplace Listings</label>
-                    <div class="tab_content">
-                        <div class="listings-table-container">
-                            <div id="current-listing-text">Current Exchange Listings:</div>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th id="tb-listing-id-have">Listing ID</th>
-                                            <th id="tb-event-title-have">Event Title</th>
-                                            <th id="tb-ticket-type-have">Ticket Type</th>
-                                            <!-- <th id="tb-date-have">Date</th> -->
-                                            <th id="tb-event-title-want">Asking for: Event Title</th>
-                                            <th id="tb-ticket-type-want">Asking for: Ticket Type</th>
-                                            <!-- <th id="tb-date-want">Want: Date</th> -->
-                                        </tr>
-                                    </thead>
-                                    <tbody id="listings_tb_tbody"></tbody>
-                                </table>
-                            </div>
-                        </div>
                     </div>
+                </div>
+
             </div>
                 <div class="listing-selection-container">
                     <div id="selected-listing-text">Selected Listing</div>
+                    <div id="no-selection-text">You have not selected any listing.</div>
                     <div class="summary-div"></div>
                     <div class="btn-div"></div>
                 </div>

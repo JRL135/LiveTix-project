@@ -133,6 +133,9 @@ function renderListingSelectionDiv(e){
     btn_div.innerHTML =``;
     btn_div.innerHTML += `<button id="post-btn" onclick="postListingSelection()">Submit</button>`;
 
+    let no_selection_text = document.getElementById('no-selection-text');
+    no_selection_text.style.display = 'none';
+
 }
 
 async function postListingSelection(){

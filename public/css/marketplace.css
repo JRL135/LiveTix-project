@@ -156,6 +156,11 @@ table thead th {
     padding: 0.5em;
 }
 
+#no-selection-text {
+    padding: 1em;
+    color: #abacac;
+}
+
 .summary-div {
     padding: 0.5em;
 }
