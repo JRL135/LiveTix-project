@@ -245,11 +245,20 @@ async function getEventDetailsAPI(){
     document.getElementsByClassName("event_venue")[0].innerHTML = `Location: ${eventDetails[0].venue}`;
     document.getElementsByClassName("event_location")[0].innerHTML = `City: ${eventDetails[0].city}`;
     document.getElementsByClassName("event_category")[0].innerHTML = `Category: ${eventDetails[0].category}`;
-    document.getElementsByClassName("event_artist")[0].innerHTML = `
-    Artist: ${eventDetails[0].artist}`;
+
+    let event_artist = document.getElementsByClassName("event_artist")[0];
+    for (let i = 0; i < eventDetails[0].artist.length; i++) {
+        event_artist.innerHTML += ` ${eventDetails[0].artist[i]}`;
+        event_artist.innerHTML += `,`;
+    }
+    function slice() {
+        event_artist.textContent = event_artist.textContent.slice(0, -1);
+    }
+    slice();
+
     document.getElementsByClassName("event_main-image")[0].setAttribute('src', eventDetails[0].main_picture);
-    // document.getElementsByClassName("event_main-image")[0].innerHTML = "main_image";
     document.getElementsByClassName("event_description")[0].innerHTML = event_description;
+    document.getElementsByClassName("map-responsive")[0].innerHTML = `${eventDetails[0].map}`;
 }
 getEventDetailsAPI();
 

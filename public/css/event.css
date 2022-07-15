@@ -80,7 +80,8 @@ main > * {
 
 .event_title {
     font-weight: 800;
-    font-size: 1.2em;
+    font-size: 2em;
+    color: rgb(51, 152, 169);
 }
 
 .main-container-s2 {
@@ -98,15 +99,42 @@ main > * {
 
 #event_description_header {
     font-weight: 800;
-    font-size: 1.2em;
+    font-size: 1.6em;
+    color: rgb(51, 152, 169);
+}
+
+#map-text {
+    font-weight: 800;
+    font-size: 1.6em;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    color: rgb(51, 152, 169);
 }
 
 .event_description {
     text-align: left;
     font-size: 1em;
+    border-bottom: 1px solid #bacdd8;
+    padding-bottom: 2em;
+}
+
+.map-responsive{
+    overflow:hidden;
+    padding-bottom:56.25%;
+    position:relative;
+    height:0;
+}
+
+.map-responsive iframe{
+    left:0;
+    top:0;
+    height:100%;
+    width:100%;
+    position:absolute;
 }
 
 #countdown-div {
+    align-items: center;
     text-align: center;
     margin: 1em;
 }
@@ -213,8 +241,8 @@ table thead th {
     text-align: center;
 }
 
-#ticket-btn {
-    margin-top: 0.5em;
+#buy_ticket_button {
+    margin-top: 1em;
 }
 
 #paySDK-btn {
