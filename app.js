@@ -4,8 +4,8 @@ const express = require("express");
 // const multer = require("multer");
 const path = require("path");
 const {printReq, getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents, getCurrentEventsForExchange} = require("./controllers/event-controller");
-const {registerUser, loginUser, getUserProfile, getUserRegisteredEvents, getUserFavEvents, checkUserMiddleware, getUserMessages} = require("./controllers/user-controller");
-const {getTicketDetails, authTicket, getVerifiedTickets, getUserUnusedTickets, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection} = require("./controllers/ticket-controller");
+const {registerUser, loginUser, getUserProfile, getUserUnusedTickets, getUserUsedTickets, getUserFavEvents, checkUserMiddleware, getUserMessages} = require("./controllers/user-controller");
+const {getTicketDetails, authTicket, getVerifiedTickets, getUserUnusedTicketsForListing, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection} = require("./controllers/ticket-controller");
 const {checkUserRole, checkIndividualUser} = require("./controllers/auth-controller");
 
 
@@ -72,7 +72,11 @@ app.post(`/api/${process.env.api}/user/profile`, getUserProfile, (req, res)=>{
     res.json(req.result);
 })
 
-app.get(`/api/${process.env.api}/user/:username/events/registered`, getUserRegisteredEvents, (req, res)=>{
+app.get(`/api/${process.env.api}/user/:username/tickets/unused`, getUserUnusedTickets, (req, res)=>{
+    res.json(req.result);
+})
+
+app.get(`/api/${process.env.api}/user/:username/tickets/used`, getUserUsedTickets, (req, res)=>{
     res.json(req.result);
 })
 
@@ -107,7 +111,7 @@ app.get(`/api/${process.env.api}/ticket/ticket-management/verified-tickets/admin
 
 
 //ticket-listing: fetch user unused tickets for listing
-app.get(`/api/${process.env.api}/ticket/ticket-listing/unused-tickets/user/:id`, getUserUnusedTickets, (req, res)=>{
+app.get(`/api/${process.env.api}/ticket/ticket-listing/unused-tickets/user/:id`, getUserUnusedTicketsForListing, (req, res)=>{
     res.json(req.result);
 })
 

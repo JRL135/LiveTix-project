@@ -5,7 +5,8 @@
 
 async function profilePageRender(){
     let username = await checkTokenAndRenderProfile();
-    await getUserRegisteredEvents(username);
+    await getUserUnusedTickets(username);
+    await getUserUsedTickets(username);
     await getUserFavEvents(username);
 
 }
@@ -37,9 +38,9 @@ async function checkTokenAndRenderProfile(){
 }
 
 
-async function getUserRegisteredEvents(username){
+async function getUserUnusedTickets(username){
     console.log(username);
-    const getUserRegisteredEventsURL = `/api/1.0/user/${username}/events/registered`;
+    const getUserRegisteredEventsURL = `/api/1.0/user/${username}/tickets/unused`;
     let userRegisteredsEvents = await fetch(getUserRegisteredEventsURL);
     let registeredEvents = await userRegisteredsEvents.json();
     console.log(registeredEvents);
@@ -62,11 +63,39 @@ async function getUserRegisteredEvents(username){
             <div id="register-event-div-venue">${registeredEvents[i].venue} @ ${registeredEvents[i].city}</div>
             <div id="register-event-div-purchase">Purchased Date: ${registeredEvents[i].purchase_date}</div>
             <a target="_parent" href="${ROOT_URL}ticket.html?id=${registeredEvents[i].ticket_id}"><button id="ticket-btn">Ticket</button></a>
-            
         </div>
         `;
     }
+}
 
+async function getUserUsedTickets(username){
+    console.log(username);
+    const getUserRegisteredEventsURL = `/api/1.0/user/${username}/tickets/used`;
+    let userRegisteredsEvents = await fetch(getUserRegisteredEventsURL);
+    let registeredEvents = await userRegisteredsEvents.json();
+    console.log(registeredEvents);
+    let registeredEventDiv = document.getElementsByClassName('tab2-div')[0];
+    for (let i = 0; i < registeredEvents.length; i++) {
+        let date;
+        let start_date = registeredEvents[i].start_date;
+        let end_date = registeredEvents[i].end_date;
+        if (start_date === end_date) {
+            date = start_date;
+        } else {
+            date = `${start_date} - ${end_date}`;
+        }
+        registeredEventDiv.innerHTML += `
+        <div class="registered-event-div">
+            <img src="${registeredEvents[i].main_picture}">
+            <div id="register-event-div-title">${registeredEvents[i].title}</div>
+            <div id="register-event-div-type">${registeredEvents[i].ticket_type_name}</div>
+            <div id="register-event-div-date">${date}</div>
+            <div id="register-event-div-venue">${registeredEvents[i].venue} @ ${registeredEvents[i].city}</div>
+            <div id="register-event-div-purchase">Purchased Date: ${registeredEvents[i].purchase_date}</div>
+            <a target="_parent" href="${ROOT_URL}ticket.html?id=${registeredEvents[i].ticket_id}"><button id="ticket-btn">Ticket</button></a>
+        </div>
+        `;
+    }
 }
 
 async function getUserFavEvents(username){
@@ -75,7 +104,7 @@ async function getUserFavEvents(username){
     let userFavEvents = await fetch(getUserFavEventsURL);
     let favEvents = await userFavEvents.json();
     console.log(favEvents);
-    let favEventsDiv = document.getElementsByClassName('tab2-div')[0];
+    let favEventsDiv = document.getElementsByClassName('tab3-div')[0];
     console.log("length: " + favEvents.length);
     for (let i = 0; i < favEvents.length; i++) {
         let date;

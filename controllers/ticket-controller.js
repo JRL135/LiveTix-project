@@ -24,11 +24,11 @@ async function getTicketDetails(req, res, next){
     await next();
 }
 
-async function getUserUnusedTickets(req, res, next){
-    console.log("getUserUnusedTickets triggered");
+async function getUserUnusedTicketsForListing(req, res, next){
+    console.log("getUserUnusedTicketsForListing triggered");
     try {
         let user_id = req.params.id;
-        let unusedTickets = await Ticket.getUserUnusedTickets(user_id);
+        let unusedTickets = await Ticket.getUserUnusedTicketsForListing(user_id);
         console.log(unusedTickets);
         req.result = unusedTickets;
 
@@ -404,4 +404,4 @@ async function postListingSelection(req, res, next){
     await next();
 }
 
-module.exports = { getTicketDetails, getUserUnusedTickets, genQRcode, authTicket, getVerifiedTickets, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection };
+module.exports = { getTicketDetails, getUserUnusedTicketsForListing, genQRcode, authTicket, getVerifiedTickets, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection };

@@ -160,15 +160,30 @@ async function checkUserMiddleware(req, res, next){
 }
 
 
-
-async function getUserRegisteredEvents(req, res, next){
-    console.log('getUserRegisteredEvents triggered');
+async function getUserUnusedTickets(req, res, next){
+    console.log('getUserUnusedTickets triggered');
     try {
         let username = req.params.username;
         console.log(username);
-        let registeredEvents = await User.getRegisteredEvents(username);
-        console.log(registeredEvents);
-        req.result = registeredEvents;
+        let unusedTickets = await User.getUserUnusedTickets(username);
+        console.log(unusedTickets);
+        req.result = unusedTickets;
+
+    } catch(err) {
+        console.log(err);
+        res.status(500).send({error: err.message});
+    }
+    await next();
+}
+
+async function getUserUsedTickets(req, res, next){
+    console.log('getUserUsedTickets triggered');
+    try {
+        let username = req.params.username;
+        console.log(username);
+        let usedTickets = await User.getUserUsedTickets(username);
+        console.log(usedTickets);
+        req.result = usedTickets;
 
     } catch(err) {
         console.log(err);
@@ -225,4 +240,4 @@ async function genToken(user_id, email, name, role, password){
 }
 
 
-module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkUserMiddleware, getUserRegisteredEvents, getUserFavEvents, getUserMessages };
+module.exports = { registerUser, loginUser, getUserProfile, checkToken, checkUserMiddleware, getUserUnusedTickets, getUserUsedTickets, getUserFavEvents, getUserMessages };

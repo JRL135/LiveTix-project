@@ -11,7 +11,7 @@ const getTicketDetails = async (ticket_id)=>{
     return ticketDetails;
 };
 
-const getUserUnusedTickets = async (user_id)=>{
+const getUserUnusedTicketsForListing = async (user_id)=>{
     const [userListedTickets] = await pool.query(`SELECT JSON_ARRAYAGG(ticket_id) as ticket_id FROM listings WHERE user_id = ?`, user_id);
     console.log(userListedTickets);
     let listedTicketArray = userListedTickets[0].ticket_id;
@@ -222,4 +222,4 @@ const sendMessage = async (user_id, content)=>{
     return message;
 }
 
-module.exports = { getTicketInfo, getTicketDetails, getUserUnusedTickets, updateUsed, saveTicketURLAndQR, getVerifiedTickets, getSelectedEventTicketTypes, saveExchangeAndListing, getAllCurrentListings, getUserCurrentListings, getUserMatchingTicketsForExchange, executeExchange, sendMessage };
+module.exports = { getTicketInfo, getTicketDetails, getUserUnusedTicketsForListing, updateUsed, saveTicketURLAndQR, getVerifiedTickets, getSelectedEventTicketTypes, saveExchangeAndListing, getAllCurrentListings, getUserCurrentListings, getUserMatchingTicketsForExchange, executeExchange, sendMessage };

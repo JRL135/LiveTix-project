@@ -79,7 +79,7 @@ main {
     display: initial;
 }
 
-/* ------------ registered event -------------- */
+/* ------------ Unused Tickets -------------- */
 
 
 .tab1-div {
@@ -170,8 +170,7 @@ main {
     border-radius: 12px;
 }
 
-/* ------------ fav event -------------- */
-
+/* ------------ Used Tickets -------------- */
 
 .tab2-div {
     display: grid;
@@ -190,6 +189,33 @@ main {
 
 @media only screen and (max-width: 768px) {
     .tab2-div {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1em;
+    }
+}
+
+
+
+/* ------------ Fav Events -------------- */
+
+.tab3-div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1em;
+
+}
+
+@media only screen and (max-width: 1070px) {
+    .tab3-div {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1em;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .tab3-div {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
         gap: 1em;
