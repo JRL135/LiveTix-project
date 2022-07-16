@@ -36,6 +36,7 @@ main {
 }
 
 /* ------------------- tab ------------------- */
+
 .tab_css {
     display:flex;
     flex-wrap:wrap;
@@ -79,14 +80,13 @@ main {
     display: initial;
 }
 
-/* ------------ Unused Tickets -------------- */
 
+/* ------------ Unused Tickets -------------- */
 
 .tab1-div {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1em;
-
 }
 
 @media only screen and (max-width: 1070px) {

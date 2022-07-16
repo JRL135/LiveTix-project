@@ -1,24 +1,25 @@
+
 const ROOT_URL = `${environment.backendBaseUrl}`;
 
 class Header extends HTMLElement {
-    constructor() {
-      super();
-    }
-    async connectedCallback() {
-        let token = localStorage.getItem('token');
-        let headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": `Bearer ${token}`,
-        }
-        const checkUserLoginURL = `/user/role`;
-        let loginResult = await fetch(checkUserLoginURL, {
-            headers: headers
-        });
-        let userLoginStatus = await loginResult.json();
-        console.log(userLoginStatus);
-        if (userLoginStatus.role == 'admin') {
-            this.innerHTML = `
+  constructor() {
+    super();
+  }
+  async connectedCallback() {
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    };
+    const checkUserLoginURL = `/user/role`;
+    const loginResult = await fetch(checkUserLoginURL, {
+      headers: headers,
+    });
+    const userLoginStatus = await loginResult.json();
+    console.log(userLoginStatus);
+    if (userLoginStatus.role == 'admin') {
+      this.innerHTML = `
             <div class="header-container navbar">
                 <div class="header-left">
                     <a target="_parent" href="${ROOT_URL}index.html" class="nav-link"><img id="logo-id" src="../img/LiveTixLogo.png"></a>
@@ -31,8 +32,8 @@ class Header extends HTMLElement {
                     <div class="nav-link" id="signout-div">Sign Out</div>
                 </div>
             </div>`;
-        } else if (userLoginStatus.role == 'user') {
-            this.innerHTML = `
+    } else if (userLoginStatus.role == 'user') {
+      this.innerHTML = `
             <div class="header-container navbar">
                 <div class="header-left">
                     <a target="_parent" href="${ROOT_URL}index.html" class="nav-link"><img id="logo-id" src="../img/LiveTixLogo.png"></a>
@@ -48,8 +49,8 @@ class Header extends HTMLElement {
                     <div class="nav-link" id="signout-div">Sign Out</div>
                 </div>
             </div>`;
-        } else {
-        this.innerHTML = `
+    } else {
+      this.innerHTML = `
             <div class="header-container navbar">
                 <div class="header-left">
                     <a target="_parent" href="${ROOT_URL}index.html" class="nav-link"><img id="logo-id" src="../img/LiveTixLogo.png"></a>
@@ -63,19 +64,19 @@ class Header extends HTMLElement {
                 </div>
             </div>
         `;
-        }
-        let search = document.getElementById('search-div');
-        search.setAttribute('href', `${ROOT_URL}search.html`);
-
-        let signout_div = document.getElementById('signout-div');
-        signout_div.addEventListener('click', signOut);
-        function signOut(){
-            localStorage.removeItem('token');
-            alert('You have signed out.');
-            // window.location.reload();
-            window.location.href = "/index.html";
-        }
     }
+    const search = document.getElementById('search-div');
+    search.setAttribute('href', `${ROOT_URL}search.html`);
+
+    const signoutDiv = document.getElementById('signout-div');
+    signoutDiv.addEventListener('click', signOut);
+    function signOut() {
+      localStorage.removeItem('token');
+      alert('You have signed out.');
+      // window.location.reload();
+      window.location.href = '/index.html';
+    }
+  }
 }
 
 customElements.define('header-component', Header);

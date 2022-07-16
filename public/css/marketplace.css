@@ -157,8 +157,15 @@ table thead th {
 }
 
 #no-selection-text {
+    padding-top: 1em;
+    color: #abacac;
+}
+
+#no-listing-text {
     padding: 1em;
     color: #abacac;
+    text-align: center;
+    font-size: 1.15em;
 }
 
 .summary-div {

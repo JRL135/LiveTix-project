@@ -1,54 +1,57 @@
 
-let user_id;
+let userId;
 
-async function pageRender(){
-    await checkUserId();
-    await fetchMessages();
+async function pageRender() {
+  await checkUserId();
+  await fetchMessages();
 }
 pageRender();
 
-async function checkUserId(){
-    let token = localStorage.getItem('token');
-    let headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": `Bearer ${token}`,
-    }
-    const authRoleURL = `/user/role`;
-    let authRoleStatus = await fetch(authRoleURL, {
-        headers: headers
-    });
-    let roleStatus = await authRoleStatus.json();
-    console.log(roleStatus);
-    if (roleStatus == 'No token') {
-        alert('Please login to access this page');
-        window.location.href = "/login.html";
-    } else if (roleStatus.role == 'admin') {
-        alert('You are not authorized to access this page');
-        window.location.href = "/index.html";
-    } else {
-        user_id = roleStatus.user_id;
-        console.log("user_id: " + user_id);
-    }
+async function checkUserId() {
+  const token = localStorage.getItem('token');
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  };
+  const authRoleURL = `/user/role`;
+  const authRoleStatus = await fetch(authRoleURL, {
+    headers: headers,
+  });
+  const roleStatus = await authRoleStatus.json();
+  console.log(roleStatus);
+  if (roleStatus == 'No token') {
+    alert('Please login to access this page');
+    window.location.href = '/login.html';
+  } else if (roleStatus.role == 'admin') {
+    alert('You are not authorized to access this page');
+    window.location.href = '/index.html';
+  } else {
+    userId = roleStatus.user_id;
+    console.log('user_id: ' + userId);
+  }
 }
 
-//fetch messages
-//render
-async function fetchMessages(){
-    let messagesFetch = await fetch(`/api/1.0/user/${user_id}/message`);
-    let userMessages = await messagesFetch.json();
-    console.log(userMessages);
-
+// fetch messages
+// render
+async function fetchMessages() {
+  const messagesFetch = await fetch(`/api/1.0/user/${userId}/message`);
+  const userMessages = await messagesFetch.json();
+  console.log(userMessages);
+  if (userMessages.length === 0) {
+    const mainContainer = document.getElementsByClassName('main-container')[0];
+    mainContainer.innerHTML += `<div id="no-notif-text">You don't have any notifications at the moment.</div>`;
+  } else {
     for (let i = 0; i < userMessages.length; i++) {
-        let notifications_container = document.getElementsByClassName('notifications-container')[0];
-        notifications_container.innerHTML += `
-            <div class="notification-box">
-                <div id='msg-source-div'>From: ${userMessages[i].message_type}</div>
-                <div id='msg-date-div'>Date: ${userMessages[i].date}</div>
-                <div>${userMessages[i].content}</div>
-            </div>
-        `;
+      const notificationsContainer = document.getElementsByClassName('notifications-container')[0];
+      notificationsContainer.innerHTML += `
+              <div class="notification-box">
+                  <div id='msg-source-div'>From: ${userMessages[i].message_type}</div>
+                  <div id='msg-date-div'>Date: ${userMessages[i].date}</div>
+                  <div>${userMessages[i].content}</div>
+              </div>
+          `;
     }
-
+  }
 }
 

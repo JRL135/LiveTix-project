@@ -53,6 +53,13 @@ main > * {
     margin-top: 1em;
 }
 
+#no-notif-text {
+    padding: 1em;
+    color: #abacac;
+    text-align: center;
+    font-size: 1.15em;
+}
+
 .notifications-container {
     display: flex;
     flex-direction: column;

@@ -1,3 +1,3 @@
-var environment = {
-    "backendBaseUrl": "http://localhost:3000/",
-}
+const environment = {
+  'backendBaseUrl': 'http://localhost:3000/',
+};
