@@ -37,6 +37,7 @@ main {
 table {
     text-align: center;
     padding: 1em;
+    table-layout: fixed;
 }
 
 table > *{
