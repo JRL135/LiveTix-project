@@ -203,7 +203,7 @@ async function authTicket(req, res, next) {
     console.log('ticketURLHash: ' + ticketURLHash);
     const ticketId = await decryptTicketURL(ticketURLHash);
 
-    console.log('ticket_id: ' + ticketId);
+    console.log('ticketId: ' + ticketId);
 
     // check if ticket has already been verified
     // only qrcode currently saved in db is valid (to account for exchanged condition)
@@ -324,12 +324,12 @@ async function postListingSelection(req, res, next) {
   console.log('postListingSelection triggered');
   try {
     // check if user_id has ticket that meets listing_id requirement
-    const user_id = parseInt(req.body.user_id);
-    const listing_selection_id = parseInt(req.body.listing_selection_id);
-    console.log('user_id: ' + user_id);
-    console.log('listing_selection_id: ' + listing_selection_id);
+    const userId = parseInt(req.body.user_id);
+    const listingSelectionId = parseInt(req.body.listing_selection_id);
+    console.log('userId: ' + userId);
+    console.log('listingSelectionId: ' + listingSelectionId);
 
-    const userMatchingTickets = await Ticket.getUserMatchingTicketsForExchange(user_id, listing_selection_id);
+    const userMatchingTickets = await Ticket.getUserMatchingTicketsForExchange(userId, listingSelectionId);
     console.log('userMatchingTickets:');
     console.log(userMatchingTickets);
     const matchingTixLength = userMatchingTickets.length;
@@ -342,14 +342,14 @@ async function postListingSelection(req, res, next) {
       // poster user_id (i want user_id)
       // ticket_id = i have ticket_id
       // poster ticket_id (i want ticket_id)
-      const ticket_id = userMatchingTickets[0].ticket_id;
-      console.log('ticket_id: ' + ticket_id);
-      const poster_user_id = userMatchingTickets[0].poster_user_id;
-      console.log('poster_user_id: ' + poster_user_id);
-      const poster_ticket_id = userMatchingTickets[0].poster_ticket_id;
-      console.log('poster_ticket_id: ' + poster_ticket_id);
+      const ticketId = userMatchingTickets[0].ticket_id;
+      console.log('ticketId: ' + ticketId);
+      const posterUserId = userMatchingTickets[0].poster_user_id;
+      console.log('posterUserId: ' + posterUserId);
+      const posterTicketId = userMatchingTickets[0].poster_ticket_id;
+      console.log('posterTicketId: ' + posterTicketId);
 
-      const ticketURLHash = await encryptTicketURL(ticket_id);
+      const ticketURLHash = await encryptTicketURL(ticketId);
       let ticketURL;
       if (process.env.MODE === 'development') {
         ticketURL = `${process.env.ROOT_URL}ticket/verification/${ticketURLHash}`;
@@ -357,15 +357,15 @@ async function postListingSelection(req, res, next) {
         ticketURL = `https://${process.env.DOMAIN}ticket/verification/${ticketURLHash}`;
       }
       const ticketQR = await QRCode.toDataURL(ticketURL);
-      const poster_ticketURLHash = await encryptTicketURL(poster_ticket_id);
-      let poster_ticketURL;
+      const posterTicketURLHash = await encryptTicketURL(posterTicketId);
+      let posterTicketURL;
       if (process.env.MODE === 'development') {
-        poster_ticketURL = `http://localhost:80/ticket/verification/${poster_ticketURLHash}`;
+        posterTicketURL = `http://localhost:80/ticket/verification/${posterTicketURLHash}`;
       } else if (process.env.MODE === 'production') {
-        poster_ticketURL = `https://${process.env.DOMAIN}ticket/verification/${poster_ticketURLHash}`;
+        posterTicketURL = `https://${process.env.DOMAIN}ticket/verification/${posterTicketURLHash}`;
       }
-      const poster_ticketQR = await QRCode.toDataURL(poster_ticketURL);
-      const exchangeResult = await Ticket.executeExchange(user_id, ticket_id, ticketURL, ticketQR, poster_user_id, poster_ticket_id, poster_ticketURL, poster_ticketQR);
+      const posterTicketQR = await QRCode.toDataURL(posterTicketURL);
+      const exchangeResult = await Ticket.executeExchange(userId, ticketId, ticketURL, ticketQR, posterUserId, posterTicketId, posterTicketURL, posterTicketQR);
       if (exchangeResult.length == 0 || exchangeResult == null || exchangeResult == undefined) {
         console.log('exchange db error');
         return res.status(500).send({
@@ -377,16 +377,16 @@ async function postListingSelection(req, res, next) {
         // current_user:
         req.result = {
           status: 1,
-          new_ticket_id: poster_ticket_id,
-          message: `Congratulations! Your new ticket ID is ${poster_ticket_id}`,
+          new_ticket_id: posterTicketId,
+          message: `Congratulations! Your new ticket ID is ${posterTicketId}`,
         };
         // poster_user: send message to poster_user
         // ticket_id
-        const poster_message = `Congratulations, your marketplace listing #${listing_selection_id} was successfully exchanged. Your new ticket ID is ${ticket_id}.`;
-        const poster_message_query = await Ticket.sendMessage(poster_user_id, poster_message);
+        const posterMessage = `Congratulations, your marketplace listing #${listingSelectionId} was successfully exchanged. Your new ticket ID is ${ticketId}.`;
+        const posterMessageQuery = await Ticket.sendMessage(posterUserId, posterMessage);
         // current_user: send message to current_user
-        const message = `Congratulations, you have successfully exchanged your ticket #${ticket_id} for ticket #${poster_ticket_id}.`;
-        const message_query = await Ticket.sendMessage(user_id, message);
+        const message = `Congratulations, you have successfully exchanged your ticket #${ticketId} for ticket #${posterTicketId}.`;
+        const messageQuery = await Ticket.sendMessage(userId, message);
       }
     } else {
       console.log('no matching tickets');
