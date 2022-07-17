@@ -31,7 +31,6 @@ async function checkAdminRole() {
   } else {
     adminId = roleStatus.user_id;
     console.log(adminId);
-    alert('Welcome back to the ticket management page');
   }
 }
 

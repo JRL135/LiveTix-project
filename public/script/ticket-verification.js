@@ -18,6 +18,8 @@ async function checkAdminRoleAndVerify() {
   let message;
   if (result.status == 1) {
     message = result.message;
+    const verificationImg = document.getElementById('verification-img');
+    verificationImg.innerHTML += `<img id='verified-img' src='../img/verified.png'>`;
   } else {
     message = result.message;
   }

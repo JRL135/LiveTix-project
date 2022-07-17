@@ -34,6 +34,10 @@ main {
     padding: 1em;
 }
 
+#tickets-verified-text {
+    font-size: 1.1em;
+}
+
 table {
     text-align: center;
     padding: 1em;
