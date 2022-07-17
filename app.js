@@ -86,10 +86,6 @@ app.get(`/api/${process.env.api}/ticket/:id`, checkUserMiddleware, checkIndividu
   res.json(req.result);
 });
 
-app.get(`/ticket/verification/:hash`, authTicket, (req, res)=>{
-  res.json(req.result);
-});
-
 app.get(`/api/${process.env.api}/event/:id/user/favorite`, getEventFavStatus, (req, res)=>{
   res.json(req.result);
 });
@@ -102,10 +98,15 @@ app.delete(`/api/${process.env.api}/event/:id/user/favorite`, deleteEventFavStat
   res.json(req.result);
 });
 
+// ticket-management
 app.get(`/api/${process.env.api}/ticket/ticket-management/verified-tickets/admin/:id`, getVerifiedTickets, (req, res)=>{
   res.json(req.result);
 });
 
+// ticket-verification
+app.get(`/ticket/verification/:hash`, authTicket, (req, res)=>{
+  res.json(req.result);
+});
 
 // ticket-listing: fetch user unused tickets for listing
 app.get(`/api/${process.env.api}/ticket/ticket-listing/unused-tickets/user/:id`, getUserUnusedTicketsForListing, (req, res)=>{
