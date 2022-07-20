@@ -37,20 +37,21 @@ const getAvailTickets = async (id)=>{
 };
 
 const checkAndReserveTickets = async (eventId, userId, ticketTypeName, ticketNumber)=>{
-  // const [reservedTickets] = await pool.query(`CALL checkAvailTicketsAndreserveTicket(?, ?, ?, @out_ticket_id)`, [user_id, ticketType, ticketNumber]);
-
   const conn = await pool.getConnection();
   try {
     await conn.query('START TRANSACTION');
+    await conn.query('LOCK TABLE tickets WRITE');
     const [reservedTickets] = await conn.query(`SELECT ticket_id from tickets WHERE event_id = ? and temp_status = '0' and type_name = ? limit ?`, [eventId, ticketTypeName, ticketNumber]);
     const ticketIdArray = [];
     for (let i = 0; i < reservedTickets.length; i++) {
       const ticketId = reservedTickets[i].ticket_id;
       console.log(ticketId);
       ticketIdArray.push(ticketId);
-      await conn.query(`UPDATE tickets SET user_id = ?, timer_timestamp = NOW(), temp_status = '1' WHERE ticket_id = ?`, [userId, ticketId]);
     }
+    await conn.query(`UPDATE tickets SET user_id = ?, timer_timestamp = NOW(), temp_status = '1' WHERE ticket_id IN (?)`, [userId, ticketIdArray]);
+
     await conn.query('COMMIT');
+    await conn.query('UNLOCK TABLES');
     return ticketIdArray;
   } catch (error) {
     console.log(error);
@@ -94,6 +95,8 @@ const saveTicketOrder = async (eventId, userId, ticketIds)=>{
     console.log(eventId);
     console.log(userId);
     await conn.query('START TRANSACTION');
+    await conn.query('LOCK TABLE tickets WRITE');
+    // await conn.query('LOCK TABLE orders WRITE');
 
 
     // order_query
@@ -113,6 +116,7 @@ const saveTicketOrder = async (eventId, userId, ticketIds)=>{
       await conn.query(`INSERT INTO ticket_order (order_id, ticket_id) VALUES (?, ?)`, [orderId, ticketId]);
     }
     await conn.query('COMMIT');
+    await conn.query('UNLOCK TABLES');
     return orderId;
   } catch (error) {
     console.log(error);
