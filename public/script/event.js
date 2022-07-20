@@ -419,14 +419,6 @@ async function postTicketSelection(e) {
     if (ticketTypeList.length == 0) {
       alert('Please select ticket');
     } else {
-      alert('Selected ticket(s) has been reserved for 5 minutes');
-      // hide add to cart button
-      document.getElementById('addToCart_ticket_button').style.display = 'none';
-      // unhide timer
-      document.getElementById('countdown-div').style.display = 'inline';
-      // show buy ticket button
-      document.getElementById('buy_ticket_button').style.display = 'inline-block';
-
       // start timer
       startCountdown();
 
@@ -460,6 +452,18 @@ async function postTicketSelection(e) {
       if (postTixResponse === 'No token') {
         alert('Please login first.');
         window.location.href = '/login.html';
+      } else if (postTixResponse.status === '0') {
+        console.log('status = 0');
+        alert(postTixResponse.message); // Sorry, there are no available tickets at the moment.
+      } else {
+        console.log('status = 1');
+        alert('Selected ticket(s) has been reserved for 5 minutes');
+        // hide add to cart button
+        document.getElementById('addToCart_ticket_button').style.display = 'none';
+        // unhide timer
+        document.getElementById('countdown-div').style.display = 'inline';
+        // show buy ticket button
+        document.getElementById('buy_ticket_button').style.display = 'inline-block';
       }
     }
   }

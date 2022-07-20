@@ -164,12 +164,24 @@ async function reserveTickets(req, res, next) {
           ticketsOK.push(ticketTypeObj);
         }
       }
-      // if all ticket types have available tickets
-      console.log('reserved tickets array: ');
-      console.log(ticketsOK);
-      console.log('sending reserved tickets array to frontend');
-      // 3. send tickets to frontend
-      req.result = ticketsOK;
+
+      if (ticketsOK.length != 0) {
+        // if all ticket types have available tickets
+        console.log('reserved tickets array: ');
+        console.log(ticketsOK);
+        console.log('sending reserved tickets array to frontend');
+        // 3. send tickets to frontend
+        req.result = {
+          status: 1,
+          result: ticketsOK,
+        };
+      } else {
+        console.log('no available tickets for reserve');
+        req.result = {
+          status: 0,
+          message: 'Sorry, there are no available tickets at the moment.',
+        };
+      }
     }
   } catch (err) {
     console.log(err);
