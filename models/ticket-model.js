@@ -89,7 +89,7 @@ const saveExchangeAndListing = async (selectedEventId, selectedTicketType, userI
 
 const getAllCurrentListings = async (userId)=>{
   const [ticketListing] = await pool.query(`SELECT distinct
-	l.listing_id AS listing_id,
+	  l.listing_id AS listing_id,
     l.ticket_id AS my_ticket_id,
     l.user_id AS my_user_id,
     l.exchange_condition_id AS my_exchange_condition_id,
@@ -122,7 +122,7 @@ FROM
 		inner join
     events e_mine on t_mine.event_id = e_mine.event_id
 WHERE
-    l.user_id <> ? and t_mine.used_status = '0'
+    l.user_id <> ? and t_mine.used_status = '0' and l.listing_status = '0'
 ORDER BY
     listing_id`, userId);
   return ticketListing;
@@ -163,7 +163,7 @@ FROM
 		inner join
     events e_mine on t_mine.event_id = e_mine.event_id
 WHERE
-    l.user_id = ? and t_mine.used_status = '0'
+    l.user_id = ? and t_mine.used_status = '0' and l.listing_status = '0'
 ORDER BY
     listing_id`, userId);
   return ticketListing;
@@ -188,6 +188,8 @@ const executeExchange = async (userId, ticketId, ticketURL, ticketQR, posterUser
   try {
     console.log('executeExchange triggered');
     await conn.query('START TRANSACTION');
+    await conn.query('LOCK TABLE tickets WRITE');
+    await conn.query('LOCK TABLE listings WRITE');
 
     // update tickets: user_id, url, qrcode
     // original B ticket, to A (poster)
@@ -197,6 +199,7 @@ const executeExchange = async (userId, ticketId, ticketURL, ticketQR, posterUser
     // console.log(ticket_id);
     const [ticketExchanged] = await conn.query(`UPDATE tickets SET user_id = ?, ticket_url = ?, qrcode = ? WHERE ticket_id = ?`, [posterUserId, ticketURL, ticketQR, ticketId]);
     console.log(ticketExchanged);
+    const [listingStatus] = await conn.query(`UPDATE listings SET listing_status = '1' WHERE ticket_id = ?`, ticketId);
 
     // original A (poster) ticket, to B
     console.log('userId: ' + userId);
@@ -205,8 +208,10 @@ const executeExchange = async (userId, ticketId, ticketURL, ticketQR, posterUser
     // console.log(poster_ticket_id);
     const [posterTicketExchanged] = await conn.query(`UPDATE tickets SET user_id = ?, ticket_url = ?, qrcode = ? WHERE ticket_id = ?`, [userId, posterTicketURL, posterTicketQR, posterTicketId]);
     console.log(posterTicketExchanged);
+    const [posterListingStatus] = await conn.query(`UPDATE listings SET listing_status = '1' WHERE ticket_id = ?`, posterTicketId);
 
     await conn.query('COMMIT');
+    await conn.query('UNLOCK TABLES');
     return posterTicketExchanged;
   } catch (error) {
     console.log(error);
