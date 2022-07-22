@@ -1,16 +1,131 @@
-/* eslint-disable max-len */
-/* eslint-disable no-unused-vars */
-/* eslint-disable require-jsdoc */
 const QRCode = require('qrcode');
 const Ticket = require('../models/ticket-model');
-const AuthController = require('./auth-controller');
-// const crypto = require('crypto');
+const Auth = require('../utils/auth');
 const CryptoJS = require('crypto-js');
-
+const key = process.env.CRYPTOKEY;
 require('dotenv').config();
-// const AWS = require('aws-sdk');
-// AWS.config.update({region: process.env.AWS_REGION});
 
+
+// save user_id, timer_timestamp
+async function reserveTickets(req, res, next) {
+  console.log('reserveTickets triggered');
+  try {
+    if (req.result == 'No token') {
+      console.log(req.result + ', calling next');
+      next();
+    } else {
+      console.log(req.result);
+      const userId = req.result.user_id;
+      console.log('userId: ' + userId);
+      // get ticket_type, ticket_number
+      const tickets = req.body;
+      console.log('------------------');
+      console.log(tickets);
+      // console.log(typeof(tickets[0]));
+      const eventId = req.body.event_id;
+
+      const ticketsOK = [];
+      for (let i = 0; i < tickets.ticket_number.length; i++) {
+        const ticketNumber = parseInt(tickets.ticket_number[i]);
+        const ticketTypeName = tickets.ticket_type[i];
+
+        // 1. check available tickets for each ticket type, grab ticket ids
+        const ticIds = await Ticket.checkAndReserveTickets(eventId, userId, ticketTypeName, ticketNumber);
+
+        console.log('ticketTypeName: ' + ticketTypeName);
+        console.log('ticIds: ');
+        console.log(ticIds);
+        // add error handling for no available ticket sitaution
+
+        // 2. push available ticket_ids to array
+        // for each ticket type
+        const ticketTypeObj = {};
+        if (!(ticketTypeName.ticket_type in ticketTypeObj)) {
+          ticketTypeObj.ticket_type = ticketTypeName;
+          ticketTypeObj.ticket_ids = ticIds;
+          console.log(ticketTypeObj);
+          ticketsOK.push(ticketTypeObj);
+        }
+      }
+
+      if (ticketsOK.length != 0) {
+        // if all ticket types have available tickets
+        console.log('reserved tickets array: ');
+        console.log(ticketsOK);
+        console.log('sending reserved tickets array to frontend');
+        // 3. send tickets to frontend
+        req.result = {
+          status: 1,
+          result: ticketsOK,
+        };
+      } else {
+        console.log('no available tickets for reserve');
+        req.result = {
+          status: 0,
+          message: 'Sorry, there are no available tickets at the moment.',
+        };
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({error: err.message});
+  }
+  await next();
+}
+
+async function saveTicketOrder(req, res, next) {
+  console.log('saveTicketOrder triggered');
+  const eventId = req.params.id;
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(' ')[1];
+  const userInfo = await Auth.checkToken(token);
+  console.log('userInfo:');
+  console.log(userInfo);
+  const userId = userInfo.id;
+  console.log('userId: ' + userId);
+  // order: event_id, user_id
+  // ticket: user_id, purchase_date
+  // insert ticket_order table
+  const buyTicketsArray = req.body;
+  console.log('buyTicketsArray in saveTicketOrder:');
+  console.log(buyTicketsArray);
+  const ticketIds = [];
+  for (let i = 0; i < buyTicketsArray.length; i++) {
+    const ticketId = buyTicketsArray[i].ticket_ids;
+    for (let j = 0; j < ticketId.length; j++) {
+      ticketIds.push(ticketId[j]);
+    }
+  }
+  console.log(ticketIds);
+  try {
+    // check timer status
+    const status = await Ticket.checkTimerStatus(ticketIds);
+    console.log('---------------ticket timer status: ---------------');
+    console.log(status);
+    const tixOkArray = [];
+    for (let i = 0; i < status.length; i++) {
+      console.log(Object.keys(status[i]));
+      if (Object.keys(status[i])[0] === 'ok') {
+        tixOkArray.push(Object.values(status[i])[0]);
+      }
+    }
+    console.log('------printing tixOkArray: ');
+    console.log(tixOkArray);
+    if (tixOkArray.length != 0) {
+      await TicketController.genQRcode(tixOkArray);
+      const orderId = await Ticket.saveTicketOrder(eventId, userId, tixOkArray);
+      console.log(orderId);
+      req.order_result = orderId;
+    } else {
+      console.log('some tickets have expired timer, returning expired ticket_ids to frontend');
+      req.anti_order_result = status;
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({error: err.message});
+  }
+  await next();
+}
 
 async function getTicketDetails(req, res, next) {
   console.log('getTicketDetails triggered');
@@ -70,52 +185,6 @@ async function genQRcode(ticketIds) {
   }
 }
 
-async function s3UploadQR(ticketQR, ticketId) {
-  // Configure AWS with your access and secret key.
-  const {AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, AWS_BUCKET_NAME} = process.env;
-  // Configure AWS to use promise
-  // AWS.config.setPromisesDependency(require('bluebird'));
-  AWS.config.update({accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY, region: AWS_REGION});
-  // Create an s3 instance
-  const s3 = new AWS.S3();
-  // Getting the file type, ie: jpeg, png or gif
-  const type = ticketQR.split(';')[0].split('/')[1];
-  // With this setup, each time your user uploads an image, will be overwritten.
-  // To prevent this, use a different Key each time.
-  // This won't be needed if they're uploading their avatar, hence the filename, userAvatar.js.
-  const params = {
-    Bucket: AWS_BUCKET_NAME,
-    Key: `ticketQR/${ticketId}.${type}`, // type is not required
-    Body: ticketQR,
-    //   ACL: 'public-read',
-    ContentEncoding: 'base64', // required
-    ContentType: `image/${type}`, // required. Notice the back ticks
-  };
-
-  // The upload() is used instead of putObject() as we'd need the location url and assign that to our user profile/database
-  // see: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#upload-property
-  let location = '';
-  let key = '';
-  try {
-    const {Location, Key} = await s3.upload(params).promise();
-    location = Location;
-    key = Key;
-  } catch (error) {
-    console.log(error);
-  }
-
-  // Save the Location (url) to your database and Key if needs be.
-  // As good developers, we should return the url and let other function do the saving to database etc
-  console.log(location, key);
-
-  return location;
-
-  // To delete, see: https://gist.github.com/SylarRuby/b3b1430ca633bc5ffec29bbcdac2bd52
-}
-
-
-const key = process.env.CRYPTOKEY;
-
 function encryptTicketURL(ticketId) {
   console.log('encryptTicketURL triggered');
   console.log(ticketId);
@@ -126,28 +195,6 @@ function encryptTicketURL(ticketId) {
   console.log(ciphertextURLencoded);
   return ciphertextURLencoded;
 }
-
-// const algorithm = 'aes-256-ctr';
-// const initVector = crypto.randomBytes(16);
-// const securityKey = crypto.randomBytes(32);
-
-// function encryptTicketURL(ticket_id){
-//     let newsha256 = crypto.createHash("sha256")
-//     newsha256.update("abc");
-//     console.log("encryptTicketURL triggered");
-//     console.log(ticket_id);
-//     console.log(typeof(ticket_id));
-//     let ticket_id_string = toString(ticket_id);
-//     const cipher = crypto.createCipheriv(algorithm, newsha256.digest(), initVector);
-//     let encryptedData = cipher.update(Buffer.from(ticket_id_string));
-//     let encryptedData1 = Buffer.concat([initVector, encryptedData, cipher.final()]);
-//     encryptedData1 = encryptedData1.toString('Base64');
-//     console.log("----------------------------------");
-//     console.log(encryptedData1);
-//     let ciphertext_URLencoded = encodeURIComponent(encryptedData1);
-//     console.log(ciphertext_URLencoded);
-//     return ciphertext_URLencoded;
-// }
 
 function decryptTicketURL(ticketURLHash) {
   console.log('decryptTicketURL triggered');
@@ -161,37 +208,12 @@ function decryptTicketURL(ticketURLHash) {
   return ciphertext;
 }
 
-// function decryptTicketURL(ticketURLHash){
-//     let newsha256 = crypto.createHash("sha256")
-//     newsha256.update("abc");
-//     let ticketURLHash_decoded = decodeURIComponent(ticketURLHash);
-//     console.log('==========================');
-//     console.log(ticketURLHash_decoded);
-//     let input = Buffer.from(ticketURLHash_decoded, "base64")
-//     let decIV = input.slice(0, 16);
-//     const decipher = crypto.createDecipheriv(algorithm, newsha256.digest(), decIV);
-
-
-//     let toDecipherBuffer = input.slice(16)
-//     let decipherText = decipher.update(toDecipherBuffer) + decipher.final();
-//     console.log(decipherText);
-//     console.log(decipherText.toString('base64'))
-
-
-//     // let decryptedData_string = decipher.update(ticketURLHash, "hex", "utf-8");
-//     // decryptedData_string += decipher.final("utf8");
-//     // let decryptedData = parseInt(decryptedData_string);
-//     // console.log(decryptedData);
-//     // return decryptedData;
-//     return decipherText
-// }
-
 async function authTicket(req, res, next) {
   console.log('authTicket triggered');
   // scan qrcode -> call veritifcation api
   // check req.result
   // if admin, check ticket status
-  const userInfo = await AuthController.checkUserRole(req);
+  const userInfo = await Auth.checkUserRole(req);
   console.log(userInfo);
   const adminId = userInfo.user_id;
   let message;
@@ -251,7 +273,7 @@ async function getVerifiedTickets(req, res, next) {
 }
 
 async function getSelectedEventTicketTypes(req, res, next) {
-  console.log('getVerifiedTickets triggered');
+  console.log('getSelectedEventTicketTypes triggered');
   try {
     const eventId = req.params.id;
     const ticketTypes = await Ticket.getSelectedEventTicketTypes(eventId);
@@ -292,9 +314,9 @@ async function postExchangeCondition(req, res, next) {
 }
 
 async function getAllCurrentListings(req, res, next) {
-  console.log('getCurrentListings triggered');
+  console.log('getAllCurrentListings triggered');
   try {
-    const userInfo = await AuthController.checkUserRole(req);
+    const userInfo = await Auth.checkUserRole(req);
     const userId = userInfo.user_id;
     const listings = await Ticket.getAllCurrentListings(userId);
     console.log(listings);
@@ -307,7 +329,7 @@ async function getAllCurrentListings(req, res, next) {
 }
 
 async function getUserCurrentListings(req, res, next) {
-  console.log('getCurrentListings triggered');
+  console.log('getUserCurrentListings triggered');
   try {
     const userId = req.params.id;
     const listings = await Ticket.getUserCurrentListings(userId);
@@ -402,4 +424,4 @@ async function postListingSelection(req, res, next) {
   await next();
 }
 
-module.exports = {getTicketDetails, getUserUnusedTicketsForListing, genQRcode, authTicket, getVerifiedTickets, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection};
+module.exports = {reserveTickets, saveTicketOrder, getTicketDetails, getUserUnusedTicketsForListing, genQRcode, authTicket, getVerifiedTickets, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection};

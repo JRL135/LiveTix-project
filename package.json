@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "MODE=test mocha --exit"
   },
   "keywords": [],
   "author": "",
@@ -19,8 +19,11 @@
     "qrcode": "^1.5.0"
   },
   "devDependencies": {
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
     "eslint": "^8.19.0",
     "eslint-config-google": "^0.14.0",
+    "mocha": "^10.0.0",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.16"
   }

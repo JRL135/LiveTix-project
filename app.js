@@ -3,10 +3,10 @@ require('dotenv').config();
 const express = require('express');
 // const mysql = require("mysql2");
 // const path = require('path');
-const {getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, reserveTickets, saveTicketOrder, getCurrentEvents, getSearchOptions, getSearchedEvents, getCurrentEventsForExchange} = require('./controllers/event-controller');
-const {registerUser, loginUser, getUserProfile, getUserUnusedTickets, getUserUsedTickets, getUserFavEvents, checkUserMiddleware, getUserMessages} = require('./controllers/user-controller');
-const {getTicketDetails, authTicket, getVerifiedTickets, getUserUnusedTicketsForListing, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection} = require('./controllers/ticket-controller');
-const {checkIndividualUser} = require('./controllers/auth-controller');
+const {getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, getCurrentEvents, getSearchOptions, getSearchedEvents, getCurrentEventsForExchange} = require('./controllers/event-controller');
+const {registerUser, loginUser, getUserProfile, getUserUnusedTickets, getUserUsedTickets, getUserFavEvents, getUserMessages} = require('./controllers/user-controller');
+const {getTicketDetails, reserveTickets, saveTicketOrder, authTicket, getVerifiedTickets, getUserUnusedTicketsForListing, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection} = require('./controllers/ticket-controller');
+const {checkUserMiddleware, checkIndividualUser} = require('./utils/auth');
 
 
 const app = express();
@@ -52,7 +52,6 @@ app.get(`/api/${process.env.api}/events/:keyword`, getSearchedEvents, (req, res)
 app.get(`/api/${process.env.api}/search/events`, getSearchOptions, (req, res)=>{
   res.json(req.result);
 });
-
 
 app.post(`/api/${process.env.api}/search/results`, getSearchedEvents, (req, res)=>{
   res.json(req.result);
@@ -158,3 +157,5 @@ app.get(`/user/role`, checkUserMiddleware, (req, res)=>{
 const PORT = process.env.PORT;
 const MODE = process.env.MODE;
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT} on ${MODE} mode`));
+
+module.exports = app;

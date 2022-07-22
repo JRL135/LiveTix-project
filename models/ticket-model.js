@@ -1,6 +1,4 @@
 /* eslint-disable no-tabs */
-/* eslint-disable max-len */
-// require('dotenv').config();
 const {pool} = require('./sqlconfig.js');
 
 const getTicketInfo = async (ticketId)=>{
@@ -11,6 +9,97 @@ const getTicketInfo = async (ticketId)=>{
 const getTicketDetails = async (ticketId)=>{
   const [ticketDetails] = await pool.query(`SELECT t1.ticket_id as ticket_id, DATE_FORMAT(t1.purchase_date, '%Y-%m-%d') as purchase_date, t1.used_status as used_status, t1.price as price, t1.type_name as type_name, t1.ticket_url as ticket_url, t1.qrcode as qrcode, DATE_FORMAT(t1.ticket_start_date,'%Y-%m-%d') as ticket_start_date, DATE_FORMAT(t1.ticket_end_date,'%Y-%m-%d') as ticket_end_date, DATE_FORMAT(t1.verified_time,'%Y-%m-%d') as verified_time, t2.category as category, t2.title as title, t2.city as city, t2.venue as venue from tickets t1 INNER JOIN events t2 ON t1.event_id = t2.event_id WHERE ticket_id = ?`, ticketId);
   return ticketDetails;
+};
+
+const checkAndReserveTickets = async (eventId, userId, ticketTypeName, ticketNumber)=>{
+  const conn = await pool.getConnection();
+  try {
+    await conn.query('START TRANSACTION');
+    await conn.query('LOCK TABLE tickets WRITE');
+    const [reservedTickets] = await conn.query(`SELECT ticket_id from tickets WHERE event_id = ? and temp_status = '0' and type_name = ? limit ?`, [eventId, ticketTypeName, ticketNumber]);
+    const ticketIdArray = [];
+    for (let i = 0; i < reservedTickets.length; i++) {
+      const ticketId = reservedTickets[i].ticket_id;
+      console.log(ticketId);
+      ticketIdArray.push(ticketId);
+    }
+    await conn.query(`UPDATE tickets SET user_id = ?, timer_timestamp = NOW(), temp_status = '1' WHERE ticket_id IN (?)`, [userId, ticketIdArray]);
+
+    await conn.query('COMMIT');
+    await conn.query('UNLOCK TABLES');
+    return ticketIdArray;
+  } catch (error) {
+    console.log(error);
+    await conn.query('ROLLBACK');
+    return {error};
+  } finally {
+    await conn.release();
+  }
+};
+
+const checkTimerStatus = async (ticketIds)=>{
+  console.log('checking ticket timer');
+  // check backend timer does not exceed 5m
+  const array = [];
+  for (let i = 0; i < ticketIds.length; i++) {
+    const ticketId = ticketIds[i];
+    const [tixWithinCountdown] = await pool.query(`SELECT * FROM tickets WHERE ticket_id =? AND DATE_ADD(timer_timestamp, INTERVAL 300 second) >= NOW()`, ticketId);
+    console.log(tixWithinCountdown);
+
+    const tempObj = {};
+    if (tixWithinCountdown.length === 0) {
+      console.log(`tixWithinCountdown is empty, countdown has timed out for ticket_id: ${ticketId}`);
+      [statusUpdate] = await pool.query(`UPDATE tickets SET temp_status = '0' AND timer_timestamp = null WHERE ticket_id = ?`, ticketId);
+      tempObj.expired = ticketId;
+      array.push(tempObj);
+    } else {
+      console.log('timer has not expired, returning tixWithinCountdown');
+      tempObj.ok = ticketId;
+      array.push(tempObj);
+    }
+  }
+  return array;
+};
+
+// order: event_id, user_id
+// ticket: user_id, purchase_date
+const saveTicketOrder = async (eventId, userId, ticketIds)=>{
+  const conn = await pool.getConnection();
+  try {
+    console.log('saveTicketOrder in model try catch');
+    console.log(eventId);
+    console.log(userId);
+    await conn.query('START TRANSACTION');
+    await conn.query('LOCK TABLE tickets WRITE');
+    // await conn.query('LOCK TABLE orders WRITE');
+
+
+    // order_query
+    const [orderQuery] = await conn.query(`INSERT INTO orders (event_id, user_id) VALUES (?, ?)`, [eventId, userId]);
+    console.log(typeof(orderQuery));
+    console.log(orderQuery);
+
+
+    const orderId = orderQuery.insertId;
+    console.log('orderId in model:');
+    console.log(orderId);
+
+
+    for (let i = 0; i < ticketIds.length; i++) {
+      const ticketId = ticketIds[i];
+      await conn.query(`UPDATE tickets SET purchase_date = NOW() WHERE ticket_id = ?`, ticketId);
+      await conn.query(`INSERT INTO ticket_order (order_id, ticket_id) VALUES (?, ?)`, [orderId, ticketId]);
+    }
+    await conn.query('COMMIT');
+    await conn.query('UNLOCK TABLES');
+    return orderId;
+  } catch (error) {
+    console.log(error);
+    await conn.query('ROLLBACK');
+    return {error};
+  } finally {
+    await conn.release();
+  }
 };
 
 const getUserUnusedTicketsForListing = async (userId)=>{
@@ -227,4 +316,4 @@ const sendMessage = async (userId, content)=>{
   return message;
 };
 
-module.exports = {getTicketInfo, getTicketDetails, getUserUnusedTicketsForListing, updateUsed, saveTicketURLAndQR, getVerifiedTickets, getSelectedEventTicketTypes, saveExchangeAndListing, getAllCurrentListings, getUserCurrentListings, getUserMatchingTicketsForExchange, executeExchange, sendMessage};
+module.exports = {getTicketInfo, getTicketDetails, checkAndReserveTickets, checkTimerStatus, saveTicketOrder, getUserUnusedTicketsForListing, updateUsed, saveTicketURLAndQR, getVerifiedTickets, getSelectedEventTicketTypes, saveExchangeAndListing, getAllCurrentListings, getUserCurrentListings, getUserMatchingTicketsForExchange, executeExchange, sendMessage};

@@ -1,9 +1,7 @@
-/* eslint-disable max-len */
-/* eslint-disable require-jsdoc */
 const User = require('../models/user-model');
 const Event = require('../models/event-model');
+const Auth = require('../utils/auth');
 const bcrypt = require('bcrypt');
-const JWT = require('jsonwebtoken');
 
 require('dotenv').config({path: '../.env'});
 
@@ -29,7 +27,7 @@ async function registerUser(req, res, next) {
       userId = await User.registerUser(email, name, password, role);
       console.log('new user created');
       // gen JWT token for new user
-      const token = await genToken(userId, email, name, role, password);
+      const token = await Auth.genToken(userId, email, name, role, password);
       // console.log(token);
       req.result = {
         status: 1,
@@ -85,7 +83,7 @@ async function loginUser(req, res, next) {
       const match = await bcrypt.compare(password, hashedPassword);
       if (match) {
         console.log('password check ok');
-        const token = await genToken(userId, email, name, role, hashedPassword);
+        const token = await Auth.genToken(userId, email, name, role, hashedPassword);
         req.result = {
           status: 1,
           message: 'Welcome back!',
@@ -119,38 +117,10 @@ async function getUserProfile(req, res, next) {
       console.log('missing token, block profile access');
       userInfo = 'No token';
     } else {
-      userInfo = await checkToken(token);
+      userInfo = await Auth.checkToken(token);
       console.log(userInfo);
     }
     req.result = userInfo;
-  } catch (err) {
-    console.log(err);
-    res.status(500).send({error: err.message});
-  }
-  await next();
-}
-
-
-async function checkUserMiddleware(req, res, next) {
-  console.log('checkUserMiddleware triggered');
-  try {
-    // check token
-    const authHeader = req.headers.authorization;
-    console.log(authHeader);
-    const token = authHeader.split(' ')[1];
-    if (token == 'null') {
-      console.log('Missing token');
-      const message = 'No token';
-      req.result = message;
-    } else {
-      const userInfo = await checkToken(token);
-      req.result = {
-        role: userInfo.role,
-        user_id: userInfo.id,
-      };
-    }
-    console.log(req.result);
-    // return req.result;
   } catch (err) {
     console.log(err);
     res.status(500).send({error: err.message});
@@ -226,15 +196,5 @@ async function getUserMessages(req, res, next) {
   await next();
 }
 
-async function checkToken(token) {
-  const userInfo = await JWT.verify(token, process.env.jwt_key);
-  return userInfo;
-}
 
-async function genToken(userId, email, name, role, password) {
-  const token = await JWT.sign({id: userId, email: email, name: name, role: role, password: password}, process.env.jwt_key);
-  return token;
-}
-
-
-module.exports = {registerUser, loginUser, getUserProfile, checkToken, checkUserMiddleware, getUserUnusedTickets, getUserUsedTickets, getUserFavEvents, getUserMessages};
+module.exports = {registerUser, loginUser, getUserProfile, getUserUnusedTickets, getUserUsedTickets, getUserFavEvents, getUserMessages};
