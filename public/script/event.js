@@ -321,15 +321,36 @@ async function clickTicketButton(e) {
     tixTd.appendChild(tixDropdown);
     tixDropdown.innerHTML += `<option value="default" selected>Choose a value</option>`;
 
-    // populate dropdown values
-    tixDropdown.innerHTML +=`
-            <option id="${ticketAvailArrayKeys[i]}" value="1 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name }">1</option>
-            <option id="${ticketAvailArrayKeys[i]}" value="2 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">2</option>
-            <option id="${ticketAvailArrayKeys[i]}" value="3 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">3</option>
-            <option id="${ticketAvailArrayKeys[i]}" value="4 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">4</option>
-        `;
-
-    // tix_td.innerHTML = `<input type="number" class="tix_input" oninput="recordTicketSelection(event)" name="${ticketAvailArrayKeys[i]}" id="${ticketAvailArrayKeys[i]}_selected" min="0" max="${ticketAvailArray[ticketAvailArrayKeys[i]].ticket_id.length}">`;
+    // console.log(ticketAvailArray[ticketAvailArrayKeys[i]].ticket_id);
+    const tixAvailLength = ticketAvailArray[ticketAvailArrayKeys[i]].ticket_id.length;
+    if (tixAvailLength === 0) {
+      tixDropdown.innerHTML += `
+        <option id="" value="">Not Available</option>
+      `;
+    } else if (tixAvailLength === 1) {
+      tixDropdown.innerHTML +=`
+      <option id="${ticketAvailArrayKeys[i]}" value="1 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name }">1</option>
+    `;
+    } else if (tixAvailLength === 2) {
+      tixDropdown.innerHTML +=`
+        <option id="${ticketAvailArrayKeys[i]}" value="1 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name }">1</option>
+        <option id="${ticketAvailArrayKeys[i]}" value="2 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">2</option>
+      `;
+    } else if (tixAvailLength === 3) {
+      tixDropdown.innerHTML +=`
+        <option id="${ticketAvailArrayKeys[i]}" value="1 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name }">1</option>
+        <option id="${ticketAvailArrayKeys[i]}" value="2 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">2</option>
+        <option id="${ticketAvailArrayKeys[i]}" value="3 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">3</option>
+      `;
+    } else {
+      // populate dropdown values
+      tixDropdown.innerHTML +=`
+              <option id="${ticketAvailArrayKeys[i]}" value="1 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name }">1</option>
+              <option id="${ticketAvailArrayKeys[i]}" value="2 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">2</option>
+              <option id="${ticketAvailArrayKeys[i]}" value="3 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">3</option>
+              <option id="${ticketAvailArrayKeys[i]}" value="4 ${ticketAvailArrayKeys[i]} ${ticketAvailArrayValues[i].type_name}">4</option>
+          `;
+    }
   }
   // show table
   document.getElementsByClassName('main-container-s3')[0].style.display = 'flex';
@@ -373,9 +394,6 @@ function recordTicketSelection(e) {
 
   const summaryDiv = document.querySelector(`[summary-id="${ticketType}"]`);
   summaryDiv.innerHTML = `${summaryTicketList}`;
-  // map selected tickets with available ticket_id
-  // let ticketsFetch = await fetch(`/api/1.0/event/${event_id}/tickets`);
-  // let ticketAvail = await ticketsFetch.json();
 }
 
 let postTixResponse;
