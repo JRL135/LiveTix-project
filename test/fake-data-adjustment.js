@@ -5,8 +5,8 @@ const reserveTicketsOnlyOneTest = async (eventId, limit)=>{
   return ticketsBeforeTest;
 };
 
-const reserveTicketsOnlyOneTestRestore = async (eventId, limit)=>{
-  const [ticketsAfterTest] = await pool.query(`UPDATE tickets SET temp_status = '0' WHERE event_id = ? limit ?`, [eventId, limit]);
+const reserveTicketsOnlyOneTestRestore = async (eventId)=>{
+  const [ticketsAfterTest] = await pool.query(`UPDATE tickets SET temp_status = '0', user_id = NULL, purchase_date = NULL, timer_timestamp = NULL, ticket_url = NULL, qrcode = NULL where event_id = ?`, eventId);
   return ticketsAfterTest;
 };
 

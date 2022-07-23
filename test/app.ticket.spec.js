@@ -147,7 +147,12 @@ describe('ticket / reserveTickets: only 1 ticket left but want to reserve 4', as
     console.log(data);
     token11 = data.token;
   });
-
+  // restore tickets status
+  after(async () => {
+    console.log('entering reserveTickets restore ticket status');
+    const result = await fakeDataModel.reserveTicketsOnlyOneTestRestore(eventId);
+    console.log(result);
+  });
   // grab all tickets of a pool except for 1
   it('POST / reserveTickets: reserve 4 tickets when only 1 is left, should return 1 ticket reserved', async () => {
     const id = 8;
@@ -162,10 +167,6 @@ describe('ticket / reserveTickets: only 1 ticket left but want to reserve 4', as
         .send(tickets);
     console.log(res.body);
     expect(res.statusCode).to.equal(200);
-  });
-
-  // restore tickets status
-  after(async () => {
-    await fakeDataModel.reserveTicketsOnlyOneTest(eventId, limit);
+    expect(res.body.status).to.equal(1);
   });
 });
