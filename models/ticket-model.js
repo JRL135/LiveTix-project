@@ -11,23 +11,28 @@ const getTicketDetails = async (ticketId)=>{
   return ticketDetails;
 };
 
-const checkAndReserveTickets = async (eventId, userId, ticketTypeName, ticketNumber)=>{
+const checkAndReserveTickets = async (eventId, userId, ticketTypeNameArray, ticketNumberArray)=>{
   const conn = await pool.getConnection();
   try {
     await conn.query('START TRANSACTION');
-    await conn.query('LOCK TABLE tickets WRITE');
-    const [reservedTickets] = await conn.query(`SELECT ticket_id from tickets WHERE event_id = ? and temp_status = '0' and type_name = ? limit ?`, [eventId, ticketTypeName, ticketNumber]);
-    const ticketIdArray = [];
-    for (let i = 0; i < reservedTickets.length; i++) {
-      const ticketId = reservedTickets[i].ticket_id;
-      console.log(ticketId);
-      ticketIdArray.push(ticketId);
-    }
-    await conn.query(`UPDATE tickets SET user_id = ?, timer_timestamp = NOW(), temp_status = '1' WHERE ticket_id IN (?)`, [userId, ticketIdArray]);
+    // await conn.query('LOCK TABLE tickets WRITE');
+    const reservedTickets = [];
+    // for each ticket type, loop through ticket number
+    for (let i = 0; i < ticketTypeNameArray.length; i++) {
+      const [reservedTicket] = await conn.query(`SELECT ticket_id from tickets WHERE event_id = ? and temp_status = '0' and type_name = ? limit ?`, [eventId, ticketTypeNameArray[i], ticketNumberArray[i]]);
+      console.log([reservedTicket]);
+      const tix = [reservedTicket];
+      for (let j = 0; j < tix[0].length; j++) {
+        reservedTickets.push(tix[0][j].ticket_id);
+      };
+    };
+    console.log('----------------reservedTickets---------------');
+    console.log(reservedTickets);
+    await conn.query(`UPDATE tickets SET user_id = ?, timer_timestamp = NOW(), temp_status = '1' WHERE ticket_id IN ?`, [userId, [reservedTickets]]);
 
     await conn.query('COMMIT');
-    await conn.query('UNLOCK TABLES');
-    return ticketIdArray;
+    // await conn.query('UNLOCK TABLES');
+    return reservedTickets;
   } catch (error) {
     console.log(error);
     await conn.query('ROLLBACK');
@@ -35,6 +40,12 @@ const checkAndReserveTickets = async (eventId, userId, ticketTypeName, ticketNum
   } finally {
     await conn.release();
   }
+};
+
+const getReservedTicketsType = async (ticketIds) => {
+  // const [ticketType] = await pool.query(`SELECT type, type_name FROM tickets WHERE ticket_id IN (?)`, [ticketIds]);
+  const [ticketType] = await pool.query(`SELECT type, type_name, count(*) as number FROM tickets WHERE ticket_id IN (?) GROUP BY type, type_name`, [ticketIds]);
+  return ticketType;
 };
 
 const checkTimerStatus = async (ticketIds)=>{
@@ -316,4 +327,4 @@ const sendMessage = async (userId, content)=>{
   return message;
 };
 
-module.exports = {getTicketInfo, getTicketDetails, checkAndReserveTickets, checkTimerStatus, saveTicketOrder, getUserUnusedTicketsForListing, updateUsed, saveTicketURLAndQR, getVerifiedTickets, getSelectedEventTicketTypes, saveExchangeAndListing, getAllCurrentListings, getUserCurrentListings, getUserMatchingTicketsForExchange, executeExchange, sendMessage};
+module.exports = {getTicketInfo, getTicketDetails, checkAndReserveTickets, getReservedTicketsType, checkTimerStatus, saveTicketOrder, getUserUnusedTicketsForListing, updateUsed, saveTicketURLAndQR, getVerifiedTickets, getSelectedEventTicketTypes, saveExchangeAndListing, getAllCurrentListings, getUserCurrentListings, getUserMatchingTicketsForExchange, executeExchange, sendMessage};

@@ -1,7 +1,9 @@
+/* eslint-disable prefer-const */
 const QRCode = require('qrcode');
 const Ticket = require('../models/ticket-model');
 const Auth = require('../utils/auth');
 const CryptoJS = require('crypto-js');
+const {listen} = require('../app');
 const key = process.env.CRYPTOKEY;
 require('dotenv').config();
 
@@ -25,38 +27,53 @@ async function reserveTickets(req, res, next) {
       const eventId = req.body.event_id;
 
       const ticketsOK = [];
+      const ticketNumberArray = [];
+      const ticketTypeNameArray = [];
       for (let i = 0; i < tickets.ticket_number.length; i++) {
         const ticketNumber = parseInt(tickets.ticket_number[i]);
         const ticketTypeName = tickets.ticket_type[i];
+        ticketNumberArray.push(ticketNumber);
+        ticketTypeNameArray.push(ticketTypeName);
 
-        // 1. check available tickets for each ticket type, grab ticket ids
-        const ticIds = await Ticket.checkAndReserveTickets(eventId, userId, ticketTypeName, ticketNumber);
-
-        console.log('ticketTypeName: ' + ticketTypeName);
-        console.log('ticIds: ');
-        console.log(ticIds);
+        // console.log('ticketTypeName: ' + ticketTypeName);
+        // console.log('ticIds: ');
+        // console.log(ticIds);
         // add error handling for no available ticket sitaution
-
-        // 2. push available ticket_ids to array
-        // for each ticket type
-        const ticketTypeObj = {};
-        if (!(ticketTypeName.ticket_type in ticketTypeObj)) {
-          ticketTypeObj.ticket_type = ticketTypeName;
-          ticketTypeObj.ticket_ids = ticIds;
-          console.log(ticketTypeObj);
-          ticketsOK.push(ticketTypeObj);
-        }
       }
+      // 1. check available tickets for each ticket type, grab ticket ids
+      const ticIds = await Ticket.checkAndReserveTickets(eventId, userId, ticketTypeNameArray, ticketNumberArray);
+      console.log('--------BACK IN CONTROLLER--------');
+      console.log(ticIds);
+      // 2. push available ticket_ids to array
+      // for (let i = 0; i < tickets.ticket_number.length; i++) {
+      //   const ticketTypeName = tickets.ticket_type[i];
+      //   const ticketTypeObj = {};
+      //   if (!(ticketTypeName.ticket_type in ticketTypeObj)) {
+      //     ticketTypeObj.ticket_type = ticketTypeName;
+      //     ticketTypeObj.ticket_ids = ticIds;
+      //     console.log(ticketTypeObj);
+      //     ticketsOK.push(ticketTypeObj);
+      //   }
+      // }
 
-      if (ticketsOK.length != 0) {
+      if (ticIds.length != 0) {
+        // 2. grab reserved tickets info for frontend render
+        const reservedTicketsInfo = await Ticket.getReservedTicketsType(ticIds);
+        console.log(reservedTicketsInfo);
+        // json:
+        // [
+        //   { type: 'zone_A', type_name: 'Zone A', number: 1 },
+        //   { type: 'zone_B', type_name: 'Zone B', number: 2 }
+        // ]
+
         // if all ticket types have available tickets
         console.log('reserved tickets array: ');
-        console.log(ticketsOK);
+        console.log(reservedTicketsInfo);
         console.log('sending reserved tickets array to frontend');
         // 3. send tickets to frontend
         req.result = {
           status: 1,
-          result: ticketsOK,
+          result: reservedTicketsInfo,
         };
       } else {
         console.log('no available tickets for reserve');
