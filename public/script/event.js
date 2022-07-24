@@ -314,6 +314,7 @@ async function clickTicketButton(e) {
     // populate summary section based on ticket types
     const summaryDivContainer = document.getElementById('ticket_selected_summary_container');
     summaryDivContainer.innerHTML += `<div summary-id="${ticketAvailArrayKeys[i]}" class="summary_row_tix"></div>`;
+
     // select tix column
     const tixTd = document.getElementById(ticketAvailArray[ticketAvailArrayKeys[i]].type_name);
     const tixDropdown = document.createElement('select');
@@ -403,7 +404,7 @@ async function postTicketSelection(e) {
 
   // get current shown input value
   const tixSelected = document.querySelectorAll(`[class="summary_row_tix"]`);
-  console.log(tixSelected);
+  // console.log(tixSelected);
   const ticketTypeList = [];
   const ticketNumberList = [];
   for (let i = 0; i < tixSelected.length; i++) {
@@ -475,13 +476,21 @@ async function postTicketSelection(e) {
         alert(postTixResponse.message); // Sorry, there are no available tickets at the moment.
       } else {
         console.log('status = 1');
-        alert('Selected ticket(s) has been reserved for 5 minutes');
+        alert(`Selected ticket(s) has been reserved for 5 minutes`);
         // hide add to cart button
         document.getElementById('addToCart_ticket_button').style.display = 'none';
         // unhide timer
         document.getElementById('countdown-div').style.display = 'inline';
         // show buy ticket button
         document.getElementById('buy_ticket_button').style.display = 'inline-block';
+        // replace selection summary with reserved tickets
+        document.getElementById('ticket_selected_summary_container').innerHTML = `
+            <div class="ticket_selected_summary_container_item" id="order_summary_title">Reserved Tickets Summary</div>`;
+        for (let i = 0; i < postTixResponse.result.length; i++) {
+          document.getElementById('ticket_selected_summary_container').innerHTML += `
+            <div summary-id='${postTixResponse.result[i].type}' class='summary_row_tix'>${postTixResponse.result[i].type_name} x ${postTixResponse.result[i].number}</div>
+          `;
+        }
       }
     }
   }
