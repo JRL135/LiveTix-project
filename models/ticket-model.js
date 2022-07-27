@@ -21,27 +21,21 @@ const checkAndReserveTickets = async (eventId, userId, ticketTypeNameArray, tick
     for (let i = 0; i < ticketTypeNameArray.length; i++) {
       // adding exclusive lock on selected rows
       const [reservedTicket] = await conn.query(`SELECT ticket_id from tickets WHERE event_id = ? and temp_status = '0' and type_name = ? limit ? FOR UPDATE`, [eventId, ticketTypeNameArray[i], ticketNumberArray[i]]);
-      console.log([reservedTicket]);
 
       // check locked rows
       const [lockedRows]= await conn.query(`SELECT * FROM performance_schema.data_locks`);
-      console.log(`------printing lockedRows------`);
-      console.log(lockedRows);
 
       const tix = [reservedTicket];
       for (let j = 0; j < tix[0].length; j++) {
         reservedTickets.push(tix[0][j].ticket_id);
       };
     };
-    console.log('----------------reservedTickets---------------');
-    console.log(reservedTickets);
     await conn.query(`UPDATE tickets SET user_id = ?, timer_timestamp = NOW(), temp_status = '1' WHERE ticket_id IN ?`, [userId, [reservedTickets]]);
 
     await conn.query('COMMIT'); // lock is released after commit
     await conn.query('UNLOCK TABLES');
     return reservedTickets;
   } catch (error) {
-    console.log(error);
     await conn.query('ROLLBACK');
     return {error};
   } finally {
@@ -50,26 +44,21 @@ const checkAndReserveTickets = async (eventId, userId, ticketTypeNameArray, tick
 };
 
 const getReservedTicketsType = async (ticketIds) => {
-  // const [ticketType] = await pool.query(`SELECT type, type_name FROM tickets WHERE ticket_id IN (?)`, [ticketIds]);
   const [ticketType] = await pool.query(`SELECT type, type_name, count(*) as number FROM tickets WHERE ticket_id IN (?) GROUP BY type, type_name`, [ticketIds]);
   return ticketType;
 };
 
 const checkTimerStatus = async (userId, buyTicketsArray)=>{
-  console.log('checking ticket timer');
   // check backend timer does not exceed 5m
   const array = [];
   for (let i = 0; i < buyTicketsArray.result.length; i++) {
     const type = buyTicketsArray.result[i].type;
     const number = buyTicketsArray.result[i].number;
     const [tixWithinCountdown] = await pool.query(`SELECT * FROM tickets WHERE user_id = ? AND type = ? AND DATE_ADD(timer_timestamp, INTERVAL 300 second) >= NOW() LIMIT ?`, [userId, type, number]);
-    console.log(tixWithinCountdown);
     for (let j = 0; j < tixWithinCountdown.length; j++) {
       const ticketId = tixWithinCountdown[j].ticket_id;
-      // tempObj.ok = ticketId;
       array.push(ticketId);
     }
-    console.log(array);
   }
   return array;
 };
@@ -79,19 +68,12 @@ const checkTimerStatus = async (userId, buyTicketsArray)=>{
 const saveTicketOrder = async (eventId, userId, ticketIds)=>{
   const conn = await pool.getConnection();
   try {
-    console.log('saveTicketOrder in model try catch');
-    console.log(eventId);
-    console.log(userId);
     await conn.query('START TRANSACTION');
 
     // order_query
     const [orderQuery] = await conn.query(`INSERT INTO orders (event_id, user_id) VALUES (?, ?)`, [eventId, userId]);
-    console.log(typeof(orderQuery));
-    console.log(orderQuery);
 
     const orderId = orderQuery.insertId;
-    console.log('orderId in model:');
-    console.log(orderId);
 
     for (let i = 0; i < ticketIds.length; i++) {
       const ticketId = ticketIds[i];
@@ -102,7 +84,6 @@ const saveTicketOrder = async (eventId, userId, ticketIds)=>{
     await conn.query('UNLOCK TABLES');
     return orderId;
   } catch (error) {
-    console.log(error);
     await conn.query('ROLLBACK');
     return {error};
   } finally {
@@ -112,9 +93,7 @@ const saveTicketOrder = async (eventId, userId, ticketIds)=>{
 
 const getUserUnusedTicketsForListing = async (userId)=>{
   const [userListedTickets] = await pool.query(`SELECT JSON_ARRAYAGG(ticket_id) as ticket_id FROM listings WHERE user_id = ?`, userId);
-  console.log(userListedTickets);
   const listedTicketArray = userListedTickets[0].ticket_id;
-  console.log(listedTicketArray);
 
   let condition;
   if (listedTicketArray != null) {
@@ -122,7 +101,6 @@ const getUserUnusedTicketsForListing = async (userId)=>{
   } else {
     condition = '';
   }
-  console.log(condition);
   const [unusedTickets] = await pool.query(`SELECT t1.ticket_id as ticket_id, DATE_FORMAT(t1.purchase_date, '%Y-%m-%d') as purchase_date, t1.used_status as used_status, t1.price as price, t1.type_name as type_name, DATE_FORMAT(t1.ticket_start_date,'%Y-%m-%d') as ticket_start_date, DATE_FORMAT(t1.ticket_end_date,'%Y-%m-%d') as ticket_end_date, DATE_FORMAT(t1.verified_time,'%Y-%m-%d') as verified_time, t2.category as category, t2.title as title, t2.city as city, t2.venue as venue from tickets t1 INNER JOIN events t2 ON t1.event_id = t2.event_id WHERE user_id = ? and used_status = '0' and purchase_date is not null${condition}`, [userId, listedTicketArray]);
   return unusedTickets;
 };
@@ -150,24 +128,17 @@ const getSelectedEventTicketTypes = async (eventId)=>{
 const saveExchangeAndListing = async (selectedEventId, selectedTicketType, userId, ticketId)=>{
   const conn = await pool.getConnection();
   try {
-    console.log('saveExchangeAndListing triggered');
     await conn.query('START TRANSACTION');
 
     let exchangeConditionId;
     // save exchange condition
     const [exchangeSelectQuery] = await conn.query(`SELECT exchange_condition_id FROM exchange_conditions WHERE event_id = ? AND ticket_type = ?`, [selectedEventId, selectedTicketType]);
-    console.log('===========================');
-    console.log(exchangeSelectQuery);
     if (exchangeSelectQuery.length === 0) {
-      console.log('exchange condition is unique');
       const [exchangeInsertQuery] = await conn.query(`INSERT INTO exchange_conditions (event_id, ticket_type) VALUES (?, ?)`, [selectedEventId, selectedTicketType]);
       exchangeConditionId = exchangeInsertQuery.insertId;
-      console.log('exchangeConditionId: ' + exchangeConditionId);
     } else {
-      console.log('exchange condition already exists');
       exchangeConditionId = exchangeSelectQuery[0].exchange_condition_id;
     }
-    console.log('exchange_condition_id: ' + exchangeConditionId);
 
     // save listing
     const [ticketListing] = await conn.query(`INSERT INTO listings (user_id, ticket_id, exchange_condition_id, listing_status) VALUES (?, ?, ?, 0)`, [userId, ticketId, exchangeConditionId]);
@@ -176,7 +147,6 @@ const saveExchangeAndListing = async (selectedEventId, selectedTicketType, userI
     await conn.query('COMMIT');
     return listingId;
   } catch (error) {
-    console.log(error);
     await conn.query('ROLLBACK');
     return {error};
   } finally {
@@ -267,7 +237,6 @@ ORDER BY
 };
 
 const getUserMatchingTicketsForExchange = async (userId, listingId)=>{
-  console.log('getUserMatchingTicketsForExchange in ticket model');
   // user tickets unused, listed or unlisted that meet condition
   // return ticket_id, event_id, type, type_name
   // also check current_user_id <> requester user_id
@@ -276,36 +245,29 @@ const getUserMatchingTicketsForExchange = async (userId, listingId)=>{
     inner join tickets t on ec.event_id = t.event_id
     inner join events e on e.event_id = t.event_id
     where l.listing_id = ? and t.user_id = ? and l.user_id <> ? and t.purchase_date is not null and t.used_status = '0'`, [listingId, userId, userId]);
-  console.log(userTickets);
   return userTickets;
 };
 
 const executeExchange = async (userId, ticketId, ticketURL, ticketQR, posterUserId, posterTicketId, posterTicketURL, posterTicketQR)=>{
   const conn = await pool.getConnection();
   try {
-    console.log('executeExchange triggered');
     await conn.query('START TRANSACTION');
     await conn.query('LOCK TABLE tickets WRITE');
     await conn.query('LOCK TABLE listings WRITE');
 
     // update tickets: user_id, url, qrcode
     // original B ticket, to A (poster)
-    console.log('posterUserId: ' + posterUserId);
     const [ticketExchanged] = await conn.query(`UPDATE tickets SET user_id = ?, ticket_url = ?, qrcode = ? WHERE ticket_id = ?`, [posterUserId, ticketURL, ticketQR, ticketId]);
-    console.log(ticketExchanged);
     const [listingStatus] = await conn.query(`UPDATE listings SET listing_status = '1' WHERE ticket_id = ?`, ticketId);
 
     // original A (poster) ticket, to B
-    console.log('userId: ' + userId);
     const [posterTicketExchanged] = await conn.query(`UPDATE tickets SET user_id = ?, ticket_url = ?, qrcode = ? WHERE ticket_id = ?`, [userId, posterTicketURL, posterTicketQR, posterTicketId]);
-    console.log(posterTicketExchanged);
     const [posterListingStatus] = await conn.query(`UPDATE listings SET listing_status = '1' WHERE ticket_id = ?`, posterTicketId);
 
     await conn.query('COMMIT');
     await conn.query('UNLOCK TABLES');
     return posterTicketExchanged;
   } catch (error) {
-    console.log(error);
     await conn.query('ROLLBACK');
     return {error};
   } finally {

@@ -42,7 +42,6 @@ app.get(`/api/${process.env.api}/events/:category`, getCurrentEvents, (req, res)
 });
 
 app.get(`/api/${process.env.api}/events/:keyword`, genSearchedEvents, (req, res)=>{
-  console.log('getSearchedEventsAPI triggered');
   res.json(req.result);
 });
 
