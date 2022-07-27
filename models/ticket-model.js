@@ -15,12 +15,19 @@ const checkAndReserveTickets = async (eventId, userId, ticketTypeNameArray, tick
   const conn = await pool.getConnection();
   try {
     await conn.query('START TRANSACTION');
-    // await conn.query('LOCK TABLE tickets WRITE');
+    await conn.query('LOCK TABLE tickets WRITE');
     const reservedTickets = [];
     // for each ticket type, loop through ticket number
     for (let i = 0; i < ticketTypeNameArray.length; i++) {
-      const [reservedTicket] = await conn.query(`SELECT ticket_id from tickets WHERE event_id = ? and temp_status = '0' and type_name = ? limit ?`, [eventId, ticketTypeNameArray[i], ticketNumberArray[i]]);
+      // adding exclusive lock on selected rows
+      const [reservedTicket] = await conn.query(`SELECT ticket_id from tickets WHERE event_id = ? and temp_status = '0' and type_name = ? limit ? FOR UPDATE`, [eventId, ticketTypeNameArray[i], ticketNumberArray[i]]);
       console.log([reservedTicket]);
+
+      // check locked rows
+      const [lockedRows]= await conn.query(`SELECT * FROM performance_schema.data_locks`);
+      console.log(`------printing lockedRows------`);
+      console.log(lockedRows);
+
       const tix = [reservedTicket];
       for (let j = 0; j < tix[0].length; j++) {
         reservedTickets.push(tix[0][j].ticket_id);
@@ -30,8 +37,8 @@ const checkAndReserveTickets = async (eventId, userId, ticketTypeNameArray, tick
     console.log(reservedTickets);
     await conn.query(`UPDATE tickets SET user_id = ?, timer_timestamp = NOW(), temp_status = '1' WHERE ticket_id IN ?`, [userId, [reservedTickets]]);
 
-    await conn.query('COMMIT');
-    // await conn.query('UNLOCK TABLES');
+    await conn.query('COMMIT'); // lock is released after commit
+    await conn.query('UNLOCK TABLES');
     return reservedTickets;
   } catch (error) {
     console.log(error);
