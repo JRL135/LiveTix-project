@@ -88,20 +88,15 @@ const saveTicketOrder = async (eventId, userId, ticketIds)=>{
     console.log(eventId);
     console.log(userId);
     await conn.query('START TRANSACTION');
-    await conn.query('LOCK TABLE tickets WRITE');
-    // await conn.query('LOCK TABLE orders WRITE');
-
 
     // order_query
     const [orderQuery] = await conn.query(`INSERT INTO orders (event_id, user_id) VALUES (?, ?)`, [eventId, userId]);
     console.log(typeof(orderQuery));
     console.log(orderQuery);
 
-
     const orderId = orderQuery.insertId;
     console.log('orderId in model:');
     console.log(orderId);
-
 
     for (let i = 0; i < ticketIds.length; i++) {
       const ticketId = ticketIds[i];
@@ -301,18 +296,12 @@ const executeExchange = async (userId, ticketId, ticketURL, ticketQR, posterUser
     // update tickets: user_id, url, qrcode
     // original B ticket, to A (poster)
     console.log('posterUserId: ' + posterUserId);
-    // console.log(ticketURL);
-    // console.log(ticketQR);
-    // console.log(ticket_id);
     const [ticketExchanged] = await conn.query(`UPDATE tickets SET user_id = ?, ticket_url = ?, qrcode = ? WHERE ticket_id = ?`, [posterUserId, ticketURL, ticketQR, ticketId]);
     console.log(ticketExchanged);
     const [listingStatus] = await conn.query(`UPDATE listings SET listing_status = '1' WHERE ticket_id = ?`, ticketId);
 
     // original A (poster) ticket, to B
     console.log('userId: ' + userId);
-    // console.log(poster_ticketURL);
-    // console.log(poster_ticketQR);
-    // console.log(poster_ticket_id);
     const [posterTicketExchanged] = await conn.query(`UPDATE tickets SET user_id = ?, ticket_url = ?, qrcode = ? WHERE ticket_id = ?`, [userId, posterTicketURL, posterTicketQR, posterTicketId]);
     console.log(posterTicketExchanged);
     const [posterListingStatus] = await conn.query(`UPDATE listings SET listing_status = '1' WHERE ticket_id = ?`, posterTicketId);
