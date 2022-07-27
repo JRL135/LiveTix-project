@@ -62,7 +62,7 @@ app.post(`/user/login`, loginUser, (req, res)=>{
   res.json(req.result);
 });
 
-app.post(`/api/${process.env.api}/user/profile`, getUserProfile, (req, res)=>{
+app.get(`/api/${process.env.api}/user/profile`, getUserProfile, (req, res)=>{
   res.json(req.result);
 });
 

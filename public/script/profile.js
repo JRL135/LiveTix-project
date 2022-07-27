@@ -16,7 +16,6 @@ async function checkTokenAndRenderProfile() {
   };
   const checkTokenURL = `/api/1.0/user/profile`;
   const checkToken = await fetch(checkTokenURL, {
-    method: 'POST',
     headers: headers,
   });
   const userInfo = await checkToken.json();
