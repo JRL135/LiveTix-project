@@ -48,7 +48,7 @@ const getCurrentEventsByCategory = async (category)=>{
 
 
 // search querie
-const getSearchedEvents = async (keyword, category, city, startDate, endDate)=>{
+const genSearchedEvents = async (keyword, category, city, startDate, endDate)=>{
   let categoryCondition;
   if (category != 0) {
     categoryCondition = 'and';
@@ -71,4 +71,4 @@ const getCurrentEventsForExchange = async ()=>{
 };
 
 
-module.exports = {getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetails, getEventArtists, getEventDates, getAvailTickets, getCurrentEvents, getCurrentEventsByCategory, getSearchedEvents, getCurrentEventsForExchange};
+module.exports = {getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetails, getEventArtists, getEventDates, getAvailTickets, getCurrentEvents, getCurrentEventsByCategory, genSearchedEvents, getCurrentEventsForExchange};

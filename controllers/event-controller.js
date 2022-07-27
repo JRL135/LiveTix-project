@@ -132,8 +132,8 @@ async function getSearchOptions(req, res, next) {
   await next();
 }
 
-async function getSearchedEvents(req, res, next) {
-  console.log('getSearchedEvents triggered');
+async function genSearchedEvents(req, res, next) {
+  console.log('genSearchedEvents triggered');
   const keyword = req.body.keyword;
   const category = req.body.category;
   const city = req.body.city;
@@ -149,7 +149,7 @@ async function getSearchedEvents(req, res, next) {
   // console.log(category);
   let searchedEvents;
   try {
-    searchedEvents = await Event.getSearchedEvents(keyword, category, city, startDate, endDate);
+    searchedEvents = await Event.genSearchedEvents(keyword, category, city, startDate, endDate);
     req.result = searchedEvents;
     console.log(searchedEvents);
   } catch (err) {
@@ -172,4 +172,4 @@ async function getCurrentEventsForExchange(req, res, next) {
   await next();
 }
 
-module.exports = {getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, getCurrentEvents, getSearchOptions, getSearchedEvents, getCurrentEventsForExchange};
+module.exports = {getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, getCurrentEvents, getSearchOptions, genSearchedEvents, getCurrentEventsForExchange};

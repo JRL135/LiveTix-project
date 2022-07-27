@@ -1,9 +1,6 @@
-/* eslint-disable max-len */
 require('dotenv').config();
 const express = require('express');
-// const mysql = require("mysql2");
-// const path = require('path');
-const {getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, getCurrentEvents, getSearchOptions, getSearchedEvents, getCurrentEventsForExchange} = require('./controllers/event-controller');
+const {getEventFavStatus, postEventFavStatus, deleteEventFavStatus, getEventDetailsAPI, getAvailableTickets, getCurrentEvents, getSearchOptions, genSearchedEvents, getCurrentEventsForExchange} = require('./controllers/event-controller');
 const {registerUser, loginUser, getUserProfile, getUserUnusedTickets, getUserUsedTickets, getUserFavEvents, getUserMessages} = require('./controllers/user-controller');
 const {getTicketDetails, reserveTickets, saveTicketOrder, authTicket, getVerifiedTickets, getUserUnusedTicketsForListing, getSelectedEventTicketTypes, postExchangeCondition, getAllCurrentListings, getUserCurrentListings, postListingSelection} = require('./controllers/ticket-controller');
 const {checkUserMiddleware, checkIndividualUser} = require('./utils/auth');
@@ -44,7 +41,7 @@ app.get(`/api/${process.env.api}/events/:category`, getCurrentEvents, (req, res)
   res.json(req.result);
 });
 
-app.get(`/api/${process.env.api}/events/:keyword`, getSearchedEvents, (req, res)=>{
+app.get(`/api/${process.env.api}/events/:keyword`, genSearchedEvents, (req, res)=>{
   console.log('getSearchedEventsAPI triggered');
   res.json(req.result);
 });
@@ -53,7 +50,7 @@ app.get(`/api/${process.env.api}/search/events`, getSearchOptions, (req, res)=>{
   res.json(req.result);
 });
 
-app.post(`/api/${process.env.api}/search/results`, getSearchedEvents, (req, res)=>{
+app.post(`/api/${process.env.api}/search/results`, genSearchedEvents, (req, res)=>{
   res.json(req.result);
 });
 
