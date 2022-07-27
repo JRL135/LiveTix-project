@@ -55,26 +55,21 @@ const getReservedTicketsType = async (ticketIds) => {
   return ticketType;
 };
 
-const checkTimerStatus = async (ticketIds)=>{
+const checkTimerStatus = async (userId, buyTicketsArray)=>{
   console.log('checking ticket timer');
   // check backend timer does not exceed 5m
   const array = [];
-  for (let i = 0; i < ticketIds.length; i++) {
-    const ticketId = ticketIds[i];
-    const [tixWithinCountdown] = await pool.query(`SELECT * FROM tickets WHERE ticket_id =? AND DATE_ADD(timer_timestamp, INTERVAL 300 second) >= NOW()`, ticketId);
+  for (let i = 0; i < buyTicketsArray.result.length; i++) {
+    const type = buyTicketsArray.result[i].type;
+    const number = buyTicketsArray.result[i].number;
+    const [tixWithinCountdown] = await pool.query(`SELECT * FROM tickets WHERE user_id = ? AND type = ? AND DATE_ADD(timer_timestamp, INTERVAL 300 second) >= NOW() LIMIT ?`, [userId, type, number]);
     console.log(tixWithinCountdown);
-
-    const tempObj = {};
-    if (tixWithinCountdown.length === 0) {
-      console.log(`tixWithinCountdown is empty, countdown has timed out for ticket_id: ${ticketId}`);
-      [statusUpdate] = await pool.query(`UPDATE tickets SET temp_status = '0' AND timer_timestamp = null WHERE ticket_id = ?`, ticketId);
-      tempObj.expired = ticketId;
-      array.push(tempObj);
-    } else {
-      console.log('timer has not expired, returning tixWithinCountdown');
-      tempObj.ok = ticketId;
-      array.push(tempObj);
+    for (let j = 0; j < tixWithinCountdown.length; j++) {
+      const ticketId = tixWithinCountdown[j].ticket_id;
+      // tempObj.ok = ticketId;
+      array.push(ticketId);
     }
+    console.log(array);
   }
   return array;
 };

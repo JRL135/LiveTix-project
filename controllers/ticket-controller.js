@@ -3,7 +3,6 @@ const QRCode = require('qrcode');
 const Ticket = require('../models/ticket-model');
 const Auth = require('../utils/auth');
 const CryptoJS = require('crypto-js');
-const {listen} = require('../app');
 const key = process.env.CRYPTOKEY;
 require('dotenv').config();
 
@@ -23,10 +22,8 @@ async function reserveTickets(req, res, next) {
       const tickets = req.body;
       console.log('------------------');
       console.log(tickets);
-      // console.log(typeof(tickets[0]));
       const eventId = req.body.event_id;
 
-      const ticketsOK = [];
       const ticketNumberArray = [];
       const ticketTypeNameArray = [];
       for (let i = 0; i < tickets.ticket_number.length; i++) {
@@ -34,28 +31,11 @@ async function reserveTickets(req, res, next) {
         const ticketTypeName = tickets.ticket_type[i];
         ticketNumberArray.push(ticketNumber);
         ticketTypeNameArray.push(ticketTypeName);
-
-        // console.log('ticketTypeName: ' + ticketTypeName);
-        // console.log('ticIds: ');
-        // console.log(ticIds);
-        // add error handling for no available ticket sitaution
       }
       // 1. check available tickets for each ticket type, grab ticket ids
       const ticIds = await Ticket.checkAndReserveTickets(eventId, userId, ticketTypeNameArray, ticketNumberArray);
       console.log('--------BACK IN CONTROLLER--------');
       console.log(ticIds);
-      // 2. push available ticket_ids to array
-      // for (let i = 0; i < tickets.ticket_number.length; i++) {
-      //   const ticketTypeName = tickets.ticket_type[i];
-      //   const ticketTypeObj = {};
-      //   if (!(ticketTypeName.ticket_type in ticketTypeObj)) {
-      //     ticketTypeObj.ticket_type = ticketTypeName;
-      //     ticketTypeObj.ticket_ids = ticIds;
-      //     console.log(ticketTypeObj);
-      //     ticketsOK.push(ticketTypeObj);
-      //   }
-      // }
-
       if (ticIds.length != 0) {
         // 2. grab reserved tickets info for frontend render
         const reservedTicketsInfo = await Ticket.getReservedTicketsType(ticIds);
@@ -106,36 +86,29 @@ async function saveTicketOrder(req, res, next) {
   const buyTicketsArray = req.body;
   console.log('buyTicketsArray in saveTicketOrder:');
   console.log(buyTicketsArray);
-  const ticketIds = [];
-  for (let i = 0; i < buyTicketsArray.length; i++) {
-    const ticketId = buyTicketsArray[i].ticket_ids;
-    for (let j = 0; j < ticketId.length; j++) {
-      ticketIds.push(ticketId[j]);
-    }
-  }
-  console.log(ticketIds);
+
   try {
     // check timer status
-    const status = await Ticket.checkTimerStatus(ticketIds);
-    console.log('---------------ticket timer status: ---------------');
-    console.log(status);
-    const tixOkArray = [];
-    for (let i = 0; i < status.length; i++) {
-      console.log(Object.keys(status[i]));
-      if (Object.keys(status[i])[0] === 'ok') {
-        tixOkArray.push(Object.values(status[i])[0]);
-      }
-    }
-    console.log('------printing tixOkArray: ');
-    console.log(tixOkArray);
-    if (tixOkArray.length != 0) {
-      await TicketController.genQRcode(tixOkArray);
-      const orderId = await Ticket.saveTicketOrder(eventId, userId, tixOkArray);
+    const statusOkArray = await Ticket.checkTimerStatus(userId, buyTicketsArray);
+    console.log('------------timer check ok tix array: ------------');
+    console.log(statusOkArray);
+    // const tixOkArray = [];
+    // for (let i = 0; i < status.length; i++) {
+    //   console.log(Object.keys(status[i]));
+    //   if (Object.keys(status[i])[0] === 'ok') {
+    //     tixOkArray.push(Object.values(status[i])[0]);
+    //   }
+    // }
+    // console.log('------printing tixOkArray: ');
+    // console.log(tixOkArray);
+    if (statusOkArray.length != 0) {
+      await genQRcode(statusOkArray);
+      const orderId = await Ticket.saveTicketOrder(eventId, userId, statusOkArray);
       console.log(orderId);
       req.order_result = orderId;
     } else {
       console.log('some tickets have expired timer, returning expired ticket_ids to frontend');
-      req.anti_order_result = status;
+      req.anti_order_result = 0;
     }
   } catch (err) {
     console.log(err);
