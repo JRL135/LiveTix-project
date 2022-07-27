@@ -22,7 +22,6 @@ describe('ticket / getTicketDetails', async () => {
         .post('/user/login')
         .send(user);
     const data = res.body;
-    console.log(data);
     token = data.token;
   });
 
@@ -31,7 +30,6 @@ describe('ticket / getTicketDetails', async () => {
         .get(`/api/${process.env.api}/ticket/${id}`)
         .set('Authorization', `Bearer ${token}`)
         .send({});
-    console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body[0].ticket_id).to.equal(3);
   });
@@ -50,7 +48,6 @@ describe('ticket / getTicketDetails', async () => {
         .post('/user/login')
         .send(user);
     const data = res.body;
-    console.log(data);
     token = data.token;
   });
 
@@ -59,7 +56,6 @@ describe('ticket / getTicketDetails', async () => {
         .get(`/api/${process.env.api}/ticket/${id}`)
         .set('Authorization', `Bearer ${token}`)
         .send({});
-    console.log(res.body);
     expect(res.statusCode).to.equal(403);
     expect(res.body.message).to.equal('Not authorized to access this page');
   });
@@ -74,7 +70,6 @@ describe('ticket / reserveTickets', async () => {
         .post(`/api/${process.env.api}/event/${id}/tickets/reserve`)
         .set('Authorization', `Bearer ${token}`)
         .send({});
-    console.log(res.body);
     expect(res.body).to.equal('No token');
   });
 
@@ -89,7 +84,6 @@ describe('ticket / reserveTickets', async () => {
         .post('/user/login')
         .send(user);
     const data = res.body;
-    console.log(data);
     token11 = data.token;
   });
 
@@ -105,10 +99,8 @@ describe('ticket / reserveTickets', async () => {
         .post(`/api/${process.env.api}/event/${id}/tickets/reserve`)
         .set('Authorization', `Bearer ${token11}`)
         .send(tickets);
-    console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body.status).to.equal(1);
-    // expect(res.body.status).to.equal(1);
   });
   it('POST / reserveTickets: 2 ticket types', async () => {
     id = 2;
@@ -121,7 +113,6 @@ describe('ticket / reserveTickets', async () => {
         .post(`/api/${process.env.api}/event/${id}/tickets/reserve`)
         .set('Authorization', `Bearer ${token11}`)
         .send(tickets);
-    console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body.status).to.equal(1);
   });
@@ -144,14 +135,11 @@ describe('ticket / reserveTickets: only 1 ticket left but want to reserve 4', as
         .post('/user/login')
         .send(user);
     const data = res.body;
-    console.log(data);
     token11 = data.token;
   });
   // restore tickets status
   after(async () => {
-    console.log('entering reserveTickets restore ticket status');
     const result = await fakeDataModel.reserveTicketsOnlyOneTestRestore(eventId);
-    console.log(result);
   });
   // grab all tickets of a pool except for 1
   it('POST / reserveTickets: reserve 4 tickets when only 1 is left, should return 1 ticket reserved', async () => {
@@ -165,7 +153,6 @@ describe('ticket / reserveTickets: only 1 ticket left but want to reserve 4', as
         .post(`/api/${process.env.api}/event/${id}/tickets/reserve`)
         .set('Authorization', `Bearer ${token11}`)
         .send(tickets);
-    console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body.status).to.equal(1);
   });

@@ -14,7 +14,6 @@ describe('event', async () => {
   it('GET / getAvailableTickets of different ticket types of the current event', async () => {
     const res = await requester
         .get(`/api/${process.env.api}/event/${id}/tickets`);
-    // console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body[0].ticket_id).to.be.a('number');
     expect(res.body[0].type).to.be.a('string');
@@ -36,7 +35,6 @@ describe('event', async () => {
         .post('/user/login')
         .send(user);
     const data = res.body;
-    console.log(data);
     token = data.token;
   });
 
@@ -46,8 +44,6 @@ describe('event', async () => {
         .get(`/api/${process.env.api}/event/${id}/user/favorite`)
         .set('Authorization', `Bearer ${token}`)
         .send({});
-    console.log('-------get before post---------');
-    // console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body).to.equal(0);
   });
@@ -58,7 +54,6 @@ describe('event', async () => {
         .post(`/api/${process.env.api}/event/${id}/user/favorite`)
         .set('Authorization', `Bearer ${token}`)
         .send({});
-    // console.log(res.body);
     expect(res.statusCode).to.equal(200);
   });
 
@@ -68,8 +63,6 @@ describe('event', async () => {
         .get(`/api/${process.env.api}/event/${id}/user/favorite`)
         .set('Authorization', `Bearer ${token}`)
         .send({});
-    console.log('-------get after post----------');
-    // console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body).to.equal(1);
   });
@@ -79,7 +72,6 @@ describe('event', async () => {
         .delete(`/api/${process.env.api}/event/${id}/user/favorite`)
         .set('Authorization', `Bearer ${token}`)
         .send({});
-    // console.log(res.body);
     expect(res.statusCode).to.equal(200);
   });
 
@@ -89,8 +81,6 @@ describe('event', async () => {
         .get(`/api/${process.env.api}/event/${id}/user/favorite`)
         .set('Authorization', `Bearer ${token}`)
         .send({});
-    console.log('-------get after delete-----------');
-    // console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body).to.equal(0);
   });
@@ -101,7 +91,6 @@ describe('event', async () => {
     const category = 'null';
     const res = await requester
         .get(`/api/${process.env.api}/events/${category}`);
-    console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body.length).to.equal(11);
   });
@@ -110,7 +99,6 @@ describe('event', async () => {
     const category = 'concert';
     const res = await requester
         .get(`/api/${process.env.api}/events/${category}`);
-    console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body.length).to.equal(9);
   });
@@ -119,7 +107,6 @@ describe('event', async () => {
     const category = 'festival';
     const res = await requester
         .get(`/api/${process.env.api}/events/${category}`);
-    console.log(res.body);
     expect(res.statusCode).to.equal(200);
     expect(res.body.length).to.equal(2);
   });
