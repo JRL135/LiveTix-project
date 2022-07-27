@@ -1,13 +1,11 @@
 
 const searchResultsDiv = document.getElementsByClassName('search-results-events-container')[0];
-console.log(searchResultsDiv);
 searchResultsDiv.innerHTML = '<p id=\'search-results-placeholder-text\'>Try searching for anything! Need some ideas? How about your favorite artist?</p>';
 
 async function getSearchConditions() {
   const searchConditionsURL = `/api/1.0/search/events`;
   const getConditions = await fetch(searchConditionsURL);
   const searchConditions = await getConditions.json();
-  console.log(searchConditions);
   const cityOptionSec = document.getElementById('city');
   for (let i = 0; i < searchConditions.length; i++) {
     cityOptionSec.innerHTML += `
@@ -23,10 +21,6 @@ async function postSearchConditions(e) {
   const searchCategory = searchCategoryDiv.options[searchCategoryDiv.selectedIndex].value;
   const searchCity = document.querySelector(`#city`).value;
   const searchDates = document.querySelector(`#date`).innerHTML;
-  console.log(searchKeyword);
-  console.log(searchCategory);
-  console.log(searchCity);
-  console.log(searchDates);
 
   const headers = {
     'Content-Type': 'application/json',
@@ -45,11 +39,8 @@ async function postSearchConditions(e) {
     body: JSON.stringify(body),
   });
   const postSearch = await post.json();
-  console.log(postSearch);
-
 
   let searchResultsDiv = document.getElementsByClassName('search-results-events-container')[0];
-  console.log(searchResultsDiv);
   searchResultsDiv.innerHTML = '';
 
   if (postSearch.length === 0) {
@@ -97,16 +88,11 @@ $(function() {
     endDate: end,
     ranges: {
       'Today': [moment(), moment()],
-      //    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
       'Tomorrow': [moment().add(1, 'day').endOf('day'), moment().add(1, 'day').endOf('day')],
       'This Week': [moment().startOf('isoWeek'), moment().endOf('isoWeek')],
       'Next Week': [startNextWeek, endNextWeek],
-      //    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-      //    'Next 7 Days': [moment().startOf(6, 'days'), moment().endOf(6, 'days')],
-      //    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
       'This Month': [moment().startOf('month'), moment().endOf('month')],
       'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')],
-      //    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     },
   }, cb);
 

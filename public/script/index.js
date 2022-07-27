@@ -1,17 +1,11 @@
 
 const params = new URL(document.location).searchParams;
 const categoryParams = params.get('category');
-// console.log(document.location);
-// let event_params = new URL(document.location);
-// console.log(event_params.pathname);
-console.log('category params: ' + categoryParams);
-
 
 async function getCurrentEvents() {
   // fetch events
   const eventsFetch = await fetch(`/api/1.0/events/${categoryParams}`);
   const currentEvents = await eventsFetch.json();
-  console.log(currentEvents);
 
   const currentEventText = document.getElementById('current-event-text');
   if (categoryParams == 'concert') {

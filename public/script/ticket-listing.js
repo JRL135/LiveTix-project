@@ -31,7 +31,6 @@ async function checkUserId() {
     headers: headers,
   });
   const roleStatus = await authRoleStatus.json();
-  console.log(roleStatus);
   if (roleStatus == 'No token') {
     alert('Please login to access this page');
     window.location.href = '/login.html';
@@ -40,7 +39,6 @@ async function checkUserId() {
     window.location.href = '/index.html';
   } else {
     userId = roleStatus.user_id;
-    console.log('user_id: ' + userId);
   }
 }
 
@@ -48,7 +46,6 @@ async function getUserTickets() {
   // fetch user current/unused tickets
   const ticketsFetch = await fetch(`/api/1.0/ticket/ticket-listing/unused-tickets/user/${userId}`);
   const ticketsAvail = await ticketsFetch.json();
-  console.log(ticketsAvail);
   const choiceOneContainer = document.getElementsByClassName('choice-1-container')[0];
 
   // USER UNUSED TICKETS dropdown create & populate
@@ -81,7 +78,6 @@ async function getUserTickets() {
 function recordSelectedUserTicket(e) {
   const selectedIndex = e.target.options.selectedIndex;
   selectedTicketId = e.target.children[selectedIndex].value;
-  console.log(e.target.children[selectedIndex].value);
 }
 
 async function getCurrentEvents() {
@@ -89,8 +85,6 @@ async function getCurrentEvents() {
   // fetch current events with ticket types
   const currentEventsFetch = await fetch(`/api/1.0/ticket/ticket-listing/exchange-conditions/events`);
   const eventsAvail = await currentEventsFetch.json();
-  console.log(eventsAvail);
-  console.log(eventsAvail.length);
   const choiceTwoContainer = document.getElementsByClassName('choice-2-container')[0];
   // EVENT dropdown create & populate
   choiceTwoContainer.innerHTML += `
@@ -101,7 +95,6 @@ async function getCurrentEvents() {
         </select>
     `;
   eventDropdown = document.getElementById('event');
-  console.log(eventDropdown);
   for (let i = 0; i < eventsAvail.length; i++) {
     eventDropdown.innerHTML += `
             <option value="${eventsAvail[i].event_id}">${eventsAvail[i].title}</option>
@@ -142,7 +135,6 @@ function recordSelectedEvent(e) {
   const selectedIndex = e.target.options.selectedIndex;
   selectedEventId = e.target.children[selectedIndex].value;
   const selectedEventTitle = e.target.children[selectedIndex].text;
-  console.log(e.target.children[selectedIndex].value);
 
   if (selectedEventId == 'default') {
     selectedEventDiv.innerHTML = ``;
@@ -156,10 +148,8 @@ function recordSelectedEvent(e) {
 
 // fetch ticket types for the selected event & populate TICKET TYPES dropdown
 async function getSelectedEventTicketTypes() {
-  console.log('selected event id: ' + selectedEventId);
   const ticketTypesFetch = await fetch(`/api/1.0/ticket/ticket-listing/event/${selectedEventId}/ticket-types`);
   ticketTypesAvail = await ticketTypesFetch.json();
-  console.log(ticketTypesAvail);
 
   const ticketTypesDropdown = document.getElementById('ticket-types');
   if (ticketTypesAvail.length == 0) {
@@ -185,13 +175,11 @@ function recordSelectedTicketType(e) {
   const selectedIndex = e.target.options.selectedIndex;
   selectedTicketType = e.target.children[selectedIndex].value;
   const selectedTicketTypeText = e.target.children[selectedIndex].text;
-  console.log(e.target.children[selectedIndex].value);
 
   // render in condition container
   selectedTicketTypeDiv.innerHTML += `
         <div id='${selectedTicketType}'>${selectedTicketTypeText}</div>
     `;
-
   // unhide submit btn
   document.getElementById('post-btn').style.display = 'inline-block';
 }
@@ -199,8 +187,6 @@ function recordSelectedTicketType(e) {
 async function postExchangeCondition() {
   // disable submit btn to prevent dup submit
   document.getElementById('post-btn').disabled = true;
-
-  console.log('postExchangeCondition triggered');
 
   if (selectedTicketId == undefined || selectedTicketId == 'default') {
     alert('Please select your ticket');
@@ -227,7 +213,6 @@ async function postExchangeCondition() {
       body: JSON.stringify(body),
     });
     const postStatus = await result.json();
-    console.log(postStatus);
 
     if (postStatus.status === 'success') {
       alert(`Your listing has been saved! Listing number: ${postStatus.listing_id}`);

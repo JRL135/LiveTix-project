@@ -25,7 +25,6 @@ async function checkUserId() {
     headers: headers,
   });
   const roleStatus = await authRoleStatus.json();
-  console.log(roleStatus);
   if (roleStatus == 'No token') {
     alert('Please login to access this page');
     window.location.href = '/login.html';
@@ -34,7 +33,6 @@ async function checkUserId() {
     window.location.href = '/index.html';
   } else {
     userId = roleStatus.user_id;
-    console.log('user_id: ' + userId);
   }
 }
 async function getUserListings() {
@@ -47,7 +45,6 @@ async function getUserListings() {
     headers: headers,
   });
   userListings = await userListingsStatus.json();
-  console.log(userListings);
 }
 async function renderUserListingsTable() {
   if (userListings.length === 0) {
@@ -88,7 +85,6 @@ async function getListings() {
     headers: headers,
   });
   listings = await listingsStatus.json();
-  console.log(listings);
 }
 
 let listingSelectionId;
@@ -124,12 +120,8 @@ async function renderListingsTable() {
 function renderListingSelectionDiv(e) {
   const summaryDiv = document.getElementsByClassName('summary-div')[0];
   summaryDiv.innerHTML = ``;
-  console.log(e.currentTarget);
   listingSelectionId = e.currentTarget.id;
   listingSelectionTitle = e.currentTarget.title;
-  // listing_selection_type = e.currentTarget.type;
-  console.log('listing_selection_id: ' + listingSelectionId);
-  // console.log(listing_selection_type);
   summaryDiv.innerHTML += `
         <div>Listing ID: ${listingSelectionId}</div>
         <div>Listing Event: ${listingSelectionTitle}</div>
@@ -139,7 +131,6 @@ function renderListingSelectionDiv(e) {
   btnDiv.innerHTML += `<button id="post-btn" onclick="postListingSelection()">Submit</button>`;
 
   const noSelectionText = document.getElementById('no-selection-text');
-  // noSelectionText.style.display = 'none';
   noSelectionText.innerHTML = `The listing you wish to exchange for is:`;
 }
 
@@ -159,7 +150,6 @@ async function postListingSelection() {
     body: JSON.stringify(body),
   });
   const postStatus = await result.json();
-  console.log(postStatus);
 
   if (postStatus.status == 1) {
     alert(`${postStatus.message}`);

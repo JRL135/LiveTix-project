@@ -1,7 +1,6 @@
 
 async function checkAdminRoleAndVerify() {
   const ticketURL = sessionStorage.getItem('ticketURL');
-  console.log(ticketURL);
 
   const token = localStorage.getItem('token');
   const headers = {
@@ -14,7 +13,6 @@ async function checkAdminRoleAndVerify() {
     headers: headers,
   });
   const result = await verifyStatus.json();
-  console.log(result);
   let message;
   if (result.status == 1) {
     message = result.message;

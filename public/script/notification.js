@@ -19,7 +19,6 @@ async function checkUserId() {
     headers: headers,
   });
   const roleStatus = await authRoleStatus.json();
-  console.log(roleStatus);
   if (roleStatus == 'No token') {
     alert('Please login to access this page');
     window.location.href = '/login.html';
@@ -28,7 +27,6 @@ async function checkUserId() {
     window.location.href = '/index.html';
   } else {
     userId = roleStatus.user_id;
-    console.log('user_id: ' + userId);
   }
 }
 
@@ -37,7 +35,6 @@ async function checkUserId() {
 async function fetchMessages() {
   const messagesFetch = await fetch(`/api/1.0/user/${userId}/message`);
   const userMessages = await messagesFetch.json();
-  console.log(userMessages);
   if (userMessages.length === 0) {
     const mainContainer = document.getElementsByClassName('main-container')[0];
     mainContainer.innerHTML += `<div id="no-notif-text">You don't have any notifications at the moment.</div>`;

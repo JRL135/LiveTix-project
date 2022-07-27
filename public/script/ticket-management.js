@@ -21,7 +21,6 @@ async function checkAdminRole() {
     headers: headers,
   });
   const roleStatus = await authRoleStatus.json();
-  console.log(roleStatus);
   if (roleStatus == 'No token') {
     alert('Please login to access this page');
     window.location.href = '/login.html';
@@ -30,16 +29,13 @@ async function checkAdminRole() {
     window.location.href = '/index.html';
   } else {
     adminId = roleStatus.user_id;
-    console.log(adminId);
   }
 }
 
 
 async function populateTicketTable() {
-  console.log('admin_id: ' + adminId);
   const getVerifiedTickets = await fetch(`/api/1.0/ticket/ticket-management/verified-tickets/admin/${adminId}`);
   const verifiedTickets = await getVerifiedTickets.json();
-  console.log(verifiedTickets);
   for (let i = 0; i < verifiedTickets.length; i++) {
     const tbody = document.getElementById('ticket_tb_tbody');
     const tr = document.createElement('tr');

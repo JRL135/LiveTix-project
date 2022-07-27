@@ -1,6 +1,5 @@
 const ticketParams = new URL(document.location).searchParams;
 const ticketId = ticketParams.get('id');
-console.log(ticketId);
 
 async function getTicketDetails() {
   const token = localStorage.getItem('token');
@@ -14,7 +13,6 @@ async function getTicketDetails() {
     headers: headers,
   });
   const ticketDetails = await fetchTicketDetails.json();
-  console.log(ticketDetails);
 
   if (ticketDetails.message == 'Not authorized to access this page') {
     const main = document.getElementsByClassName('main')[0];
@@ -59,12 +57,3 @@ function downloadPDF() {
   const pdfElement = document.getElementsByClassName('ticket-container')[0];
   html2pdf(pdfElement);
 }
-// function downloadPDF(){
-//     console.log("download PDF");
-//     const doc = new jsPDF();
-//     doc.html(document.body, {
-//         cb: function(doc) {
-//             doc.save('ticket.pdf');
-//         }
-//     });
-// }

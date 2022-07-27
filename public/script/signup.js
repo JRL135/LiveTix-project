@@ -2,7 +2,6 @@ const ROOT_URL = `${environment.backendBaseUrl}`;
 
 async function postSignupInfo() {
   const email = document.getElementById('email').value;
-  console.log(email);
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
 
@@ -32,7 +31,6 @@ async function postSignupInfo() {
       body: JSON.stringify(body),
     });
     const newUserStatus = await postUser.json();
-    console.log(newUserStatus);
     if (newUserStatus.status === 1) {
       localStorage.setItem('token', newUserStatus.token);
       alert(newUserStatus.message);

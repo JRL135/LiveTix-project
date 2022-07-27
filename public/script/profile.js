@@ -19,7 +19,6 @@ async function checkTokenAndRenderProfile() {
     headers: headers,
   });
   const userInfo = await checkToken.json();
-  console.log(userInfo);
   if (userInfo === 'No token') {
     alert('Please login first');
     window.location.href = '/login.html';
@@ -32,11 +31,9 @@ async function checkTokenAndRenderProfile() {
 }
 
 async function getUserUnusedTickets(username) {
-  console.log(username);
   const getUserRegisteredEventsURL = `/api/1.0/user/${username}/tickets/unused`;
   const userRegisteredsEvents = await fetch(getUserRegisteredEventsURL);
   const registeredEvents = await userRegisteredsEvents.json();
-  console.log(registeredEvents);
   const registeredEventDiv = document.getElementsByClassName('tab1-div')[0];
   for (let i = 0; i < registeredEvents.length; i++) {
     let date;
@@ -62,11 +59,9 @@ async function getUserUnusedTickets(username) {
 }
 
 async function getUserUsedTickets(username) {
-  console.log(username);
   const getUserRegisteredEventsURL = `/api/1.0/user/${username}/tickets/used`;
   const userRegisteredsEvents = await fetch(getUserRegisteredEventsURL);
   const registeredEvents = await userRegisteredsEvents.json();
-  console.log(registeredEvents);
   const registeredEventDiv = document.getElementsByClassName('tab2-div')[0];
   for (let i = 0; i < registeredEvents.length; i++) {
     let date;
@@ -92,13 +87,10 @@ async function getUserUsedTickets(username) {
 }
 
 async function getUserFavEvents(username) {
-  console.log(username);
   const getUserFavEventsURL = `/api/1.0/user/${username}/events/favorite`;
   const userFavEvents = await fetch(getUserFavEventsURL);
   const favEvents = await userFavEvents.json();
-  console.log(favEvents);
   const favEventsDiv = document.getElementsByClassName('tab3-div')[0];
-  console.log('length: ' + favEvents.length);
   for (let i = 0; i < favEvents.length; i++) {
     let date;
     const startDate = favEvents[i][0].start_date.split('T')[0];

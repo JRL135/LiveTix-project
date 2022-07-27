@@ -119,7 +119,6 @@ function onSubmit(event) {
       return;
     } else {
       const TPPrime = result.card.prime;
-      console.log(TPPrime);
       const buyURL = `/api/1.0/event/${eventId}/tickets/buy`;
       const token = localStorage.getItem('token');
       const headers = {
@@ -133,13 +132,11 @@ function onSubmit(event) {
         body: JSON.stringify(postTixResponse),
       });
       const buyTixResponse = await buyTix.json();
-      console.log(buyTixResponse);
 
       if (buyTixResponse.success) {
         alert(`Thank you for ordering, your order number is #${buyTixResponse.success}`);
         window.location.href = '/profile.html';
       } else {
-        // console.log(buyTixResponse)
         alert(`Sorry, purchase was unsuccessful, please try again!`);
         window.location.href = '/index.html';
       }
@@ -151,14 +148,9 @@ function onSubmit(event) {
 
 const eventParams = new URL(document.location).searchParams;
 const eventId = eventParams.get('id');
-// console.log(document.location);
-// let event_params = new URL(document.location);
-// console.log(event_params.pathname);
-console.log(eventId);
 
 
 async function getEventFavStatus() {
-  console.log('getFavStatus triggered');
   const favIcon = document.getElementById('fav-icon');
   const token = localStorage.getItem('token');
   const headers = {
@@ -171,13 +163,10 @@ async function getEventFavStatus() {
     headers: headers,
   });
   const favStatus = await favStatusResult.json();
-  console.log(favStatus);
   if (favStatus === 1) {
-    console.log('favStatus: y');
     favIcon.setAttribute('src', '../img/fav-full.png');
     favIcon.setAttribute('status', 'full');
   } else {
-    console.log('favStatus: n');
     favIcon.setAttribute('src', '../img/fav-empty.png');
     favIcon.setAttribute('status', 'empty');
   }
@@ -185,7 +174,6 @@ async function getEventFavStatus() {
 getEventFavStatus();
 
 async function toggleFav(e) {
-  console.log('toggleFav triggered');
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
@@ -218,7 +206,6 @@ async function toggleFav(e) {
     alert('Removed from favorites!');
   }
   const favStatus = await favStatusResult.json();
-  console.log(favStatus);
 }
 
 // fetch event details
@@ -226,7 +213,6 @@ async function getEventDetailsAPI() {
   const eventFetch = await fetch(`/api/1.0/event/${eventId}`);
   const eventDetails = await eventFetch.json();
   document.getElementsByClassName('event_title')[0].innerHTML = eventDetails[0].title;
-  console.log(document.getElementsByClassName('event_title')[0]);
   let eventDescription = eventDetails[0].description;
   eventDescription = eventDescription.replaceAll('\r\n', '<br/>');
   eventDescription = eventDescription.replaceAll('\t', '&emsp;');
@@ -274,7 +260,6 @@ async function fetchAvailTickets() {
       availableTickets[ticket.type] = {type_name: ticket.type_name, price: ticket.price, ticket_id: [ticket.ticket_id]};
     }
   }
-  // console.log(availableTickets);
   return availableTickets;
 }
 
@@ -289,13 +274,8 @@ async function clickTicketButton(e) {
 
   // fetch available tickets
   const ticketAvailArray = await fetchAvailTickets();
-
-  //   console.log(ticketAvailArray);
-  //   console.log(ticketAvailArray['zone_A']);
   const ticketAvailArrayKeys = Object.keys(ticketAvailArray);
   const ticketAvailArrayValues = Object.values(ticketAvailArray);
-  console.log(ticketAvailArrayKeys);
-  //   console.log(ticketAvailArray[ticketAvailArrayKeys[0]].type_name);
 
   // format ticket json data
   for (let i = 0; i < ticketAvailArrayKeys.length; i++) {
@@ -322,7 +302,6 @@ async function clickTicketButton(e) {
     tixTd.appendChild(tixDropdown);
     tixDropdown.innerHTML += `<option value="default" selected>Choose a value</option>`;
 
-    // console.log(ticketAvailArray[ticketAvailArrayKeys[i]].ticket_id);
     const tixAvailLength = ticketAvailArray[ticketAvailArrayKeys[i]].ticket_id.length;
     if (tixAvailLength === 0) {
       tixDropdown.innerHTML += `
@@ -360,19 +339,13 @@ async function clickTicketButton(e) {
 
   // record current user ticket selection
   const tixDropdown = document.querySelectorAll('.tix-dropdown');
-  console.log(tixDropdown.length);
   for (let i = 0; i < tixDropdown.length; i++) {
     tixDropdown[i].onchange = function() {
       const ticketSelection = this.value;
-      console.log(ticketSelection);
       const [ticketNumber, ...rest] = ticketSelection.split(' ');
-      console.log(ticketNumber);
       const ticketTypeTypeName = rest.join(' ');
-      console.log(ticketTypeTypeName);
       const [ticketType, ...rest1] = ticketTypeTypeName.split(' ');
       const ticketTypeName = rest1.join(' ');
-      console.log(ticketType);
-      console.log(ticketTypeName);
       const summaryDiv = document.querySelector(`[summary-id="${ticketType}"]`);
       summaryDiv.innerHTML = `${ticketTypeName} x ${ticketNumber}`;
     };
@@ -384,14 +357,9 @@ async function clickTicketButton(e) {
 // assign random available ticket_id to ticket_selected
 // package input data with user_id & send to backend
 function recordTicketSelection(e) {
-  console.log(e.target.value); // ticket number
-  console.log(e.target.name); // ticket type
   const ticketNumber = e.target.value;
   const ticketType = e.target.name;
-  // let ticketObj = {ticket_type, ticket_number};
   const summaryTicketList = [ticketNumber, ticketType];
-  // summaryTicketList.push(ticketObj);
-  console.log(summaryTicketList);
 
   const summaryDiv = document.querySelector(`[summary-id="${ticketType}"]`);
   summaryDiv.innerHTML = `${summaryTicketList}`;
@@ -400,11 +368,8 @@ function recordTicketSelection(e) {
 let postTixResponse;
 
 async function postTicketSelection(e) {
-  console.log('postTicketSelection triggered');
-
   // get current shown input value
   const tixSelected = document.querySelectorAll(`[class="summary_row_tix"]`);
-  // console.log(tixSelected);
   const ticketTypeList = [];
   const ticketNumberList = [];
   for (let i = 0; i < tixSelected.length; i++) {
@@ -430,7 +395,6 @@ async function postTicketSelection(e) {
     headers: headers,
   });
   const userLoginStatus = await loginResult.json();
-  console.log(userLoginStatus);
 
   if (userLoginStatus == 'No token') {
     alert('Please log in to reserve tickets');
@@ -456,26 +420,19 @@ async function postTicketSelection(e) {
         ticket_number: ticketNumberList,
       };
 
-      console.log(headers);
-      console.log('sorted body: ');
-      console.log(body);
-
       const reserve = await fetch(reserveURL, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(body),
       });
       postTixResponse = await reserve.json();
-      console.log('postTixResponse:');
-      console.log(postTixResponse); // returns available tickets for each tix type
+      // returns available tickets for each ticket type
       if (postTixResponse === 'No token') {
         alert('Please login first.');
         window.location.href = '/login.html';
       } else if (postTixResponse.status === '0') {
-        console.log('status = 0');
         alert(postTixResponse.message); // Sorry, there are no available tickets at the moment.
       } else {
-        console.log('status = 1');
         alert(`Selected ticket(s) has been reserved for 5 minutes`);
         // hide add to cart button
         document.getElementById('addToCart_ticket_button').style.display = 'none';
@@ -499,11 +456,9 @@ async function postTicketSelection(e) {
 // click pay now button
 // show pay SDK
 async function buyTickets(e) {
-  console.log('buyTickets triggered');
   // post data:
   // order: event_id, user_id
   // ticket: user_id, purchase_date
-  // insert ticket_order table
 
   // hide pay now button
   document.getElementById('buy_ticket_button').style.display = 'none';
@@ -537,17 +492,5 @@ function countdown() {
   if (minutes<10) minutes = '0'+minutes;
   if (seconds<10) seconds = '0'+seconds;
   timerElement.innerHTML = `${minutes} : ${seconds}`;
-
-
-  // if (timer == -1) {
-  //     clearInterval(timeCountdown);
-  //     alert('Sorry, time is up!');
-  //     window.location.href = "/index.html";
-
-  // } else {
-  //     timerElement.innerHTML = timer + ' secs';
-  //     timer--;
-  // }
 }
-
 
