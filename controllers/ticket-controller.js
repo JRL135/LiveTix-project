@@ -89,7 +89,7 @@ async function saveTicketOrder(req, res, next) {
 
   try {
     // check timer status
-    const statusOkArray = await Ticket.checkTimerStatus(userId, buyTicketsArray);
+    const statusOkArray = await Ticket.checkTimerStatus(eventId, userId, buyTicketsArray);
     console.log('------------timer check ok tix array: ------------');
     console.log(statusOkArray);
     // const tixOkArray = [];
