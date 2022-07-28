@@ -252,8 +252,7 @@ const executeExchange = async (userId, ticketId, ticketURL, ticketQR, posterUser
   const conn = await pool.getConnection();
   try {
     await conn.query('START TRANSACTION');
-    await conn.query('LOCK TABLE tickets WRITE');
-    await conn.query('LOCK TABLE listings WRITE');
+    await conn.query('LOCK TABLE tickets WRITE, listings WRITE');
 
     // update tickets: user_id, url, qrcode
     // original B ticket, to A (poster)
