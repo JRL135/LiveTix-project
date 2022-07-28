@@ -69,7 +69,7 @@ async function saveTicketOrder(req, res, next) {
 
   try {
     // check timer status
-    const statusOkArray = await Ticket.checkTimerStatus(userId, buyTicketsArray);
+    const statusOkArray = await Ticket.checkTimerStatus(eventId, userId, buyTicketsArray);
     if (statusOkArray.length != 0) {
       await genQRcode(statusOkArray);
       const orderId = await Ticket.saveTicketOrder(eventId, userId, statusOkArray);

@@ -48,13 +48,13 @@ const getReservedTicketsType = async (ticketIds) => {
   return ticketType;
 };
 
-const checkTimerStatus = async (userId, buyTicketsArray)=>{
+const checkTimerStatus = async (eventId, userId, buyTicketsArray)=>{
   // check backend timer does not exceed 5m
   const array = [];
   for (let i = 0; i < buyTicketsArray.result.length; i++) {
     const type = buyTicketsArray.result[i].type;
     const number = buyTicketsArray.result[i].number;
-    const [tixWithinCountdown] = await pool.query(`SELECT * FROM tickets WHERE user_id = ? AND type = ? AND DATE_ADD(timer_timestamp, INTERVAL 300 second) >= NOW() LIMIT ?`, [userId, type, number]);
+    const [tixWithinCountdown] = await pool.query(`SELECT * FROM tickets WHERE user_id = ? AND event_id = ? AND type = ? AND DATE_ADD(timer_timestamp, INTERVAL 300 second) >= NOW() LIMIT ?`, [userId, eventId, type, number]);
     for (let j = 0; j < tixWithinCountdown.length; j++) {
       const ticketId = tixWithinCountdown[j].ticket_id;
       array.push(ticketId);
