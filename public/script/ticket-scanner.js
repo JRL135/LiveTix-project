@@ -22,7 +22,8 @@ html5QrCode.start(
     },
     (decodedText, decodedResult) => {
     // do something when code is read
-      confirm(window.location = decodedText);
+      // confirm(window.location = decodedText);
+      window.location.replace = decodedText;
     },
     (errorMessage) => {
     // parse error, ignore it.
