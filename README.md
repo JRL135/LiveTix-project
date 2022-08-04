@@ -1,13 +1,26 @@
 # LiveTix
-A ticketing website that sells event tickets and connects users with a ticket-exchange marketplace.
+A ticketing website that sells event tickets and connects users with a ticket-exchange marketplace.\
+Enter LiveTix here: [Click Me!](https://livetix.site)
 
 [comment]: <> (A ticketing website that offers a B2C ticket selling/purchasing service and a C2C ticket-exchange marketplace.)
 
 ## Table of content
+- [Site Demo](#site-demo)
 - [Technologies](#technologies)
 - [System Design](#system-design)
 - [Database Schema](#database-schema)
 - [Features](#features)
+
+## Site Demo Account
+### User Account
+- Email: demo@email.com
+- Password: demo
+
+### Admin Account
+- Email: admin_demo@email.com
+- Password: admin_demo
+<!-- - Notes: when verifying tickets, please open the site on your computer to scan the ticket QRcodes.  -->
+
 
 ## Technologies
 ### Back-Eend
