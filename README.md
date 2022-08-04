@@ -17,10 +17,8 @@ Enter LiveTix here: [Click Me!](https://livetix.site)
 - Password: demo
 
 ### Admin Account
-- Email: admin_demo@email.com
-- Password: admin_demo
-<!-- - Notes: when verifying tickets, please open the site on your computer to scan the ticket QRcodes.  -->
-
+- Email: admin@email.com
+- Password: admin
 
 ## Technologies
 ### Back-Eend
