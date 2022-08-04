@@ -19,6 +19,7 @@ Enter LiveTix here: [Click Me!](https://livetix.site)
 ### Admin Account
 - Email: admin@email.com
 - Password: admin
+- Notes: For ticket verification, user with admin role needs to be **logged in** to scan the ticket QRcode, so if you wish to use mobile for ticket scanning, please use your preferred browser to log in with the provided admin account, and then go to "Ticket Management" -> "Ticket Scanner" to open the in-browser QRcode scanner. Third party mobile QRcode scanning apps will not work as user needs to be logged in to pass the LiveTix ticket management authorization.
 
 ## Technologies
 ### Back-Eend
