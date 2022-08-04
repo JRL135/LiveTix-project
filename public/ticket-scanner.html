@@ -23,7 +23,7 @@
                 console.log(decodedText);
                 if (window.confirm("Ticket QRcode detected, verifty ticket now?")) {
                     sessionStorage.setItem("ticketURL", decodedText);
-                    window.open('/ticket-verification.html');
+                    window.location.replace('/ticket-verification.html');
 
                 }
             };
