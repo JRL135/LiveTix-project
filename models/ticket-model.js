@@ -15,12 +15,13 @@ const checkAndReserveTickets = async (eventId, userId, ticketTypeNameArray, tick
   const conn = await pool.getConnection();
   try {
     await conn.query('START TRANSACTION');
+    await conn.query('SET autocommit=0');
     await conn.query('LOCK TABLE tickets WRITE');
     const reservedTickets = [];
     // for each ticket type, loop through ticket number
     for (let i = 0; i < ticketTypeNameArray.length; i++) {
       // adding exclusive lock on selected rows
-      const [reservedTicket] = await conn.query(`SELECT ticket_id from tickets WHERE event_id = ? and temp_status = '0' and type_name = ? limit ? FOR UPDATE`, [eventId, ticketTypeNameArray[i], ticketNumberArray[i]]);
+      const [reservedTicket] = await conn.query(`SELECT ticket_id from tickets WHERE event_id = ? and temp_status = '0' and type_name = ? limit ?`, [eventId, ticketTypeNameArray[i], ticketNumberArray[i]]);
 
       // check locked rows
       const [lockedRows]= await conn.query(`SELECT * FROM performance_schema.data_locks`);
